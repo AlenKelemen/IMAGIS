@@ -1,1 +1,2 @@
-document.write('Hello IMAGIS')
+import UX from './src/UX';
+const ux = new UX();
