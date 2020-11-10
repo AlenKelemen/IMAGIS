@@ -1,2 +1,2 @@
 import UX from './src/UX';
-const ux=new UX();
+const ux = new UX();
