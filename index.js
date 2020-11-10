@@ -1,1 +1,1 @@
-document.write('wdfvcasfdvcasdf')
+document.write('Hello IMAGIS')
