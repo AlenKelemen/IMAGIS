@@ -1,3 +1,16 @@
+import 'ol/ol.css';
+import '@fortawesome/fontawesome-pro/css/fontawesome.css';
+import '@fortawesome/fontawesome-pro/css/regular.min.css';
+import './ux.css';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import ScaleLine from 'ol/control/ScaleLine';
+import Rotate from 'ol/control/Rotate';
+import Zoom from 'ol/control/Zoom';
+import {
+    register
+} from 'ol/proj/proj4.js';
+import proj4 from 'proj4';
 /**
  *
  *
