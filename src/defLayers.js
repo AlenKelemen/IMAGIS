@@ -2,8 +2,13 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import BingMaps from 'ol/source/BingMaps';
 import TileWMS from 'ol/source/TileWMS';
-import ImageMapGuide from 'ol/source/ImageMapGuide';
-import ImageLayer from 'ol/layer/Image';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from 'ol/layer/Vector';
+import VersionControl from './vcs';
+import {
+    makeStyle
+} from './makeStyle';
 /** Load layers as defined in def.json
  * @constructor
  * @param {Object=} options DefLayers options
@@ -59,8 +64,59 @@ export default class DefLayers {
                     }))
                 );
             layer.getSource().set('def', s);
-            if(this.map) this.map.addLayer(layer);
+            if (this.map) this.map.addLayer(layer);
+        }
+    }
+    getVectorLayers() {
+        const r = [];
+        for (const [i, l] of this.def.layers.entries()) {
+            const source = this.def.sources.find(x => x.name === l.source);
+            if (['geojson'].includes(source.type)) {
+                r.push(l)
+            }
+        }
+        return r;
+    }
+    addVectorLayers() {
+        const vc = new VersionControl("fs");
+        for (const [i, l] of this.getVectorLayers().entries()) {
+            const s = this.def.sources.find(x => x.name === l.source);
+            const base = {
+                maxResolution: l.maxResolution,
+                minResolution: l.minResolution,
+                maxZoom: l.maxZoom,
+                minZoom: l.minZoom,
+                visible: l.visible,
+                opacity: l.opacity,
+                zIndex: l.zIndex || i, //if no l.zIndex in def take sequence
+                name: l.name,
+                label: l.label,
+                info: l.info,
+                translucent: l.translucent, //for traslucent tiled layer
+                def: l
+            };
+            const layer = new VectorLayer(base);
+            const source = new VectorSource({
+                loader: (extent, resolution, projection) => {
+                    vc.getFile("https://github.com/AlenKelemen/test-json.git", "/test-json")
+                        .then(r => {
+                            const features = new GeoJSON({
+                                dataProjection: 'EPSG:4326',
+                                featureProjection: 'EPSG:3765'
+                            }).readFeatures(r);
+                            source.addFeatures(features);
+                            source.getFeatures().map(x => x.set('layer', layer));
+                        });
+                }
+            });
+            layer.setSource(source);
+
+
+            //if (l.style) layer.setStyle(makeStyle(l.style));
+            layer.getSource().set('def', s);
+            if (this.map) this.map.addLayer(layer);
         }
 
     }
+
 }
