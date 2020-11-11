@@ -63,4 +63,5 @@ const defLayers = new DefLayers({
     def: def,
     map:map
 })
-defLayers.addTileLayers()
+defLayers.addTileLayers();
+defLayers.addVectorLayers();

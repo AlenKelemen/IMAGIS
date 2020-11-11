@@ -2,8 +2,10 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import BingMaps from 'ol/source/BingMaps';
 import TileWMS from 'ol/source/TileWMS';
-import ImageMapGuide from 'ol/source/ImageMapGuide';
-import ImageLayer from 'ol/layer/Image';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from 'ol/layer/Vector';
+import VersionControl from './vcs';
 import {
     makeStyle
 } from './makeStyle';
@@ -62,10 +64,10 @@ export default class DefLayers {
                     }))
                 );
             layer.getSource().set('def', s);
-            if(this.map) this.map.addLayer(layer);
+            if (this.map) this.map.addLayer(layer);
         }
     }
-    getVectorLayers(){
+    getVectorLayers() {
         const r = [];
         for (const [i, l] of this.def.layers.entries()) {
             const source = this.def.sources.find(x => x.name === l.source);
@@ -76,7 +78,8 @@ export default class DefLayers {
         return r;
     }
     addVectorLayers() {
-        for (const [i, l] of this.getTileLayers().entries()) {
+        const vc = new VersionControl("fs");
+        for (const [i, l] of this.getVectorLayers().entries()) {
             const s = this.def.sources.find(x => x.name === l.source);
             const base = {
                 maxResolution: l.maxResolution,
@@ -92,11 +95,26 @@ export default class DefLayers {
                 translucent: l.translucent, //for traslucent tiled layer
                 def: l
             };
-            
             const layer = new VectorLayer(base);
-            if (style) layer.setStyle(makeStyle(l.style));
+            const source = new VectorSource({
+                loader: (extent, resolution, projection) => {
+                    vc.getFile("https://github.com/AlenKelemen/test-json.git", "/test-json")
+                        .then(r => {
+                            const features = new GeoJSON({
+                                dataProjection: 'EPSG:4326',
+                                featureProjection: 'EPSG:3765'
+                            }).readFeatures(r);
+                            source.addFeatures(features);
+                            source.getFeatures().map(x => x.set('layer', layer));
+                        });
+                }
+            });
+            layer.setSource(source);
+
+
+            //if (l.style) layer.setStyle(makeStyle(l.style));
             layer.getSource().set('def', s);
-            if(this.map) this.map.addLayer(layer);
+            if (this.map) this.map.addLayer(layer);
         }
 
     }
