@@ -4,6 +4,9 @@ import BingMaps from 'ol/source/BingMaps';
 import TileWMS from 'ol/source/TileWMS';
 import ImageMapGuide from 'ol/source/ImageMapGuide';
 import ImageLayer from 'ol/layer/Image';
+import {
+    makeStyle
+} from './makeStyle';
 /** Load layers as defined in def.json
  * @constructor
  * @param {Object=} options DefLayers options
@@ -61,6 +64,40 @@ export default class DefLayers {
             layer.getSource().set('def', s);
             if(this.map) this.map.addLayer(layer);
         }
+    }
+    getVectorLayers(){
+        const r = [];
+        for (const [i, l] of this.def.layers.entries()) {
+            const source = this.def.sources.find(x => x.name === l.source);
+            if (['geojson'].includes(source.type)) {
+                r.push(l)
+            }
+        }
+        return r;
+    }
+    addVectorLayers() {
+        for (const [i, l] of this.getTileLayers().entries()) {
+            const s = this.def.sources.find(x => x.name === l.source);
+            const base = {
+                maxResolution: l.maxResolution,
+                minResolution: l.minResolution,
+                maxZoom: l.maxZoom,
+                minZoom: l.minZoom,
+                visible: l.visible,
+                opacity: l.opacity,
+                zIndex: l.zIndex || i, //if no l.zIndex in def take sequence
+                name: l.name,
+                label: l.label,
+                info: l.info,
+                translucent: l.translucent, //for traslucent tiled layer
+                def: l
+            };
+            const layer = new VectorLayer(base);
+            if (style) layer.setStyle(makeStyle(l.style));
+            layer.getSource().set('def', s);
+            if(this.map) this.map.addLayer(layer);
+        }
 
     }
+
 }
