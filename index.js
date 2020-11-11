@@ -33,16 +33,7 @@ const view = new View({
 window.map = new Map({
     target: mapContainer,
     view: view,
-    controls: [
-        new ScaleLine(),
-        new Rotate({
-            tipLabel: 'Sjever gore'
-        }),
-        new Zoom({
-            zoomInTipLabel: 'Približi',
-            zoomOutTipLabel: 'Udalji'
-        })
-    ]
+    controls: []
 });
 const menubar = new Container({
     className: 'menubar'
@@ -56,7 +47,12 @@ const actionbar = new Container({
     className: 'actionbar'
 });
 map.addControl(actionbar);
+actionbar.addControl(new Zoom());
+actionbar.addControl(new Rotate({
+    tipLabel: 'Sjever gore'
+}));
 const statusbar = new Container({
     className: 'statusbar'
 });
 map.addControl(statusbar);
+statusbar.addControl(new ScaleLine());
