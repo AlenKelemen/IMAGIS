@@ -92,6 +92,7 @@ export default class DefLayers {
                 translucent: l.translucent, //for traslucent tiled layer
                 def: l
             };
+            
             const layer = new VectorLayer(base);
             if (style) layer.setStyle(makeStyle(l.style));
             layer.getSource().set('def', s);
