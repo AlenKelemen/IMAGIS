@@ -98,7 +98,7 @@ export default class DefLayers {
             const layer = new VectorLayer(base);
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
-                    vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json','db.json')
+                    vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json/blob/master','vodovodOmis/' + l.name + '.json')
                         .then(r => {
                             const features = new GeoJSON({
                                 dataProjection: 'EPSG:4326',
@@ -110,9 +110,8 @@ export default class DefLayers {
                 }
             });
             layer.setSource(source);
-
-
-            //if (l.style) layer.setStyle(makeStyle(l.style));
+//add style
+            if (l.style) layer.setStyle(makeStyle(l.style));
             layer.getSource().set('def', s);
             if (this.map) this.map.addLayer(layer);
         }

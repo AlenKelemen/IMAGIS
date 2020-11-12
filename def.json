@@ -1,7 +1,7 @@
 {
     "project": "Vodovod Omiš",
-    "center": [500008.5165882833, 4826968.360253662],
-    "zoom": 3.92,
+    "center": [535420.4693824024, 4814471.358589062],
+    "zoom": 5.7,
     "sources": [{
         "name": "VodoopskrbaVod",
         "path": "Vodoopskrba/Vod",
