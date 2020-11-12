@@ -3,14 +3,14 @@ import regeneratorRuntime from "regenerator-runtime";
 import git from "isomorphic-git"
 import http from "isomorphic-git/http/web"
 import fs from "@isomorphic-git/lightning-fs";
-
+//vc.getFile("https://github.com/AlenKelemen/test-json.git", "/test-json",'db.json')
 export default class VersionControl {
   constructor(path) {
     this.fs = new fs(path)
     this.corsProxy = "https://cors.isomorphic-git.org";
   }
 
-  async getFile(url, dir) {
+  async getFile(url, dir,db) {
     const config =  {
       fs: this.fs,
       http: http,
@@ -20,7 +20,7 @@ export default class VersionControl {
     };
 
     await git.clone(config);
-    const dbFile = await this.fs.promises.readFile("/test-json/db.json");
+    const dbFile = await this.fs.promises.readFile(dir + '/' + db);
     const geoJSONString = new TextDecoder().decode(dbFile);
     
     return JSON.parse(geoJSONString);
