@@ -9,7 +9,6 @@ export default class VersionControl {
     this.fs = new fs(path)
     this.corsProxy = "https://cors.isomorphic-git.org";
   }
-
   async getFile(url, dir,db) {
     const config =  {
       fs: this.fs,
@@ -22,7 +21,6 @@ export default class VersionControl {
     await git.clone(config);
     const dbFile = await this.fs.promises.readFile(dir + '/' + db);
     const geoJSONString = new TextDecoder().decode(dbFile);
-    
     return JSON.parse(geoJSONString);
   }
 
