@@ -16,6 +16,7 @@ import proj4 from 'proj4';
 import baseDef from './def.json';
 import Container from './src/container';
 import DefLayers from './src/defLayers';
+import DefEditor from './src/defEditor';
 
 
 if (localStorage.getItem('def') === null) localStorage.setItem('def', JSON.stringify(baseDef));
@@ -61,6 +62,9 @@ actionbar.addControl(new Rotate({
 const statusbar = new Container({
     className: 'statusbar'
 });
+actionbar.addControl(new DefEditor({
+    def:def
+}));
 map.addControl(statusbar);
 statusbar.addControl(new ScaleLine());
 const defLayers = new DefLayers({

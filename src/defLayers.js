@@ -67,7 +67,7 @@ export default class DefLayers {
             if (this.map) this.map.addLayer(layer);
         }
     }
-    getVectorLayers() {
+    getVectorLayers() {//get 'geojson' layers from def
         const r = [];
         for (const [i, l] of this.def.layers.entries()) {
             const source = this.def.sources.find(x => x.name === l.source);
@@ -98,7 +98,7 @@ export default class DefLayers {
             const layer = new VectorLayer(base);
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
-                    vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json/blob/master','vodovodOmis/' + l.name + '.json')
+                    vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json/blob/master', 'vodovodOmis/' + l.name + '.json')
                         .then(r => {
                             const features = new GeoJSON({
                                 dataProjection: 'EPSG:4326',
@@ -110,12 +110,23 @@ export default class DefLayers {
                 }
             });
             layer.setSource(source);
-//add style
+            //add style
             if (l.style) layer.setStyle(makeStyle(l.style));
             layer.getSource().set('def', s);
             if (this.map) this.map.addLayer(layer);
         }
 
+    }
+    removeVectorLayers() {// remove 'geojson' layers defined in def from map
+        for (const [i, l] of this.getVectorLayers().entries()) {
+            this.map.removeLayer(this.map.getLayers().getArray().find(x => x.get('name') === l.name));
+        }
+    }
+    setStyle(){// set style from def to named layers 
+        if (l.style) layer.setStyle(makeStyle(l.style));
+    }
+    setDef(def) {//change def
+        this.def = def;
     }
 
 }
