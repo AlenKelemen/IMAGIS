@@ -26,7 +26,7 @@ def.path = window.location.href.split('/').slice(0, -1).join('/'); //base url
 proj4.defs('EPSG:3765',
     '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 register(proj4);
-const mapContainer = document.createElement('div');
+const mapContainer = document.createElement('main');
 mapContainer.className = 'map';
 document.body.appendChild(mapContainer)
 const view = new View({
@@ -62,8 +62,8 @@ actionbar.addControl(new Rotate({
 const statusbar = new Container({
     className: 'statusbar'
 });
-actionbar.addControl(new DefEditor({
-    def:def
+sidebar.addControl(new DefEditor({
+    def: def
 }));
 map.addControl(statusbar);
 statusbar.addControl(new ScaleLine());
