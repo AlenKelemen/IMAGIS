@@ -18,6 +18,7 @@ import Container from './src/container';
 import DefLayers from './src/defLayers';
 
 const path = window.location.href.split('/').slice(0, -1).join('/'); //base url
+if(!localStorage.getItem('def')) localStorage.setItem('def',def);
 proj4.defs('EPSG:3765',
     '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 register(proj4);
