@@ -8,3 +8,36 @@
         font-size: 14px;
         line-height: 1.42857143;
     }
+    
+    .bar {
+        position: fixed;
+        background-color: aquamarine;
+    }
+    
+    .menu {
+        top: 0;
+    }
+    
+    .status {
+        bottom: 0;
+        width: 100%
+    }
+    
+    .status>div {
+        color: black;
+        border: 1px solid rgb(202, 36, 36);
+    }
+    
+    .action {
+        right: 0;
+        height: 100%;
+        color: black
+    }
+    
+    .side {
+        left: 0;
+    }
+    
+    side {
+        left: 0;
+    }
