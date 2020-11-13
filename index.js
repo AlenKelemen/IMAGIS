@@ -38,35 +38,47 @@ const view = new View({
         extent: [208311.05, 4614890.75, 724721.78, 5159767.36]
     })
 });
+
+const actionbar = new Container({
+    className: 'bar action'
+});
+const statusbar = new Container({
+    className: 'bar status'
+});
 window.map = new Map({
     target: mapContainer,
     view: view,
-    controls: []
+    controls: [
+        new Zoom({
+            target: actionbar.element
+        }),
+        new Rotate({
+            target: actionbar.element,
+            tipLabel: 'Sjever gore'
+        }),
+        new ScaleLine({
+            target: statusbar.element
+        })
+    ]
 });
+map.getControls().getArray().map(x => x.element.className = '');
+map.addControl(actionbar);
+map.addControl(statusbar);
 const menubar = new Container({
-    className: 'menubar'
+    className: 'bar menu'
 });
 map.addControl(menubar);
 const sidebar = new Container({
-    className: 'sidebar'
+    className: 'bar side'
 });
 map.addControl(sidebar);
-const actionbar = new Container({
-    className: 'actionbar'
-});
-map.addControl(actionbar);
-actionbar.addControl(new Zoom());
-actionbar.addControl(new Rotate({
-    tipLabel: 'Sjever gore'
-}));
-const statusbar = new Container({
-    className: 'statusbar'
-});
+
+
+
 sidebar.addControl(new DefEditor({
     def: def
 }));
-map.addControl(statusbar);
-statusbar.addControl(new ScaleLine());
+
 const defLayers = new DefLayers({
     def: def,
     map: map
