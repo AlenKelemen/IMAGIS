@@ -2,7 +2,8 @@ import Control from 'ol/control/Control';
 /** Container for controls
  * @constructor
  * @extends {ol_control_Control}
- * @param {Object=} options Control options.
+ * @param {Object} options Control options.
+ * @param {string[=div]} options.semantic semantic element ['nav','aside','footer']
  * @param {string[]} options.className clases to add to control
  * @param {boolean[=true]} options.visible initally visible
  */
@@ -10,7 +11,7 @@ import Control from 'ol/control/Control';
 export default class Container extends Control {
     constructor(options = {}) {
         super({
-            element: document.createElement('div')
+            element: document.createElement(options.semantic || 'div')
         });
         this.element.className = options.className || 'container'; // className
         this.controls_ = [];
@@ -38,26 +39,26 @@ export default class Container extends Control {
         this.getMap().removeControl(control);
     }
     getControls() {
-        return this.controls_;
-    }
-    /** Get active controls in a container
-     * @return {object []} active controls
-     */
-    getActiveControls() {
-        var active = [];
-        for (const control of this.controls_) {
-            if (control.getActive()) active.push(control);
+            return this.controls_;
         }
-        return active;
+        /** Get active controls in a container
+         * @return {object []} active controls
+         */
+    getActiveControls() {
+            var active = [];
+            for (const control of this.controls_) {
+                if (control.getActive()) active.push(control);
+            }
+            return active;
+        }
+        /** Deactivate all controls in a container
+         * @param {_ol_control_} except a control to keep active, if except == undefined all controls are deactivated
+         */
+    deactivateControls(except) {
+        for (const control of this.controls_) {
+            if (control !== except) {
+                if (control.getActive()) control.setActive(false);
+            }
+        }
     }
-     /** Deactivate all controls in a container
-      * @param {_ol_control_} except a control to keep active, if except == undefined all controls are deactivated
-      */
-     deactivateControls(except) {
-         for (const control of this.controls_) {
-             if (control !== except) {
-                 if (control.getActive()) control.setActive(false);
-             }
-         }
-     }
 }
