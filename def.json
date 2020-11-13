@@ -471,7 +471,7 @@
                 },
                 "text": {
                     "text": "DN",
-                    "resolution": [0, 5],
+                    "resolution": [0, 4],
                     "placement": "line",
                     "scale": 1.2
                 }
@@ -482,9 +482,9 @@
                     "operator": "<=",
                     "value": 250
                 },
-                "resolution": [0, 3],
+                "resolution": [0, 50],
                 "stroke": {
-                    "color": "red",
+                    "color": "blue",
                     "width": 1
                 },
                 "text": {
