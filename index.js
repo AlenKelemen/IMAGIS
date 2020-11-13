@@ -13,14 +13,15 @@ import {
 } from 'ol/proj/proj4.js';
 import proj4 from 'proj4';
 
-import def from './def.json';
+import baseDef from './def.json';
 import Container from './src/container';
 import DefLayers from './src/defLayers';
 
-const path = window.location.href.split('/').slice(0, -1).join('/'); //base url
-console.log(JSON.stringify(def))
-//if(!localStorage.getItem('def')) localStorage.setItem('def',JSON.stringify(def));
-//const def = JSON.parse(localStorage.getItem('def'));
+
+if (localStorage.getItem('def') === null) localStorage.setItem('def', JSON.stringify(baseDef));
+const def = JSON.parse(localStorage.getItem('def'));
+def.path = window.location.href.split('/').slice(0, -1).join('/'); //base url
+
 proj4.defs('EPSG:3765',
     '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 register(proj4);
@@ -64,7 +65,7 @@ map.addControl(statusbar);
 statusbar.addControl(new ScaleLine());
 const defLayers = new DefLayers({
     def: def,
-    map:map
+    map: map
 })
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
