@@ -61,7 +61,10 @@ window.map = new Map({
         })
     ]
 });
-map.getControls().getArray().map(x => x.element.className = '');
+map.getControls().getArray().map(x => {
+    x.element.className = '';
+    x.element.children
+});
 map.addControl(actionbar);
 map.addControl(statusbar);
 const menubar = new Container({
