@@ -9,35 +9,18 @@
         line-height: 1.42857143;
     }
     
-    .bar {
-        position: fixed;
-        background-color: aquamarine;
-    }
-    
-    .menu {
+    header {
         top: 0;
     }
     
-    .status {
+    footer {
         bottom: 0;
-        width: 100%
     }
     
-    .status>div {
-        color: black;
-        border: 1px solid rgb(202, 36, 36);
+    aside {
+        left: 0
     }
     
-    .action {
-        right: 0;
-        height: 100%;
-        color: black
-    }
-    
-    .side {
-        left: 0;
-    }
-    
-    side {
-        left: 0;
+    nav {
+        right: 0
     }

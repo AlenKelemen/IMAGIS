@@ -40,10 +40,10 @@ const view = new View({
 });
 
 const actionbar = new Container({
-    className: 'bar action'
+    semantic: 'nav'
 });
 const statusbar = new Container({
-    className: 'bar status'
+    semantic: 'footer'
 });
 window.map = new Map({
     target: mapContainer,
@@ -61,15 +61,15 @@ window.map = new Map({
         })
     ]
 });
-map.getControls().getArray().map(x => x.element.className = '');
+
 map.addControl(actionbar);
 map.addControl(statusbar);
 const menubar = new Container({
-    className: 'bar menu'
+    semantic: 'header'
 });
 map.addControl(menubar);
 const sidebar = new Container({
-    className: 'bar side'
+    semantic: 'aside'
 });
 map.addControl(sidebar);
 
