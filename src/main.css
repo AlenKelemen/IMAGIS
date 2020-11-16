@@ -1,26 +1,41 @@
-    * {
-        box-sizing: border-box;
-    }
-    
-    body {
-        margin: 0;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        line-height: 1.42857143;
-    }
-    
-    header {
-        top: 0;
-    }
-    
-    footer {
-        bottom: 0;
-    }
-    
-    aside {
-        left: 0
-    }
-    
-    nav {
-        right: 0
-    }
+        html {
+            box-sizing: border-box;
+            font-size: 80%;
+        }
+        
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            ;
+        }
+        
+        .ol-overlaycontainer-stopevent {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .ol-control,
+        .ol-scale-line,
+        .ol-rotate {
+            position: unset;
+        }
+        
+        header {
+            /*   height: 4rem;
+            width: 100%; */
+        }
+        
+        aside {
+            flex-grow: 1;
+            display: flex;
+            pointer-events: none!important;
+        }
+        
+        nav {
+            margin-left: auto;
+            height: fit-content;
+        }
+        
+        footer {
+            width: fit-content;
+        }

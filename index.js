@@ -38,50 +38,46 @@ const view = new View({
         extent: [208311.05, 4614890.75, 724721.78, 5159767.36]
     })
 });
-
-const actionbar = new Container({
-    semantic: 'nav'
+const header = new Container({ //menu
+    semantic: 'header'
 });
-const statusbar = new Container({
+const footer = new Container({ //status
     semantic: 'footer'
+});
+const aside = new Container({ // contaner for left & right side menus, taskpanes etc
+    semantic: 'aside'
+});
+const nav = new Container({ // side menu
+    semantic: 'nav'
 });
 window.map = new Map({
     target: mapContainer,
     view: view,
     controls: [
         new Zoom({
-            target: actionbar.element
+            target: nav.element
         }),
         new Rotate({
-            target: actionbar.element,
+            target: nav.element,
             tipLabel: 'Sjever gore'
         }),
         new ScaleLine({
-            target: statusbar.element
+            target: footer.element
         })
     ]
 });
+map.addControl(header);
+map.addControl(aside);
+map.addControl(footer);
 
-map.addControl(actionbar);
-map.addControl(statusbar);
-const menubar = new Container({
-    semantic: 'header'
-});
-map.addControl(menubar);
-const sidebar = new Container({
-    semantic: 'aside'
-});
-map.addControl(sidebar);
-
-
-
-sidebar.addControl(new DefEditor({
+aside.addControl(new DefEditor({
     def: def
 }));
+aside.addControl(nav);
 
 const defLayers = new DefLayers({
     def: def,
     map: map
-})
+});
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
