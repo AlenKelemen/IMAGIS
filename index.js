@@ -39,7 +39,8 @@ const view = new View({
     })
 });
 const header = new Container({ //menu
-    semantic: 'header'
+    semantic: 'header',
+    className:'ol-control'
 });
 const footer = new Container({ //status
     semantic: 'footer'
@@ -70,6 +71,7 @@ map.addControl(header);
 map.addControl(aside);
 map.addControl(footer);
 
+header.element.innerHTML = '<button>IMAGIS</button>'
 aside.addControl(new DefEditor({
     def: def
 }));
