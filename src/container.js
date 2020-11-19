@@ -3,7 +3,7 @@ import Control from 'ol/control/Control';
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object} options Control options.
- * @param {string[=div]} options.semantic semantic element ['nav','aside','footer','header','section']
+ * @param {string[=div]} options.semantic semantic element ['nav','aside','footer','header','section','span']
  * @param {string[]} options.className clases to add to control
  * @param {boolean[=true]} options.visible initally visible
  */

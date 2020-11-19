@@ -4,7 +4,7 @@
         
         body {
             margin: 0;
-            font-family: Verdana,sans-serif;
+            font-family: Verdana, sans-serif;
             font-size: 15px;
             line-height: 1.5;
         }
@@ -20,11 +20,9 @@
             position: unset;
         }
         
-        header {
-            width: 100%;
-            background-color:rgba(23,21,21,.56);
-            color:white;
-            padding: 8px 16px;
+        .ol-scale-line {
+            display: inline-block;
+            margin-right: 16px;
         }
         
         aside {
@@ -40,4 +38,15 @@
         
         footer {
             width: fit-content;
+            margin-left: 16px;
+        }
+        
+        .select-info {
+            vertical-align: bottom;
+            border-radius: 4px;
+            font-size: 14px;
+            padding: 2px;
+            margin-right: 16px;
+            color: #eee;
+            background: rgba(0, 60, 136, 0.3);
         }
