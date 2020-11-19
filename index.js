@@ -85,8 +85,15 @@ const select = new Select({
     className: 'select-info'
 });
 map.addInteraction(select);
-footer.addControl(select.info);
-nav.addControl(select.ui);
+select.addInfo(footer, { className: 'select-info' })
+select.addUI(nav, {
+    point: {
+        className: 'select-point',
+        html: '<i class="far fa-mouse-pointer"></i>',
+        title: 'Odaberi objekte'
+    }
+})
+
 
 
 

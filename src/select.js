@@ -11,6 +11,20 @@ export default class Select extends olSelect {
             multi: true // A boolean that determines if the default behaviour should select only single features or all (overlapping) features
         });
         this.setActive(options.active || false); // innitial
+    }
+    addUI(control, options = {}) {
+        this.ui = new Container({
+            className: 'ol-control'
+        });
+        control.addControl(this.ui);
+        this.selectPoint = new Toggle({
+            className: options.point.className || 'select-point',
+            html: options.point.html || '<i class="far fa-mouse-pointer"></i>',
+            tipLabel: options.point.title || 'Odaberi objekte'
+        })
+        this.ui.addControl(this.selectPoint);
+    }
+    addInfo(control, options) {
         this.info = new Control({
             element: document.createElement('span')
         })
@@ -19,13 +33,6 @@ export default class Select extends olSelect {
         this.on('select', evt => {
             this.info.element.innerHTML = 'Odabrano: ' + evt.target.getFeatures().getLength();
         });
-        this.ui = new Container({
-            className: 'select-container'
-        });
-        this.ui.addControl(new Toggle({
-            className: 'select-point ol-control',
-            html: '<i class="far fa-mouse-pointer"></i>',
-            tipLabel: 'Odaberi objekte'
-        }))
+        control.addControl(this.info);
     }
 }
