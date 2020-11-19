@@ -17,12 +17,16 @@ export default class Select extends olSelect {
             className: 'ol-control'
         });
         control.addControl(this.ui);
-        this.selectPoint = new Toggle({
+        this.point = new Toggle({
             className: options.point.className || 'select-point',
             html: options.point.html || '<i class="far fa-mouse-pointer"></i>',
-            tipLabel: options.point.title || 'Odaberi objekte'
+            tipLabel: options.point.title || 'Odaberi objekte',
+            handleClick: () => this.setActive(!this.getActive())
         })
-        this.ui.addControl(this.selectPoint);
+
+        this.ui.addControl(this.point);
+
+
     }
     addInfo(control, options) {
         this.info = new Control({
