@@ -21,9 +21,8 @@ export default class Select extends olSelect {
             className: options.point.className || 'select-point',
             html: options.point.html || '<i class="far fa-mouse-pointer"></i>',
             tipLabel: options.point.title || 'Odaberi objekte',
-            handleClick: () => this.setActive(!this.getActive())
-        })
-
+            handleClick: () => this.setActive(this.point.getActive())
+        });
         this.ui.addControl(this.point);
     }
     addInfo(control, options) {
