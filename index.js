@@ -92,14 +92,8 @@ select.addUI(nav, {
         html: '<i class="far fa-mouse-pointer"></i>',
         title: 'Odaberi objekte'
     }
-})
-
-
-
-
-
-
+});
 //scale line - last control, variying width
 footer.addControl(new ScaleLine({
     target: footer.element
-}))
+}));

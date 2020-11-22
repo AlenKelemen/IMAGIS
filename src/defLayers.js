@@ -67,7 +67,12 @@ export default class DefLayers {
             if (this.map) this.map.addLayer(layer);
         }
     }
-    getVectorLayers() {//get 'geojson' layers from def
+    removeTileLayers() { // remove 'osm', 'bing', 'wms' layers defined in def from map
+        for (const [i, l] of this.getTileLayers().entries()) {
+            this.map.removeLayer(this.map.getLayers().getArray().find(x => x.get('name') === l.name));
+        }
+    }
+    getVectorLayers() { //get 'geojson' layers from def
         const r = [];
         for (const [i, l] of this.def.layers.entries()) {
             const source = this.def.sources.find(x => x.name === l.source);
@@ -117,15 +122,15 @@ export default class DefLayers {
         }
 
     }
-    removeVectorLayers() {// remove 'geojson' layers defined in def from map
+    removeVectorLayers() { // remove 'geojson' layers defined in def from map
         for (const [i, l] of this.getVectorLayers().entries()) {
             this.map.removeLayer(this.map.getLayers().getArray().find(x => x.get('name') === l.name));
         }
     }
-    setStyle(){// set style from def to named layers 
+    setStyle() { // set style from def to named layers 
         if (l.style) layer.setStyle(makeStyle(l.style));
     }
-    setDef(def) {//change def
+    setDef(def) { //change def
         this.def = def;
     }
 
