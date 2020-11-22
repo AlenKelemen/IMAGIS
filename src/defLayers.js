@@ -133,5 +133,4 @@ export default class DefLayers {
     setDef(def) { //change def
         this.def = def;
     }
-
 }
