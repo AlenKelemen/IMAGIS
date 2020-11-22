@@ -25,8 +25,6 @@ export default class Select extends olSelect {
         })
 
         this.ui.addControl(this.point);
-
-
     }
     addInfo(control, options) {
         this.info = new Control({
