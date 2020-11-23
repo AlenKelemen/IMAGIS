@@ -15,7 +15,9 @@ export default class VersionControl {
             http: http,
             dir: dir,
             url: url,
-            corsProxy: this.corsProxy
+            corsProxy: this.corsProxy,
+            username: 'EDC-dev',
+            password: 'eatdrinkcelebrate',
         };
 
         await git.clone(config);
@@ -25,5 +27,13 @@ export default class VersionControl {
         const file = await this.fs.promises.readFile(path);
         const textFile = new TextDecoder().decode(file);
         return await JSON.parse(textFile);
+    }
+    async status(dir, filepath) {
+        const fileInfo = {
+            fs: this.fs,
+            dir: dir,
+            filepath: filepath,
+        };
+        return await git.status(fileInfo);
     }
 }

@@ -114,15 +114,6 @@ export default class DefLayers {
                             source.getFeatures().map(x => x.set('layer', layer));
                         })
                     });
-                    /* vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json/blob/master', 'vodovodOmis/' + l.name + '.json')
-                        .then(r => {
-                            const features = new GeoJSON({
-                                dataProjection: 'EPSG:4326',
-                                featureProjection: 'EPSG:3765'
-                            }).readFeatures(r);
-                            source.addFeatures(features);
-                            source.getFeatures().map(x => x.set('layer', layer));
-                        }); */
                 }
             });
             layer.setSource(source);
