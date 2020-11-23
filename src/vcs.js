@@ -17,7 +17,7 @@ export default class VersionControl {
             url: url,
             corsProxy: this.corsProxy,
             username: 'EDC-dev',
-            password: 'eatdrinkcelebrate',
+            password: 'MapGuide6.5',
         };
 
         await git.clone(config);
