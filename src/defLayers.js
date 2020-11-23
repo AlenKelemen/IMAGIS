@@ -84,6 +84,7 @@ export default class DefLayers {
     }
     addVectorLayers() {
         const vc = new VersionControl("fs");
+        const result = vc.clone("https://github.com/AlenKelemen/test-json.git", "/datas");
         for (const [i, l] of this.getVectorLayers().entries()) {
             const s = this.def.sources.find(x => x.name === l.source);
             const base = {
@@ -103,7 +104,17 @@ export default class DefLayers {
             const layer = new VectorLayer(base);
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
-                    vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json/blob/master', 'vodovodOmis/' + l.name + '.json')
+                    result.then(r => {
+                        vc.readFile('/datas/vodovodOmis/' + l.name + '.json').then(r => {
+                            const features = new GeoJSON({
+                                dataProjection: 'EPSG:4326',
+                                featureProjection: 'EPSG:3765'
+                            }).readFeatures(r);
+                            source.addFeatures(features);
+                            source.getFeatures().map(x => x.set('layer', layer));
+                        })
+                    });
+                    /* vc.getFile('https://github.com/AlenKelemen/test-json.git', '/test-json/blob/master', 'vodovodOmis/' + l.name + '.json')
                         .then(r => {
                             const features = new GeoJSON({
                                 dataProjection: 'EPSG:4326',
@@ -111,7 +122,7 @@ export default class DefLayers {
                             }).readFeatures(r);
                             source.addFeatures(features);
                             source.getFeatures().map(x => x.set('layer', layer));
-                        });
+                        }); */
                 }
             });
             layer.setSource(source);

@@ -9,7 +9,7 @@ export default class VersionControl {
         this.fs = new fs(path)
         this.corsProxy = "https://cors.isomorphic-git.org";
     }
-    async getFile(url, dir, db) {
+    async clone(url, dir) {
         const config = {
             fs: this.fs,
             http: http,
@@ -19,24 +19,11 @@ export default class VersionControl {
         };
 
         await git.clone(config);
-        const dbFile = await this.fs.promises.readFile(dir + '/' + db);
-        const geoJSONString = new TextDecoder().decode(dbFile);
-        return JSON.parse(geoJSONString);
+        return await this.fs.promises.readdir(dir);
     }
-
-    // TODO
-    async updateFile(url, dir) {
-        await git.add({ fs, dir, filepath: '.' })
-        await git.commit({ fs, dir, author: commit.author, message: commit.message })
-        await git.push({
-            http,
-            fs,
-            dir,
-            onAuth: () => ({
-                oauth2format: 'github',
-                token: process.env.GITHUB_TOKEN,
-            }),
-        });
+    async readFile(path) {
+        const file = await this.fs.promises.readFile(path);
+        const textFile = new TextDecoder().decode(file);
+        return await JSON.parse(textFile);
     }
-
 }
