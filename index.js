@@ -20,7 +20,6 @@ import Select from './src/select';
 //local project def
 if (localStorage.getItem('def') === null) localStorage.setItem('def', JSON.stringify(baseDef));
 const def = JSON.parse(localStorage.getItem('def'));
-def.path = window.location.href.split('/').slice(0, -1).join('/'); //base url
 //UX
 const mapContainer = document.createElement('main');
 mapContainer.className = 'map';

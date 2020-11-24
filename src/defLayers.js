@@ -20,6 +20,7 @@ export default class DefLayers {
     constructor(options = {}) {
         this.def = options.def;
         this.map = options.map;
+        this.localFolder = '/datas';
     }
     getTileLayers() {
         const r = [];
@@ -84,7 +85,7 @@ export default class DefLayers {
     }
     addVectorLayers() {
         const vc = new VersionControl("fs");
-        const result = vc.clone("https://github.com/AlenKelemen/test-json.git", "/datas");
+        const result = vc.clone(this.def.gitPath, this.localFolder);
         for (const [i, l] of this.getVectorLayers().entries()) {
             const s = this.def.sources.find(x => x.name === l.source);
             const base = {
@@ -105,7 +106,7 @@ export default class DefLayers {
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
                     result.then(r => {
-                        vc.readFile('/datas/vodovodOmis/' + l.name + '.json').then(r => {
+                        vc.readFile(this.localFolder + '/' + this.def.path + '/' + l.name + '.json').then(r => {
                             const features = new GeoJSON({
                                 dataProjection: 'EPSG:4326',
                                 featureProjection: 'EPSG:3765'
