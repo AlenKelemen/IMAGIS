@@ -2,5 +2,9 @@
     "editor.autoIndent": "none",
     "editor.autoClosingQuotes": "never",
     "editor.autoClosingOvertype": "never",
-    "editor.autoClosingBrackets": "never"
+    "editor.autoClosingBrackets": "never",
+    "editor.autoSurround": "never",
+    "editor.accessibilitySupport": "off",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.renderSideBySide": false
 }

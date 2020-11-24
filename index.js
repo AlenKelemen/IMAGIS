@@ -70,6 +70,7 @@ const defLayers = new DefLayers({
 });
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
+defLayers.addTHLayers();
 //geolocate
 const geolocator = new Geolocator({
     map: map,
