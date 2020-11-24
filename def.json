@@ -1,5 +1,7 @@
 {
     "project": "Vodovod Omiš",
+    "gitPath": "https: //github.com/AlenKelemen/IMAGIS-data.git",
+    "path": "vodovodOmis",
     "center": [535420.4693824024, 4814471.358589062],
     "zoom": 5.7,
     "sources": [{
