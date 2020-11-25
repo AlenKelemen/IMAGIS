@@ -20,10 +20,20 @@ import Select from './src/select';
 //local project def
 if (localStorage.getItem('def') === null) localStorage.setItem('def', JSON.stringify(baseDef));
 const def = JSON.parse(localStorage.getItem('def'));
-//UX
+// ol/map
 const mapContainer = document.createElement('main');
 mapContainer.className = 'map';
 document.body.appendChild(mapContainer)
+window.map = new Map({
+    target: mapContainer,
+    view: new View({
+        center: def.center,
+        zoom: def.zoom,
+        projection: new epsg3765()
+    }),
+    controls: []
+});
+//UX
 const header = new Container({ //menu
     semantic: 'header',
     className: 'ol-control'
@@ -37,33 +47,18 @@ const aside = new Container({ // contaner for left & right side menus, taskpanes
 const nav = new Container({ // side menu
     semantic: 'nav'
 });
-// ol/map
-window.map = new Map({
-    target: mapContainer,
-    view: new View({
-        center: def.center,
-        zoom: def.zoom,
-        projection: new epsg3765()
-    }),
-    controls: [
-        new Zoom({
-            target: nav.element
-        }),
-        new Rotate({
-            target: nav.element,
-            tipLabel: 'Sjever gore'
-        })
-    ]
-});
-//map.addControl(header);
+map.addControl(header);
 map.addControl(aside);
 map.addControl(footer);
-
-aside.addControl(new DefEditor({
-    def: def
+nav.addControl(new Zoom());
+nav.addControl(new Rotate({
+    tipLabel: 'Sjever gore'
 }));
+/* aside.addControl(new DefEditor({
+    def: def
+})); */
 aside.addControl(nav);
-
+//layers as defined in def.json
 const defLayers = new DefLayers({
     def: def,
     map: map

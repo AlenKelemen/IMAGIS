@@ -517,7 +517,7 @@
             "info": "",
             "maxResolution": 500,
             "visible": true,
-            "zIndex": 100,
+            "zIndex": 1000,
             "style": [{
                 "icon": {
                     "src": "th",

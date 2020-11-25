@@ -37,6 +37,7 @@ export default class DefLayers {
     addTHLayers() {
         for (const [i, l] of this.getTHLayers().entries()) {
             const s = this.def.sources.find(x => x.name === l.source);
+            console.log(s)
             const base = {
                 maxResolution: l.maxResolution,
                 minResolution: l.minResolution,
