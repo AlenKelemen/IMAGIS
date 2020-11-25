@@ -16,6 +16,7 @@ import DefLayers from './src/defLayers';
 import DefEditor from './src/defEditor';
 import Geolocator from './src/geoloc';
 import Select from './src/select';
+import Legend from './src/legend';
 
 //local project def
 if (localStorage.getItem('def') === null) localStorage.setItem('def', JSON.stringify(baseDef));
@@ -44,23 +45,31 @@ const footer = new Container({ //status
 const aside = new Container({ // contaner for left & right side menus, taskpanes etc
     semantic: 'aside'
 });
-const nav = new Container({ // side menu
-    semantic: 'nav'
+const navRight = new Container({ // side menu right
+    semantic: 'nav',
+    className: 'nav-right'
 });
+const navLeft = new Container({ // side menu left
+    semantic: 'nav',
+    className: 'ol-control nav-left'
+});
+
 //map.addControl(header);
 map.addControl(aside);
 map.addControl(footer);
-/* aside.addControl(new DefEditor({
-    def: def
-})); */
-aside.addControl(nav);
 
-
-nav.addControl(new Zoom({}));
-nav.addControl(new Rotate({
+aside.addControl(navLeft);
+aside.addControl(navRight);
+navRight.addControl(new Zoom({}));
+navRight.addControl(new Rotate({
     tipLabel: 'Sjever gore'
 }));
-
+const legend = new Legend({
+    className: 'legend',
+    html: '<i class="far fa-layer-group"></i>',
+    tipLabel: 'Legenda'
+});
+navLeft.addControl(legend);
 //layers as defined in def.json
 const defLayers = new DefLayers({
     def: def,
@@ -69,6 +78,12 @@ const defLayers = new DefLayers({
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
 defLayers.addTHLayers();
+
+/* navLeft.addControl(new DefEditor({
+    def: def
+})); */
+
+
 //geolocate
 const geolocator = new Geolocator({
     map: map,
@@ -76,7 +91,7 @@ const geolocator = new Geolocator({
     html: '<i class="far fa-map-marker-alt"></i>',
     tipLabel: 'Pokaži moju lokaciju'
 });
-nav.addControl(geolocator);
+navRight.addControl(geolocator);
 //select
 const select = new Select({
     active: true,
@@ -84,7 +99,7 @@ const select = new Select({
 });
 map.addInteraction(select);
 select.addInfo(footer, { className: 'select-info' })
-select.addUI(nav, {
+select.addUI(navRight, {
     point: {
         className: 'select-point',
         html: '<i class="far fa-mouse-pointer"></i>',

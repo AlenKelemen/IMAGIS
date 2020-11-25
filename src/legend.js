@@ -8,17 +8,49 @@ import Control from 'ol/control/Control';
 export default class Legend extends Control {
     constructor(options = {}) {
         super({
-            element: document.createElement('div')
+            element: document.createElement('span')
         });
-        this.element.className = options.className || 'legend'; //
-    }
-    addButton(options = {}) {
+        this.element.className = options.className; //
         this.button = document.createElement('button');
+        this.button.style.display = 'inline-block';
         this.button.innerHTML = options.html || ''; //
         this.button.title = options.tipLabel; //
         this.button.addEventListener('click', evt => {
             this.setActive(!this.getActive());
         });
-        this.element.appendChild(this.button);
+        this.content = document.createElement('span');
+        this.content.style.cssText = `display:none;`;
+this.element.appendChild(this.button);
+        this.element.appendChild(this.content);
+        
     }
+    legend_() {
+        //in legend one can change layer opacitiy, visibility, zIndex, active property
+        const list = document.createElement('span');
+        list.className = 'legend-items';
+        list.innerText = 'sdfvafdvfdasbvrefgsbgfsbgrbgfbrgbgfbgfbgr'
+        this.content.appendChild(list);
+    }
+    setActive(b) {
+        this.content.style.display = b ? 'inline-block' : 'none';
+        if (this.content.innerHTML === '') this.legend_();
+        if (this.getActive() == b) return;
+        if (b) {
+            this.button.classList.add('active');
+            if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
+        } else this.button.classList.remove('active');
+        this.dispatchEvent({
+            type: 'change:active',
+            key: 'active',
+            oldValue: !b,
+            active: b
+        });
+    }
+    getActive() {
+        return this.button.classList.contains('active');
+    }
+    getParent() {
+        if (this.get('parent')) return this.get('parent');
+    }
+
 }
