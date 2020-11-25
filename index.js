@@ -47,17 +47,20 @@ const aside = new Container({ // contaner for left & right side menus, taskpanes
 const nav = new Container({ // side menu
     semantic: 'nav'
 });
-map.addControl(header);
+//map.addControl(header);
 map.addControl(aside);
 map.addControl(footer);
-nav.addControl(new Zoom());
-nav.addControl(new Rotate({
-    tipLabel: 'Sjever gore'
-}));
 /* aside.addControl(new DefEditor({
     def: def
 })); */
 aside.addControl(nav);
+
+
+nav.addControl(new Zoom({}));
+nav.addControl(new Rotate({
+    tipLabel: 'Sjever gore'
+}));
+
 //layers as defined in def.json
 const defLayers = new DefLayers({
     def: def,
