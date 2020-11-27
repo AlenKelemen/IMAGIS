@@ -75,6 +75,7 @@
                     nav.nav-left {
                         height: fit-content;
                         margin: 0.5em 0.5em 0.5em 0.5em;
+                        position: relative;
                     }
                     
                     footer {
@@ -98,7 +99,12 @@
                         background: rgba(0, 60, 136, 0.3);
                     }
                     
-                    .legend {
-                        margin: 0;
-                        
+                    .legend span {
+                        position: absolute;
+                        top: 0;
+                        padding-left: 0.5em
+                    }
+                    
+                    .legend button {
+                        display: inline-block;
                     }

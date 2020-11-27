@@ -8,27 +8,27 @@ import Control from 'ol/control/Control';
 export default class Legend extends Control {
     constructor(options = {}) {
         super({
-            element: document.createElement('span')
+            element: document.createElement('div')
         });
         this.element.className = options.className; //
         this.button = document.createElement('button');
-        this.button.style.display = 'inline-block';
         this.button.innerHTML = options.html || ''; //
         this.button.title = options.tipLabel; //
         this.button.addEventListener('click', evt => {
             this.setActive(!this.getActive());
         });
         this.content = document.createElement('span');
-        this.content.style.cssText = `display:none;`;
-this.element.appendChild(this.button);
+        this.element.appendChild(this.button);
         this.element.appendChild(this.content);
-        
+
     }
     legend_() {
         //in legend one can change layer opacitiy, visibility, zIndex, active property
         const list = document.createElement('span');
         list.className = 'legend-items';
+//
         list.innerText = 'sdfvafdvfdasbvrefgsbgfsbgrbgfbrgbgfbgfbgr'
+//
         this.content.appendChild(list);
     }
     setActive(b) {

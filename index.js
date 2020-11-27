@@ -70,6 +70,16 @@ const legend = new Legend({
     tipLabel: 'Legenda'
 });
 navLeft.addControl(legend);
+
+//
+const legend1 = new Legend({
+    className: 'legend',
+    html: '<i class="far fa-layer-group"></i>',
+    tipLabel: 'Legenda'
+});
+navLeft.addControl(legend1);
+//
+
 //layers as defined in def.json
 const defLayers = new DefLayers({
     def: def,
