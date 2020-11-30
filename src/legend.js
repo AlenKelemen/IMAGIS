@@ -20,15 +20,14 @@ export default class Legend extends Control {
         this.content = document.createElement('span');
         this.element.appendChild(this.button);
         this.element.appendChild(this.content);
-
     }
     legend_() {
         //in legend one can change layer opacitiy, visibility, zIndex, active property
         const list = document.createElement('span');
-        list.className = 'legend-items';
-//
+        list.className = 'ol-control legend-items';
+        //
         list.innerText = 'sdfvafdvfdasbvrefgsbgfsbgrbgfbrgbgfbgfbgr'
-//
+            //
         this.content.appendChild(list);
     }
     setActive(b) {
