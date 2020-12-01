@@ -1,4 +1,5 @@
 import Control from 'ol/control/Control';
+import Sortable from 'sortablejs';
 /** Container for controls
  * @constructor
  * @extends {ol_control_Control}
@@ -26,9 +27,11 @@ export default class Legend extends Control {
         const list = document.createElement('span');
         list.className = 'ol-control legend-items';
         //
-        list.innerText = 'sdfvafdvfdasbvrefgsbgfsbgrbgfbrgbgfbgfbgr'
+        list.innerText = 'sadržaj legende'
             //
         this.content.appendChild(list);
+        const ls = this.getMap().getLayers().getArray().sort((a, b) => (a.getZIndex() > b.getZIndex()) ? 1 : -1).reverse(); //sort layers by index
+        console.log(ls);
     }
     setActive(b) {
         this.content.style.display = b ? 'inline-block' : 'none';

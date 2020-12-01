@@ -391,7 +391,7 @@
             "name": "OSM",
             "label": "Open Street Map",
             "info": "",
-            "visible": true,
+            "visible": false,
             "opacity": 0.7
         },
         {
