@@ -51,7 +51,7 @@ const navRight = new Container({ // side menu right
 });
 const navLeft = new Container({ // side menu left
     semantic: 'nav',
-    className: 'ol-control nav-left'
+    className: 'nav-left'
 });
 
 //map.addControl(header);

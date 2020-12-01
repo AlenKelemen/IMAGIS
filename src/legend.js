@@ -14,26 +14,29 @@ export default class Legend extends Control {
             element: document.createElement('div')
         });
         this.element.className = options.className; //
+        this.buttonControl = document.createElement('div');
+        this.buttonControl.className = 'ol-control';
+
         this.button = document.createElement('button');
         this.button.innerHTML = options.html || ''; //
         this.button.title = options.tipLabel; //
         this.button.addEventListener('click', evt => {
             this.setActive(!this.getActive());
         });
-        this.content = document.createElement('span');
+        this.content = document.createElement('div');
+        this.content.className = 'content';
         this.element.appendChild(this.button);
         this.element.appendChild(this.content);
     }
     legend_() {
         //in legend one can change layer opacitiy, visibility, zIndex, active property
-        const list = document.createElement('span');
+        const list = document.createElement('div');
         list.className = 'ol-control legend-items';
-        list.innerHTML = '<div>eofjoewpfjwpeof</div><div>reerertertetretrer</div>';
         this.content.appendChild(list);
         const ls = this.getMap().getLayers().getArray().sort((a, b) => (a.getZIndex() > b.getZIndex()) ? 1 : -1).reverse(); //sort layers by index
         for (const [i, l] of ls.entries()) {
             const item = document.createElement('div');
-            //list.appendChild(item);
+            list.appendChild(item);
             item.id = l.get('name') || 'sloj ' + i;
             l.set('name', item.id);
             item.innerHTML = `
@@ -116,7 +119,7 @@ export default class Legend extends Control {
                     l.get('def').visible = evt.target.getVisible() === undefined ? true : evt.target.getVisible();
                     l.get('def').opacity = evt.target.getOpacity() === undefined ? 1 : evt.target.getOpacity();
                     l.get('def').active = evt.target.get('active') === undefined ? false : evt.target.get('active');
-                    localStorage.setItem('def', JSON.stringify(this.getMap().get('def')));
+                    //localStorage.setItem('def', JSON.stringify(this.getMap().get('def')));
                 });
             }
         }
