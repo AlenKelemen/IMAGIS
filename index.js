@@ -70,16 +70,6 @@ const legend = new Legend({
     tipLabel: 'Legenda'
 });
 navLeft.addControl(legend);
-
-//
-const legend1 = new Legend({
-    className: 'legend',
-    html: '<i class="far fa-layer-group"></i>',
-    tipLabel: 'Legenda'
-});
-navLeft.addControl(legend1);
-//
-
 //layers as defined in def.json
 const defLayers = new DefLayers({
     def: def,
@@ -88,12 +78,9 @@ const defLayers = new DefLayers({
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
 defLayers.addTHLayers();
-
 /* navLeft.addControl(new DefEditor({
     def: def
 })); */
-
-
 //geolocate
 const geolocator = new Geolocator({
     map: map,
@@ -108,7 +95,7 @@ const select = new Select({
     className: 'select-info'
 });
 map.addInteraction(select);
-select.addInfo(footer, { className: 'select-info' })
+select.addInfo(footer, { className: 'select-info' });
 select.addUI(navRight, {
     point: {
         className: 'select-point',
