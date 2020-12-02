@@ -66,6 +66,7 @@ navRight.addControl(new Rotate({
 }));
 const legend = new Legend({
     className: 'legend',
+    buttonControlClassName: 'ol-control',
     html: '<i class="far fa-layer-group"></i>',
     tipLabel: 'Legenda'
 });

@@ -75,7 +75,6 @@
                             nav.nav-left {
                                 height: fit-content;
                                 margin: 0.5em 0.5em 0.5em 0.5em;
-                                position: relative;
                             }
                             
                             footer {
@@ -100,9 +99,9 @@
                             }
                             
                             .legend {
-                                display: flex;
+                                position: relative;
                             }
                             
                             .legend .content {
-                                padding-left: 0.5em;
+                                position: absolute;
                             }

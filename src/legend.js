@@ -7,6 +7,7 @@ const images = require('../img/*.gif');
  * @extends {ol_control_Control}
  * @param {Object} options Control options.
  * @param {string[='legend']} options.className 
+ * @param {string} options.buttonControlClassName 
  */
 export default class Legend extends Control {
     constructor(options = {}) {
@@ -15,8 +16,7 @@ export default class Legend extends Control {
         });
         this.element.className = options.className; //
         this.buttonControl = document.createElement('div');
-        this.buttonControl.className = 'ol-control';
-
+        this.buttonControl.className = options.buttonControlClassName; //
         this.button = document.createElement('button');
         this.button.innerHTML = options.html || ''; //
         this.button.title = options.tipLabel; //
@@ -25,7 +25,8 @@ export default class Legend extends Control {
         });
         this.content = document.createElement('div');
         this.content.className = 'content';
-        this.element.appendChild(this.button);
+        this.buttonControl.appendChild(this.button);
+        this.element.appendChild(this.buttonControl);
         this.element.appendChild(this.content);
     }
     legend_() {
