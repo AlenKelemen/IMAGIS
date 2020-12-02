@@ -17,6 +17,7 @@ export default class Legend extends Control {
         this.element.className = options.className; //
         this.buttonControl = document.createElement('div');
         this.buttonControl.className = options.buttonControlClassName; //
+        this.buttonControl.style.display = 'inline-block';
         this.button = document.createElement('button');
         this.button.innerHTML = options.html || ''; //
         this.button.title = options.tipLabel; //

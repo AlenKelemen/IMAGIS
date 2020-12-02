@@ -103,5 +103,6 @@
                             }
                             
                             .legend .content {
+                                display: inline-block;
                                 position: absolute;
                             }
