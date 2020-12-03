@@ -56,7 +56,11 @@ const navRight = new Container({
 const navLeft = new Container({
   // side menu left
   semantic: "nav",
-  className: "nav-left"
+  className: "nav-left ol-control"
+});
+const taskpane = new Container({
+//taskpane on left
+  className: "taskpane-left"
 });
 
 //map.addControl(header);
@@ -64,7 +68,9 @@ map.addControl(aside);
 map.addControl(footer);
 
 aside.addControl(navLeft);
+aside.addControl(taskpane);
 aside.addControl(navRight);
+
 navRight.addControl(new Zoom({}));
 navRight.addControl(
   new Rotate({
@@ -73,12 +79,11 @@ navRight.addControl(
 );
 const legend = new Legend({
   className: "legend",
-  buttonControlClassName: "ol-control",
   html: '<i class="far fa-layer-group"></i>',
   tipLabel: "Legenda",
-  target: navLeft.element
+target:taskpane.element
 });
-aside.addControl(legend);
+navLeft.addControl(legend);
 //layers as defined in def.json
 const defLayers = new DefLayers({
   def: def,

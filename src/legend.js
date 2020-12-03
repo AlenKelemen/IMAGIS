@@ -6,34 +6,43 @@ const images = require("../img/*.gif");
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object} options Control options.
- * @param {string[='legend']} options.className
- * @param {string} options.buttonControlClassName
+ * @param {string} options.className
+ * @param {string} options.tipLabel html title of the control
+ * @param {string} options.html html to insert in the control
+ * @param {html element} options.target target element to insert legend dialog
+ * @param {function} options.handleClick callback when control is clicked
+ 
  */
 export default class Legend extends Control {
   constructor(options = {}) {
     super({
-      element: document.createElement("div")
+      element: document.createElement("button")
     });
-    this.element.className = "legend";
+    this.element.className = options.className; //
+    this.element.innerHTML = options.html; //
+    this.element.title = options.tipLabel; //
+
+    //legend dialog
     this.content = document.createElement("div");
-    this.content.className = "content";
-    this.element.appendChild(this.content);
-    const control = document.createElement("div");
-    control.className = options.className; //
-    const button = document.createElement("button");
-    button.innerHTML = options.html; //
-    button.title = options.tipLabel; //
-    button.addEventListener("click", evt => {
-      this.setActive(!this.getActive());
-    });
-    control.appendChild(button);
-    options.target.appendChild(control); // target element
+    this.content.className = "legend";
+    if (options.target) options.target.appendChild(this.content);
+
+    const evtFunction = evt => {
+      if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls
+      if (evt && evt.preventDefault) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.setActive(!this.getActive());
+        if (options.handleClick) options.handleClick.call(this, evt);
+      }
+    };
+    this.element.addEventListener("click", evtFunction);
   }
 
   legend_() {
     //in legend one can change layer opacitiy, visibility, zIndex, active property
     const list = document.createElement("div");
-    list.className = "ol-control legend-items";
+    list.className = "legend-items";
     this.content.appendChild(list);
     const ls = this.getMap()
       .getLayers()
@@ -175,9 +184,13 @@ export default class Legend extends Control {
     if (this.content.innerHTML === "") this.legend_();
     if (this.getActive() == b) return;
     if (b) {
+      this.content.classList.add("active");
       this.element.classList.add("active");
       if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
-    } else this.element.classList.remove("active");
+    } else {
+      this.content.classList.remove("active");
+      this.element.classList.remove("active");
+    }
     this.dispatchEvent({
       type: "change:active",
       key: "active",
