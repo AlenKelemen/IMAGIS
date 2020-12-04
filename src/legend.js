@@ -23,11 +23,21 @@ export default class Legend extends Control {
     this.element.title = options.tipLabel; //
 
     //legend dialog
-    this.content = document.createElement("div");
-    this.content.className = "legend";
-    if (options.target) options.target.appendChild(this.content);
+    this.content = new Control({
+      element: document.createElement("div")
+    });
+    this.content.element.className =
+      options.dialogClassName || "legend ol-control";
 
     const evtFunction = evt => {
+      if (
+        // add connent control to map only on first click
+        this.getMap()
+          .getControls()
+          .getArray()
+          .find(x => x === this.content) === undefined
+      )
+        this.getMap().addControl(this.content);
       if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls
       if (evt && evt.preventDefault) {
         evt.preventDefault();
@@ -43,7 +53,7 @@ export default class Legend extends Control {
     //in legend one can change layer opacitiy, visibility, zIndex, active property
     const list = document.createElement("div");
     list.className = "legend-items";
-    this.content.appendChild(list);
+    this.content.element.appendChild(list);
     const ls = this.getMap()
       .getLayers()
       .getArray()
@@ -181,14 +191,14 @@ export default class Legend extends Control {
     });
   }
   setActive(b) {
-    if (this.content.innerHTML === "") this.legend_();
+    if (this.content.element.innerHTML === "") this.legend_();
     if (this.getActive() == b) return;
     if (b) {
-      this.content.classList.add("active");
+      this.content.element.classList.add("active");
       this.element.classList.add("active");
       if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
     } else {
-      this.content.classList.remove("active");
+      this.content.element.classList.remove("active");
       this.element.classList.remove("active");
     }
     this.dispatchEvent({

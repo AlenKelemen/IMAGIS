@@ -9,13 +9,6 @@ body {
   line-height: 1.42857143;
 }
 
-label {
-  display: inline-block;
-  max-width: 100%;
-  margin-bottom: 5px;
-  font-weight: 700;
-}
-
 button {
   font-weight: 400;
   cursor: pointer;
@@ -28,81 +21,79 @@ button.active {
   background-color: rgba(0, 136, 105, 0.6);
 }
 
-.ol-box {
-  box-sizing: border-box;
-  border-radius: 2px;
-  border: 3px solid #3399cc;
-}
-
 .ol-control button.active:hover,
 .ol-control button.active:focus {
   text-decoration: none;
   background-color: rgba(0, 136, 105, 0.8);
 }
-
-.ol-overlaycontainer-stopevent {
-  display: flex;
-  flex-direction: column;
-}
-
-.ol-control,
-.ol-scale-line,
-.ol-rotate {
-  position: static;
-}
-
-.ol-scale-line {
+label {
   display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 700;
 }
-
-header {
-  display: inline-block;
-  width: 100%;
-  height: 2em;
+.ol-box {
+  box-sizing: border-box;
+  border-radius: 2px;
+  border: 3px solid #3399cc;
 }
-
-aside {
-  flex-grow: 1;
-  display: flex;
-  pointer-events: none !important;
-}
-
-nav.nav-right {
-  height: fit-content;
-  margin: 0.5em 0.5em 0.5em auto;
-}
-
-nav.nav-left,
-nav.taskpane-left {
-  height: fit-content;
-  margin: 0.5em 0.5em 0.5em 0.5em;
-}
-
-footer {
-  width: fit-content;
-  margin: 0.5em 0.3em 0.5em 0.3em;
-}
-
-footer div,
-footer span {
-  margin-left: 0.1em;
-  margin-right: 0.1em;
-}
-
-.select-info {
-  display: inline-block;
-  vertical-align: bottom;
+.ol-control {
+  /* position: absolute;
+  background: rgba(0, 60, 136, 0.6);
   border-radius: 4px;
-  font-size: 12px;
-  padding: 2px;
-  color: #eee;
-  background: rgba(0, 60, 136, 0.3);
+  padding: 2px; */
 }
-
+.ol-zoom {
+  right: 0.5em;
+  left: auto;
+}
+.ol-rotate {
+  left: auto;
+  right: 3em;
+}
+.ol-scale-line {
+  right: 0.5em;
+  left: auto;
+  background: rgba(0, 60, 136, 0.6);
+}
+.geolocator {
+  top: 4.13em;
+  right: 0.5em;
+  left: auto;
+}
+.select {
+  top: 6.13em;
+  right: 0.5em;
+  left: auto;
+}
+.select-info {
+  position: absolute;
+  left: 0.5em;
+  bottom: 0.5em;
+  border-radius: 4px;
+  padding: 2px;
+  overflow-x: auto;
+  max-width: 15em;
+  background: rgba(0, 60, 136, 0.6);
+  color: #eee;
+}
+.nav-left {
+  left: 0.5em;
+  top: 0.5em;
+}
 .legend {
   display: none;
+  position: absolute;
+  left: 3em;
+  top: 0.5em;
+  bottom: 2.9em;
+  border-radius: 4px;
+  padding: 2px;
+  overflow-y: auto;
+  max-width: 20em;
+  background: rgba(0, 60, 136, 0.6);
+  color: #eee;
 }
-
 .legend.active {
   display: block;
 }

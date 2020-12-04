@@ -32,58 +32,14 @@ window.map = new Map({
     zoom: def.zoom,
     projection: new epsg3765()
   }),
-  controls: []
+  controls: [
+    new Zoom(),
+    new Rotate({
+      tipLabel: "Sjever gore"
+    }),
+    new ScaleLine()
+  ]
 });
-//UX
-const header = new Container({
-  //menu
-  semantic: "header",
-  className: "ol-control"
-});
-const footer = new Container({
-  //status
-  semantic: "footer"
-});
-const aside = new Container({
-  // contaner for left & right side menus, taskpanes etc
-  semantic: "aside"
-});
-const navRight = new Container({
-  // side menu right
-  semantic: "nav",
-  className: "nav-right"
-});
-const navLeft = new Container({
-  // side menu left
-  semantic: "nav",
-  className: "nav-left ol-control"
-});
-const taskpane = new Container({
-//taskpane on left
-  className: "taskpane-left"
-});
-
-//map.addControl(header);
-map.addControl(aside);
-map.addControl(footer);
-
-aside.addControl(navLeft);
-aside.addControl(taskpane);
-aside.addControl(navRight);
-
-navRight.addControl(new Zoom({}));
-navRight.addControl(
-  new Rotate({
-    tipLabel: "Sjever gore"
-  })
-);
-const legend = new Legend({
-  className: "legend",
-  html: '<i class="far fa-layer-group"></i>',
-  tipLabel: "Legenda",
-target:taskpane.element
-});
-navLeft.addControl(legend);
 //layers as defined in def.json
 const defLayers = new DefLayers({
   def: def,
@@ -102,24 +58,32 @@ const geolocator = new Geolocator({
   html: '<i class="far fa-map-marker-alt"></i>',
   tipLabel: "Pokaži moju lokaciju"
 });
-navRight.addControl(geolocator);
+map.addControl(geolocator);
 //select
 const select = new Select({
   active: true,
   className: "select-info"
 });
 map.addInteraction(select);
-select.addInfo(footer, { className: "select-info" });
-select.addUI(navRight, {
+select.addInfo(map, { className: "select-info" });
+select.addUI(map, {
+  className: "ol-control select",
   point: {
     className: "select-point",
     html: '<i class="far fa-mouse-pointer"></i>',
     title: "Odaberi objekte"
   }
 });
-//scale line - last control, variying width
-footer.addControl(
-  new ScaleLine({
-    target: footer.element
-  })
-);
+//left controls
+const navLeft = new Container({
+  className: "nav-left ol-control"
+});
+map.addControl(navLeft);
+//legend
+const legend = new Legend({
+  className: "legend-toggle",
+  html: '<i class="far fa-layer-group"></i>',
+  tipLabel: "Legenda",
+  dialogClassName: "legend"
+});
+navLeft.addControl(legend);
