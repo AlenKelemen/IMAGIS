@@ -5,8 +5,8 @@ html {
 body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.42857143;
+  font-size: 15px;
+  line-height: 1.6em;
 }
 
 button {
@@ -54,7 +54,12 @@ label {
 .ol-scale-line {
   right: 0.5em;
   left: auto;
+
   background: rgba(0, 60, 136, 0.6);
+}
+.ol-scale-line-inner {
+  font-size: 1em;
+  line-height: 1.35em;
 }
 .geolocator {
   top: 4.13em;
@@ -88,7 +93,7 @@ label {
   top: 0.5em;
   bottom: 2.9em;
   border-radius: 4px;
-  padding: 2px;
+  padding: 6px;
   overflow-y: auto;
   max-width: 20em;
   background: rgba(0, 60, 136, 0.6);
@@ -96,4 +101,7 @@ label {
 }
 .legend.active {
   display: block;
+}
+.legend div {
+  padding-bottom: 2px;
 }
