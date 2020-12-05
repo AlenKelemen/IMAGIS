@@ -16,6 +16,7 @@ import DefEditor from "./src/defEditor";
 import Geolocator from "./src/geoloc";
 import Select from "./src/select";
 import Legend from "./src/legend";
+import Theme from "./src/theme";
 
 //local project def
 if (localStorage.getItem("def") === null)
@@ -83,7 +84,15 @@ map.addControl(navLeft);
 const legend = new Legend({
   className: "legend-toggle",
   html: '<i class="far fa-layer-group"></i>',
-  tipLabel: "Legenda",
+  tipLabel: "Legenda & upravljanje kartom",
   dialogClassName: "legend"
 });
 navLeft.addControl(legend);
+//theme
+const theme = new Theme({
+  className: "theme-toggle",
+  html: '<i class="far fa-images"></i>',
+  tipLabel: "Tematizacija karte",
+  dialogClassName: "theme"
+});
+navLeft.addControl(theme);

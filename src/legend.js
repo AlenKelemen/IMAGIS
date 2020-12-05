@@ -14,15 +14,14 @@ import {
 } from 'ol/style';
 import Sortable from "sortablejs";
 const images = require("../img/*.gif");
-/** Container for controls
+/** Legend
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object} options Control options.
  * @param {string} options.className
  * @param {string} options.tipLabel html title of the control
  * @param {string} options.html html to insert in the control
- * @param {html element} options.target target element to insert legend dialog
- * @param {function} options.handleClick callback when control is clicked
+ * @param {function} options.handleClick callback on click
  
  */
 export default class Legend extends Control {
