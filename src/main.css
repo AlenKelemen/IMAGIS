@@ -58,8 +58,8 @@ label {
   background: rgba(0, 60, 136, 0.6);
 }
 .ol-scale-line-inner {
-  font-size: 1em;
-  line-height: 1.35em;
+  font-size: 0.8em;
+  line-height: 1.45em;
 }
 .geolocator {
   top: 4.13em;
@@ -79,6 +79,7 @@ label {
   padding: 2px;
   overflow-x: auto;
   max-width: 15em;
+  font-size: 0.8em;
   background: rgba(0, 60, 136, 0.6);
   color: #eee;
 }
@@ -97,11 +98,104 @@ label {
   overflow-y: auto;
   max-width: 20em;
   background: rgba(0, 60, 136, 0.6);
-  color: #eee;
+   color:white;
 }
 .legend.active {
   display: block;
 }
 .legend div {
   padding-bottom: 2px;
+}
+.theme {
+  display: none;
+  position: absolute;
+  left: 3em;
+  top: 0.5em;
+  bottom: 2.9em;
+  border-radius: 4px;
+  padding: 6px;
+  overflow-y: auto;
+  max-width: 20em;
+  background: rgba(0, 60, 136, 0.6);
+  color:white;
+  flex-direction: column;
+}
+.theme.active {
+  display: flex;
+}
+.theme .top div {
+  padding-top: 16px;
+  float: right;
+}
+.theme .top .ol-control{
+position: static;
+}
+.theme .middle {
+  align-self: center;
+  margin: auto;
+  vertical-align: middle;
+}
+.theme .wrapper ul {
+    list-style-type: none;
+    padding-left: 8px;
+    margin: 0;
+}
+
+.theme .caret {
+    cursor: pointer;
+    user-select: none;
+}
+
+.theme .style {
+    color: red;
+}
+
+.theme .nested {
+    display: none;
+}
+.theme .caret::before {
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    font-size: 16px;
+    content: "\f0da";
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.theme .caret-down::before {
+    transform: rotate(90deg);
+}
+
+.theme input,
+.theme select,
+.theme .color {
+    margin-right: 8px;
+    padding: 2px;
+    border: 0;
+    width: 95%
+}
+
+.theme .color {
+    height: 18px;
+    background-color: white;
+    border: 2px solid white;
+    padding: 0;
+}
+
+.theme .color:hover {
+    cursor: pointer;
+}
+
+.picker_editor,
+.picker_sample,
+.picker_done,
+.picker_cancel,
+.picker_arrow {
+    display: none;
+}
+
+.picker_wrapper {
+    box-shadow: unset !important;
+    width: 220px !important;
+    margin: 0 !important
 }

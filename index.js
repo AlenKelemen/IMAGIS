@@ -93,6 +93,11 @@ const theme = new Theme({
   className: "theme-toggle",
   html: '<i class="far fa-images"></i>',
   tipLabel: "Tematizacija karte",
-  dialogClassName: "theme"
+  dialogClassName: "theme",
+  layer: map
+    .getLayers()
+    .getArray()
+    .find(x => x.get("active"))
 });
 navLeft.addControl(theme);
+map.getLayers().on('propertychange', evt => theme.setLayer(evt.target.get('active')));
