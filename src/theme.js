@@ -381,7 +381,7 @@ export default class Theme extends Control {
       ns.push(is);
     }
     this.layer.get("def").style = ns;
-    console.log(this.layer.get("def"));
+    //console.log(this.layer.get("def"));
     this.layer.setStyle(makeStyle(ns));
   }
   fillOperators_(itemElement) {

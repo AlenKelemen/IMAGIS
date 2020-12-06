@@ -199,3 +199,15 @@ position: static;
     width: 220px !important;
     margin: 0 !important
 }
+.active-info{
+   position: absolute;
+  left: 7em;
+  bottom: 0.5em;
+  border-radius: 4px;
+  padding: 2px;
+  overflow-x: auto;
+  max-width: 15em;
+  font-size: 0.8em;
+  background: rgba(0, 60, 136, 0.6);
+  color: #eee;
+}

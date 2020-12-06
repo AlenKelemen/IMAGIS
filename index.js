@@ -88,6 +88,7 @@ const legend = new Legend({
   dialogClassName: "legend"
 });
 navLeft.addControl(legend);
+const activeLayerInfo = legend.activeLayerInfo();
 //theme
 const theme = new Theme({
   className: "theme-toggle",

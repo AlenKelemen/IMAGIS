@@ -1,17 +1,8 @@
 import Control from "ol/control/Control";
 import VectorLayer from "ol/layer/Vector";
-import {
-    toContext
-} from 'ol/render';
-import {
-    LineString,
-    Point,
-    Polygon
-} from 'ol/geom';
-import {
-    Icon,
-    Style
-} from 'ol/style';
+import { toContext } from "ol/render";
+import { LineString, Point, Polygon } from "ol/geom";
+import { Icon, Style } from "ol/style";
 import Sortable from "sortablejs";
 const images = require("../img/*.gif");
 /** Legend
@@ -58,6 +49,34 @@ export default class Legend extends Control {
       }
     };
     this.element.addEventListener("click", evtFunction);
+  }
+
+  activeLayerInfo() {
+    const activeInfo = new Control({
+      element: document.createElement("div")
+    });
+    this.getMap().addControl(activeInfo);
+    activeInfo.element.className = "active-info ol-unselectable";
+    const active = this.getMap()
+      .getLayers()
+      .getArray()
+      .find(x => x.get("active"));
+    if (active)
+      activeInfo.element.innerHTML =
+        "aktivni sloj: " + active.get("label") || active.get("name");
+    else activeInfo.element.style.display = "none";
+    this.getMap()
+      .getLayers()
+      .on("propertychange", evt => {
+        const active = evt.target.get("active");
+        if (active) {
+          activeInfo.element.style.display = "inline-block";
+          activeInfo.element.innerHTML =
+            "aktivni sloj: " + active.get("label") || active.get("name");
+        } else {
+          activeInfo.element.style.display = "none";
+        }
+      });
   }
 
   legend_() {
@@ -166,8 +185,12 @@ export default class Legend extends Control {
       this.getMap()
         .getView()
         .on("change:resolution", () => {
-          if (item.style.display !== 'none')
-          this.getIcons(l, item.querySelector('.icon'), item.querySelector('.thematic'));
+          if (item.style.display !== "none")
+            this.getIcons(
+              l,
+              item.querySelector(".icon"),
+              item.querySelector(".thematic")
+            );
         });
       l.on("change:opacity", evt => {
         item.querySelector(".icon").style.opacity = evt.target.getOpacity();
@@ -201,87 +224,129 @@ export default class Legend extends Control {
       }
     });
   }
-getIcons(layer, singleStyleContaner, multipleStyleContainer, iconSize = [16, 16]) { //attches icon div to container element
-        if (layer instanceof VectorLayer === false) return;
-        singleStyleContaner.title = '';
-        multipleStyleContainer.innerHTML = '';
-        const thematic = this.styleObj(layer).length > 1; // more styles => show in rows  
-        for (const [i, style] of this.styleObj(layer).entries()) {
-            const
-                canvas = document.createElement('canvas'),
-                context = canvas.getContext('2d'),
-                vectorContext = toContext(context, {
-                    size: iconSize
-                }),
-                emptyStyle = style.getImage() === null && style.getText() === null && style.getFill() === null && style.getStroke() === null;
-            if (thematic) {
-                singleStyleContaner.innerHTML = `<img src="${images.lc_theme}">`;
-                singleStyleContaner.title = `Otvori detaljnu legendu`;
-                const
-                    div = document.createElement('div'),
-                    span = document.createElement('span');
-                div.appendChild(canvas);
-                div.appendChild(span);
-                if (!emptyStyle) {
-                    multipleStyleContainer.appendChild(div);
-                    if (layer.get('def') && layer.get('def').style && layer.get('def').style.filter) {
-                        const filter = layer.get('def').style[i].filter;
-                        if (filter) span.innerHTML = filter.property + ' ' + filter.operator + ' ' + filter.value;
-                    }
-                }
-            } else {
-                singleStyleContaner.innerHTML = '';
-                singleStyleContaner.appendChild(canvas);
-            }
-            vectorContext.setStyle(style);
-            if (style.getFill() !== null) {
-                vectorContext.drawGeometry(new Polygon([
-                    [
-                        [2, 2],
-                        [iconSize[0] - 1, 2],
-                        [iconSize[0] - 1, iconSize[1] - 1],
-                        [2, iconSize[1] - 1],
-                        [2, 2]
-                    ]
-                ]));
-            } else {
-                vectorContext.drawGeometry(new LineString([
-                    [2, 2],
-                    [iconSize[0] - 2, iconSize[1] - 2]
-                ]));
-            }
-            const img = style.getImage(); //can have image in every geomType
-            if (img) {
-                if (img instanceof Icon) {
-                    const image = new Image();
-                    image.onload = () => {
-                        const newStyle = new Style({
-                            image: new Icon({
-                                img: image,
-                                imgSize: [image.width, image.height],
-                                scale: Math.min((iconSize[0] / image.width), (iconSize[1] / image.height))
-                            })
-                        });
-                        vectorContext.setStyle(newStyle);
-                        vectorContext.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
-                    };
-                    image.src = img.getSrc();
-                } else {
-                    const legendStyle = style.clone();
-                   // legendStyle.getImage().setScale(Math.min((iconSize[0] / legendStyle.getImage().getSize()[0]), (iconSize[1] / legendStyle.getImage().getSize()[1])))
-                   legendStyle.getImage().setScale(Math.min((iconSize[0] / (2*legendStyle.getImage().getRadius())), (iconSize[1] / (2*legendStyle.getImage().getRadius()))))
-                    vectorContext.setStyle(legendStyle);
-                    vectorContext.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
-                }
-            }
+  getIcons(
+    layer,
+    singleStyleContaner,
+    multipleStyleContainer,
+    iconSize = [16, 16]
+  ) {
+    //attches icon div to container element
+    if (layer instanceof VectorLayer === false) return;
+    singleStyleContaner.title = "";
+    multipleStyleContainer.innerHTML = "";
+    const thematic = this.styleObj(layer).length > 1; // more styles => show in rows
+    for (const [i, style] of this.styleObj(layer).entries()) {
+      const canvas = document.createElement("canvas"),
+        context = canvas.getContext("2d"),
+        vectorContext = toContext(context, {
+          size: iconSize
+        }),
+        emptyStyle =
+          style.getImage() === null &&
+          style.getText() === null &&
+          style.getFill() === null &&
+          style.getStroke() === null;
+      if (thematic) {
+        singleStyleContaner.innerHTML = `<img src="${images.lc_theme}">`;
+        singleStyleContaner.title = `Otvori detaljnu legendu`;
+        const div = document.createElement("div"),
+          span = document.createElement("span");
+        div.appendChild(canvas);
+        div.appendChild(span);
+        if (!emptyStyle) {
+          multipleStyleContainer.appendChild(div);
+          if (
+            layer.get("def") &&
+            layer.get("def").style &&
+            layer.get("def").style.filter
+          ) {
+            const filter = layer.get("def").style[i].filter;
+            if (filter)
+              span.innerHTML =
+                filter.property + " " + filter.operator + " " + filter.value;
+          }
         }
+      } else {
+        singleStyleContaner.innerHTML = "";
+        singleStyleContaner.appendChild(canvas);
+      }
+      vectorContext.setStyle(style);
+      if (style.getFill() !== null) {
+        vectorContext.drawGeometry(
+          new Polygon([
+            [
+              [2, 2],
+              [iconSize[0] - 1, 2],
+              [iconSize[0] - 1, iconSize[1] - 1],
+              [2, iconSize[1] - 1],
+              [2, 2]
+            ]
+          ])
+        );
+      } else {
+        vectorContext.drawGeometry(
+          new LineString([
+            [2, 2],
+            [iconSize[0] - 2, iconSize[1] - 2]
+          ])
+        );
+      }
+      const img = style.getImage(); //can have image in every geomType
+      if (img) {
+        if (img instanceof Icon) {
+          const image = new Image();
+          image.onload = () => {
+            const newStyle = new Style({
+              image: new Icon({
+                img: image,
+                imgSize: [image.width, image.height],
+                scale: Math.min(
+                  iconSize[0] / image.width,
+                  iconSize[1] / image.height
+                )
+              })
+            });
+            vectorContext.setStyle(newStyle);
+            vectorContext.drawGeometry(
+              new Point([iconSize[0] / 2, iconSize[1] / 2])
+            );
+          };
+          image.src = img.getSrc();
+        } else {
+          const legendStyle = style.clone();
+          // legendStyle.getImage().setScale(Math.min((iconSize[0] / legendStyle.getImage().getSize()[0]), (iconSize[1] / legendStyle.getImage().getSize()[1])))
+          legendStyle
+            .getImage()
+            .setScale(
+              Math.min(
+                iconSize[0] / (2 * legendStyle.getImage().getRadius()),
+                iconSize[1] / (2 * legendStyle.getImage().getRadius())
+              )
+            );
+          vectorContext.setStyle(legendStyle);
+          vectorContext.drawGeometry(
+            new Point([iconSize[0] / 2, iconSize[1] / 2])
+          );
+        }
+      }
     }
-    styleObj(layer) { //get style as array of object
-        if (layer instanceof VectorLayer) {
-            const style = typeof (layer.getStyle()) === 'function' ? layer.getStyle().call(this, undefined, this.getMap().getView().getResolution()) : layer.getStyle();
-            return Array.isArray(style) ? style : [style];
-        } else return null;
-    }
+  }
+  styleObj(layer) {
+    //get style as array of object
+    if (layer instanceof VectorLayer) {
+      const style =
+        typeof layer.getStyle() === "function"
+          ? layer.getStyle().call(
+              this,
+              undefined,
+              this.getMap()
+                .getView()
+                .getResolution()
+            )
+          : layer.getStyle();
+      return Array.isArray(style) ? style : [style];
+    } else return null;
+  }
   setActive(b) {
     if (this.content.element.innerHTML === "") this.legend_();
     if (this.getActive() == b) return;
