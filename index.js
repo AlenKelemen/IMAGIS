@@ -1,85 +1,104 @@
-import 'ol/ol.css';
-import '@fortawesome/fontawesome-pro/css/fontawesome.css';
-import '@fortawesome/fontawesome-pro/css/regular.min.css';
-import './src/main.css';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import ScaleLine from 'ol/control/ScaleLine';
-import Rotate from 'ol/control/Rotate';
-import Zoom from 'ol/control/Zoom';
-import Projection from 'ol/proj/Projection';
-import {
-    register
-} from 'ol/proj/proj4.js';
-import proj4 from 'proj4';
+import "ol/ol.css";
+import "@fortawesome/fontawesome-pro/css/fontawesome.css";
+import "@fortawesome/fontawesome-pro/css/regular.min.css";
+import "./src/main.css";
+import Map from "ol/Map";
+import View from "ol/View";
+import ScaleLine from "ol/control/ScaleLine";
+import Rotate from "ol/control/Rotate";
+import Zoom from "ol/control/Zoom";
 
-import baseDef from './def.json';
-import Container from './src/container';
-import DefLayers from './src/defLayers';
-import DefEditor from './src/defEditor';
+import epsg3765 from "./src/EPSG3765";
+import baseDef from "./def.json";
+import Container from "./src/container";
+import DefLayers from "./src/defLayers";
+import DefEditor from "./src/defEditor";
+import Geolocator from "./src/geoloc";
+import Select from "./src/select";
+import Legend from "./src/legend";
+import Theme from "./src/theme";
 
-
-if (localStorage.getItem('def') === null) localStorage.setItem('def', JSON.stringify(baseDef));
-const def = JSON.parse(localStorage.getItem('def'));
-def.path = window.location.href.split('/').slice(0, -1).join('/'); //base url
-
-proj4.defs('EPSG:3765',
-    '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
-register(proj4);
-const mapContainer = document.createElement('main');
-mapContainer.className = 'map';
-document.body.appendChild(mapContainer)
-const view = new View({
+//local project def
+if (localStorage.getItem("def") === null)
+  localStorage.setItem("def", JSON.stringify(baseDef));
+const def = JSON.parse(localStorage.getItem("def"));
+// ol/map
+const mapContainer = document.createElement("main");
+mapContainer.className = "map";
+document.body.appendChild(mapContainer);
+window.map = new Map({
+  target: mapContainer,
+  view: new View({
     center: def.center,
     zoom: def.zoom,
-    projection: new Projection({ //hr projection
-        code: 'EPSG:3765',
-        units: 'm',
-        extent: [208311.05, 4614890.75, 724721.78, 5159767.36]
-    })
+    projection: new epsg3765()
+  }),
+  controls: [
+    new Zoom(),
+    new Rotate({
+      tipLabel: "Sjever gore"
+    }),
+    new ScaleLine()
+  ]
 });
-const header = new Container({ //menu
-    semantic: 'header',
-    className:'ol-control'
-});
-const footer = new Container({ //status
-    semantic: 'footer'
-});
-const aside = new Container({ // contaner for left & right side menus, taskpanes etc
-    semantic: 'aside'
-});
-const nav = new Container({ // side menu
-    semantic: 'nav'
-});
-window.map = new Map({
-    target: mapContainer,
-    view: view,
-    controls: [
-        new Zoom({
-            target: nav.element
-        }),
-        new Rotate({
-            target: nav.element,
-            tipLabel: 'Sjever gore'
-        }),
-        new ScaleLine({
-            target: footer.element
-        })
-    ]
-});
-map.addControl(header);
-map.addControl(aside);
-map.addControl(footer);
-
-header.element.innerHTML = '<button>IMAGIS</button>'
-aside.addControl(new DefEditor({
-    def: def
-}));
-aside.addControl(nav);
-
+//layers as defined in def.json
 const defLayers = new DefLayers({
-    def: def,
-    map: map
+  def: def,
+  map: map
 });
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
+defLayers.addTHLayers();
+/* navLeft.addControl(new DefEditor({
+    def: def
+})); */
+//geolocate
+const geolocator = new Geolocator({
+  map: map,
+  className: "geolocator ol-control",
+  html: '<i class="far fa-map-marker-alt"></i>',
+  tipLabel: "Pokaži moju lokaciju"
+});
+map.addControl(geolocator);
+//select
+const select = new Select({
+  active: true,
+  className: "select-info"
+});
+map.addInteraction(select);
+select.addInfo(map, { className: "select-info" });
+select.addUI(map, {
+  className: "ol-control select",
+  point: {
+    className: "select-point",
+    html: '<i class="far fa-mouse-pointer"></i>',
+    title: "Odaberi objekte"
+  }
+});
+//left controls
+const navLeft = new Container({
+  className: "nav-left ol-control"
+});
+map.addControl(navLeft);
+//legend
+const legend = new Legend({
+  className: "legend-toggle",
+  html: '<i class="far fa-layer-group"></i>',
+  tipLabel: "Legenda & upravljanje kartom",
+  dialogClassName: "legend"
+});
+navLeft.addControl(legend);
+const activeLayerInfo = legend.activeLayerInfo();
+//theme
+const theme = new Theme({
+  className: "theme-toggle",
+  html: '<i class="far fa-images"></i>',
+  tipLabel: "Tematizacija karte",
+  dialogClassName: "theme",
+  layer: map
+    .getLayers()
+    .getArray()
+    .find(x => x.get("active"))
+});
+navLeft.addControl(theme);
+map.getLayers().on('propertychange', evt => theme.setLayer(evt.target.get('active')));

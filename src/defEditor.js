@@ -14,7 +14,7 @@ export default class DefEditor extends Control {
             element: document.createElement('textarea')
         });
         this.def = options.def;
-        this.element.className =options.className || 'defEditor';
+        this.element.className = options.className || 'defEditor';
         this.element.innerHTML = JSON.stringify(this.def, null, 2);
         const defLayers = new DefLayers({
             def: this.def,
@@ -24,11 +24,13 @@ export default class DefEditor extends Control {
             const v = evt.target.value;
             try {
                 defLayers.setDef(JSON.parse(v));
+                defLayers.removeTileLayers();
+                defLayers.addTileLayers();
                 defLayers.removeVectorLayers();
                 defLayers.addVectorLayers();
             } catch (err) {
                 console.log('DefEditor err: ', err);
             }
-        })
+        });
     }
 }

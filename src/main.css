@@ -1,43 +1,213 @@
-        html {
-            box-sizing: border-box;
-        }
-        
-        body {
-            margin: 0;
-            font-family: Verdana,sans-serif;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        
-        .ol-overlaycontainer-stopevent {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .ol-control,
-        .ol-scale-line,
-        .ol-rotate {
-            position: unset;
-        }
-        
-        header {
-            width: 100%;
-            background-color:rgba(23,21,21,.56);
-            color:white;
-            padding: 8px 16px;
-        }
-        
-        aside {
-            flex-grow: 1;
-            display: flex;
-            pointer-events: none!important;
-        }
-        
-        nav {
-            margin-left: auto;
-            height: fit-content;
-        }
-        
-        footer {
-            width: fit-content;
-        }
+html {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6em;
+}
+
+button {
+  font-weight: 400;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+button.active {
+  background-color: rgba(0, 136, 105, 0.6);
+}
+
+.ol-control button.active:hover,
+.ol-control button.active:focus {
+  text-decoration: none;
+  background-color: rgba(0, 136, 105, 0.8);
+}
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+.ol-box {
+  box-sizing: border-box;
+  border-radius: 2px;
+  border: 3px solid #3399cc;
+}
+.ol-control {
+  /* position: absolute;
+  background: rgba(0, 60, 136, 0.6);
+  border-radius: 4px;
+  padding: 2px; */
+}
+.ol-zoom {
+  right: 0.5em;
+  left: auto;
+}
+.ol-rotate {
+  left: auto;
+  right: 3em;
+}
+.ol-scale-line {
+  right: 0.5em;
+  left: auto;
+
+  background: rgba(0, 60, 136, 0.6);
+}
+.ol-scale-line-inner {
+  font-size: 0.8em;
+  line-height: 1.45em;
+}
+.geolocator {
+  top: 4.13em;
+  right: 0.5em;
+  left: auto;
+}
+.select {
+  top: 6.13em;
+  right: 0.5em;
+  left: auto;
+}
+.select-info {
+  position: absolute;
+  left: 0.5em;
+  bottom: 0.5em;
+  border-radius: 4px;
+  padding: 2px;
+  overflow-x: auto;
+  max-width: 15em;
+  font-size: 0.8em;
+  background: rgba(0, 60, 136, 0.6);
+  color: #eee;
+}
+.nav-left {
+  left: 0.5em;
+  top: 0.5em;
+}
+.legend {
+  display: none;
+  position: absolute;
+  left: 3em;
+  top: 0.5em;
+  bottom: 2.9em;
+  border-radius: 4px;
+  padding: 6px;
+  overflow-y: auto;
+  max-width: 20em;
+  background: rgba(0, 60, 136, 0.6);
+   color:white;
+}
+.legend.active {
+  display: block;
+}
+.legend div {
+  padding-bottom: 2px;
+}
+.theme {
+  display: none;
+  position: absolute;
+  left: 3em;
+  top: 0.5em;
+  bottom: 2.9em;
+  border-radius: 4px;
+  padding: 6px;
+  overflow-y: auto;
+  max-width: 20em;
+  background: rgba(0, 60, 136, 0.6);
+  color:white;
+  flex-direction: column;
+}
+.theme.active {
+  display: flex;
+}
+.theme .top div {
+  padding-top: 16px;
+  float: right;
+}
+.theme .top .ol-control{
+position: static;
+}
+.theme .middle {
+  align-self: center;
+  margin: auto;
+  vertical-align: middle;
+}
+.theme .wrapper ul {
+    list-style-type: none;
+    padding-left: 8px;
+    margin: 0;
+}
+
+.theme .caret {
+    cursor: pointer;
+    user-select: none;
+}
+
+.theme .style {
+    color: red;
+}
+
+.theme .nested {
+    display: none;
+}
+.theme .caret::before {
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    font-size: 16px;
+    content: "\f0da";
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.theme .caret-down::before {
+    transform: rotate(90deg);
+}
+
+.theme input,
+.theme select,
+.theme .color {
+    margin-right: 8px;
+    padding: 2px;
+    border: 0;
+    width: 95%
+}
+
+.theme .color {
+    height: 18px;
+    background-color: white;
+    border: 2px solid white;
+    padding: 0;
+}
+
+.theme .color:hover {
+    cursor: pointer;
+}
+
+.picker_editor,
+.picker_sample,
+.picker_done,
+.picker_cancel,
+.picker_arrow {
+    display: none;
+}
+
+.picker_wrapper {
+    box-shadow: unset !important;
+    width: 220px !important;
+    margin: 0 !important
+}
+.active-info{
+   position: absolute;
+  left: 7em;
+  bottom: 0.5em;
+  border-radius: 4px;
+  padding: 2px;
+  overflow-x: auto;
+  max-width: 15em;
+  font-size: 0.8em;
+  background: rgba(0, 60, 136, 0.6);
+  color: #eee;
+}
