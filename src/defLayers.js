@@ -177,7 +177,6 @@ export default class DefLayers {
             const layer = new VectorLayer(base);
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
-console.log(this.localFolder + '/' + this.def.path + '/' + l.name + '.json');
                     this.result.then(r => {
                         this.vc.readFile(this.localFolder + '/' + this.def.path + '/' + l.name + '.json').then(r => {
                             const features = new GeoJSON({
