@@ -48,7 +48,7 @@ const defLayers = new DefLayers({
   map: map
 });
 defLayers.addTileLayers();
-defLayers.addVectorLayers();
+//defLayers.addVectorLayers();
 defLayers.addTHLayers();
 /* navLeft.addControl(new DefEditor({
     def: def
