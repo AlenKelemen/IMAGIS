@@ -159,7 +159,7 @@ export default class DefLayers {
     }
     addVectorLayers() {
         for (const [i, l] of this.getVectorLayers().entries()) {
-console.log(s)
+console.log(this.def.sources)
             const s = this.def.sources.find(x => x.name === l.source);
             const base = {
                 maxResolution: l.maxResolution,
