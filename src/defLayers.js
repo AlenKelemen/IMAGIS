@@ -159,7 +159,6 @@ export default class DefLayers {
     }
     addVectorLayers() {
         for (const [i, l] of this.getVectorLayers().entries()) {
-console.log(this.def.sources)
             const s = this.def.sources.find(x => x.name === l.source);
             const base = {
                 maxResolution: l.maxResolution,
@@ -178,6 +177,7 @@ console.log(this.def.sources)
             const layer = new VectorLayer(base);
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
+console.log(this.localFolder + '/' + this.def.path + '/' + l.name + '.json');
                     this.result.then(r => {
                         this.vc.readFile(this.localFolder + '/' + this.def.path + '/' + l.name + '.json').then(r => {
                             const features = new GeoJSON({
