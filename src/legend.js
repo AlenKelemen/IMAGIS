@@ -78,7 +78,6 @@ export default class Legend extends Control {
         }
       });
   }
-
   legend_() {
     //in legend one can change layer opacitiy, visibility, zIndex, active property
     const list = document.createElement("div");
