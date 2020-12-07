@@ -178,7 +178,6 @@ export default class DefLayers {
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
                     this.result.then(r => {
-                        console.log(this.localFolder + '/' + this.def.path + '/' + l.name + '.json');
                         this.vc.readFile(this.localFolder + '/' + this.def.path + '/' + l.name + '.json').then(r => {
                             const features = new GeoJSON({
                                 dataProjection: 'EPSG:4326',
@@ -190,7 +189,7 @@ export default class DefLayers {
                     });
                 }
             });
-            layer.setSource(source);
+            //layer.setSource(source);
             //add style
             if (l.style) layer.setStyle(makeStyle(l.style));
             layer.getSource().set('def', s);
