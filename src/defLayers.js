@@ -178,15 +178,15 @@ export default class DefLayers {
             const source = new VectorSource({
                 loader: (extent, resolution, projection) => {
                     this.result.then(r => {
-console.log(this.localFolder + '/' + this.def.path + '/' + l.name + '.json');
-                        this.vc.readFile(this.localFolder + '/' + this.def.path + '/' + l.name + '.json').then(r => {
+                        console.log(this.localFolder + '/' + this.def.path + '/' + l.name + '.json');
+                       /*  this.vc.readFile(this.localFolder + '/' + this.def.path + '/' + l.name + '.json').then(r => {
                             const features = new GeoJSON({
                                 dataProjection: 'EPSG:4326',
                                 featureProjection: 'EPSG:3765'
                             }).readFeatures(r);
                             source.addFeatures(features);
                             source.getFeatures().map(x => x.set('layer', layer));
-                        })
+                        }) */
                     });
                 }
             });
