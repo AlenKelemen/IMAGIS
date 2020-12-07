@@ -17,6 +17,7 @@ import Geolocator from "./src/geoloc";
 import Select from "./src/select";
 import Legend from "./src/legend";
 import Theme from "./src/theme";
+import Properties from "./src/properties";
 
 //local project def
 if (localStorage.getItem("def") === null)
@@ -102,3 +103,11 @@ const theme = new Theme({
 });
 navLeft.addControl(theme);
 map.getLayers().on('propertychange', evt => theme.setLayer(evt.target.get('active')));
+//properties
+const property = new Properties({
+  className: "properties-toggle",
+  html: '<i class="far fa-info-circle"></i>',
+  tipLabel: 'Svojstva',
+  select: select
+});
+navLeft.addControl(property);
