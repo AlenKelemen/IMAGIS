@@ -159,6 +159,7 @@ export default class DefLayers {
     }
     addVectorLayers() {
         for (const [i, l] of this.getVectorLayers().entries()) {
+console.log(s)
             const s = this.def.sources.find(x => x.name === l.source);
             const base = {
                 maxResolution: l.maxResolution,
@@ -189,7 +190,7 @@ export default class DefLayers {
                     });
                 }
             });
-            //layer.setSource(source);
+            layer.setSource(source);
             //add style
             if (l.style) layer.setStyle(makeStyle(l.style));
             layer.getSource().set('def', s);
