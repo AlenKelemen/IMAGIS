@@ -19,4 +19,28 @@ export default class Legend extends Control {
     this.element.innerHTML = options.html; //
     this.element.title = options.tipLabel; //
   }
+ setActive(b) {
+    if (this.content.element.innerHTML === "") this.legend_();
+    if (this.getActive() == b) return;
+    if (b) {
+      this.content.element.classList.add("active");
+      this.element.classList.add("active");
+      if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
+    } else {
+      this.content.element.classList.remove("active");
+      this.element.classList.remove("active");
+    }
+    this.dispatchEvent({
+      type: "change:active",
+      key: "active",
+      oldValue: !b,
+      active: b
+    });
+  }
+  getActive() {
+    return this.element.classList.contains("active");
+  }
+  getParent() {
+    if (this.get("parent")) return this.get("parent");
+  }
 }
