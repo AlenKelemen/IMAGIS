@@ -233,3 +233,44 @@ label {
     line-height: normal;
     padding: 2px;
 }
+
+.properties {
+    display: none;
+    position: absolute;
+    left: 3em;
+    top: 0.5em;
+    bottom: 2.1em;
+    border-radius: 4px;
+    padding: 6px;
+    overflow-y: auto;
+    max-width: 20em;
+    background: rgba(0, 60, 136, 0.6);
+    color: white;
+}
+
+.properties.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.properties .middle {
+    align-self: center;
+    margin: auto;
+    vertical-align: middle;
+}
+
+.properties .items label {
+    display: block;
+    max-width: 100%;
+    font-weight: 400;
+}
+
+.properties .items input,
+.properties .items select {
+    width: 100%
+}
+.properties .items input:disabled,
+.properties .items select:disabled {
+    color: black;
+    cursor: default;
+}

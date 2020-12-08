@@ -63,7 +63,7 @@ const geolocator = new Geolocator({
 map.addControl(geolocator);
 //select
 const select = new Select({
-  active: true,
+  active: false,
   className: "select-info"
 });
 map.addInteraction(select);
@@ -106,6 +106,7 @@ map.getLayers().on('propertychange', evt => theme.setLayer(evt.target.get('activ
 //properties
 const property = new Properties({
   className: "properties-toggle",
+dialogClassName: "properties",
   html: '<i class="far fa-info-circle"></i>',
   tipLabel: 'Svojstva',
   select: select
