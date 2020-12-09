@@ -1,17 +1,4 @@
 import Control from "ol/control/Control";
-import VectorLayer from "ol/layer/Vector";
-import { toContext } from "ol/render";
-import { LineString, Point, Polygon } from "ol/geom";
-import {
-  Icon,
-  Fill,
-  Stroke,
-  Circle,
-  Text,
-  RegularShape,
-  Style
-} from "ol/style";
-import Sortable from "sortablejs";
 import Picker from "vanilla-picker";
 import { makeStyle } from "./makeStyle";
 const images = require("../img/*.png");

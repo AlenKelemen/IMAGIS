@@ -79,6 +79,11 @@ select.addUI(map, {
     className: "select-rect",
     html: '<i class="far fa-stop"></i>',
     title: "Odaberi unutar pravokutnika"
+  },
+  line: {
+    className: "select-line",
+    html: '<i class="far fa-heart-rate"></i>',
+    title: "Odaberi objekte koji sijeku nacrtanu liniju"
   }
 });
 //left controls

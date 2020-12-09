@@ -122,7 +122,7 @@ export default class Properties extends Control {
                 }
             }
         }
-        console.log(props);
+        //console.log(props);
         props = props.filter(x => x.Hidden !== true); //in layer.def.source.schema.properties hiden properties can be defined
         for (const p of props) {
             const div = document.createElement('div'),

@@ -2,12 +2,37 @@ import Control from "ol/control/Control";
 import olSelect from "ol/interaction/Select";
 import {
   DragZoom,
-  DragBox
+  DragBox,
+  Draw
 } from 'ol/interaction';
+import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import {
+  point,
+  segment,
+  circle,
+  polygon
+} from '@flatten-js/core';
 import Container from "./container";
 import Toggle from "./toggle";
 
+/** Select
+ * @constructor
+ * @extends {ol_control_Control}
+ * @param {Object} options Control options.
+ * @param {boolean} options.active Initial select interaction is active or not
+ * @param {string} options.className Select contaner className
+ * @param {string} options.point.className Select by point toggle className
+ * @param {string} options.point.html Select by point toggle innerHTML
+ * @param {string} options.point.title Select by point toggle tipLabel
+ * @param {string} options.rect.className Select by rectangle toggle className
+ * @param {string} options.rect.html Select by rectangle toggle innerHTML
+ * @param {string} options.rect.title Select by rectangle toggle tipLabel
+ * @param {integer} [options.line.buffer=5] Buffer radius around points in pixel
+ * @param {string} options.line.className Select by line toggle className
+ * @param {string} options.line.html Select by line toggle innerHTML
+ * @param {string} options.line.title Select by line toggle tipLabel
+ */
 
 export default class Select extends olSelect {
   constructor(options = {}) {
@@ -29,6 +54,7 @@ export default class Select extends olSelect {
       handleClick: () => {
         this.setActive(this.point.getActive());
         this.getMap().removeInteraction(this.dragBox);
+        this.getMap().removeInteraction(this.line.draw);
       }
     });
     this.ui.addControl(this.point);
@@ -38,6 +64,7 @@ export default class Select extends olSelect {
       tipLabel: options.rect.title || "Odaberi unutar pravokutnika",
       handleClick: () => {
         this.setActive(this.rect.getActive());
+        this.getMap().removeInteraction(this.line.draw);
         if (this.rect.getActive()) {
           const selectedFeatures = this.getFeatures();
           this.dragBox = new DragBox();
@@ -87,6 +114,73 @@ export default class Select extends olSelect {
     });
     this.ui.addControl(this.rect);
 
+    this.line = new Toggle({
+      className: options.line.className || 'select-line',
+      html: options.line.html || '<i class="far fa-heart-rate"></i>',
+      tipLabel: options.line.title || 'Odaberi objekte koji sijeku nacrtanu liniju',
+      handleClick: () => {
+        this.setActive(false);
+        this.line.bufferRadius = options.line.buffer || 5; // buffer radius around points in pixel
+        if (this.line.getActive()) {
+          this.getMap().removeInteraction(this.dragBox);
+          this.line.source = new VectorSource();
+          this.line.layer = new VectorLayer({
+            source: this.line.source
+          });
+          this.line.layer.setMap(this.getMap());
+          const drawOptions = {
+            source: this.line.source,
+            type: 'LineString'
+          };
+          if (options.line.selectStyle) drawOptions.style = options.line.selectStyle;
+          this.line.draw = new Draw(drawOptions);
+          this.getMap().addInteraction(this.line.draw);
+          this.line.draw.on('drawend', evt => {
+            const activeLayer = this.getMap().getLayers().getArray().find(x => x.get('active'));
+            this.getFeatures().clear();
+            evt.feature.getGeometry().forEachSegment((s, e) => {
+              const sls = segment(point(s), point(e));
+              for (const l of map.getLayers().getArray().filter(x => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
+                for (const f of l.getSource().getFeatures()) {
+                  let g = f.getGeometry();
+                  try {
+                    if (g.getType() === 'Point') {
+                      const intersect = sls.intersect(circle(point(g.getFirstCoordinate()), this.line.bufferRadius * this.getMap().getView().getResolution()));
+                      if (intersect.length > 0) this.getFeatures().push(f);
+                    }
+                    if (g.getType() === 'LineString')
+                      g.forEachSegment((s, e) => {
+                        const intersect = sls.intersect(segment(point(s), point(e)));
+                        if (intersect.length > 0) this.getFeatures().push(f);
+                      });
+                    if (g.getType() === 'Polygon') {
+                      const coor = g.getCoordinates();
+                      if (coor.length > 0 && coor.flat(Infinity).length > 0) { // poligoni sa []
+                        const p = polygon(g.getCoordinates());
+                        const intersect = p.intersect(sls);
+                        if (intersect.length > 0) this.getFeatures().push(f);
+                      }
+                    }
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }
+              }
+            });
+            this.dispatchEvent('select');
+          });
+          this.line.source.on('addfeature', evt => {
+            if (this.line.source) this.line.source.clear();
+          });
+        }
+        else {
+          this.getMap().removeInteraction(this.line.draw);
+          if (this.line.source) map.removeInteraction(this.line.draw);
+          this.line.layer.setMap(null);
+        }
+      }
+    });
+    this.ui.addControl(this.line);
   }
 
   addInfo(control, options) {
