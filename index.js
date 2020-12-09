@@ -84,6 +84,11 @@ select.addUI(map, {
     className: "select-line",
     html: '<i class="far fa-heart-rate"></i>',
     title: "Odaberi objekte koji sijeku nacrtanu liniju"
+  },
+ poly: {
+    className: "select-poly",
+    html: '<i class="far fa-monitor-heart-rate"></i>',
+    title: 'Odaberi objekte unutar nacrtanog poligona'
   }
 });
 //left controls
@@ -115,6 +120,7 @@ navLeft.addControl(theme);
 map.getLayers().on('propertychange', evt => theme.setLayer(evt.target.get('active')));
 //properties
 const property = new Properties({
+  readOnly: true,
   className: "properties-toggle",
   dialogClassName: "properties",
   html: '<i class="far fa-info-circle"></i>',

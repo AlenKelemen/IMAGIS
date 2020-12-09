@@ -32,6 +32,9 @@ import Toggle from "./toggle";
  * @param {string} options.line.className Select by line toggle className
  * @param {string} options.line.html Select by line toggle innerHTML
  * @param {string} options.line.title Select by line toggle tipLabel
+ * @param {string} options.poly.className Select by polygon toggle className
+ * @param {string} options.poly.html Select by polygon toggle innerHTML
+ * @param {string} options.poly.title Select by polygon toggle tipLabel
  */
 
 export default class Select extends olSelect {
@@ -140,7 +143,7 @@ export default class Select extends olSelect {
             this.getFeatures().clear();
             evt.feature.getGeometry().forEachSegment((s, e) => {
               const sls = segment(point(s), point(e));
-              for (const l of map.getLayers().getArray().filter(x => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
+              for (const l of this.getMap().getLayers().getArray().filter(x => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
                 for (const f of l.getSource().getFeatures()) {
                   let g = f.getGeometry();
                   try {
@@ -175,12 +178,83 @@ export default class Select extends olSelect {
         }
         else {
           this.getMap().removeInteraction(this.line.draw);
-          if (this.line.source) map.removeInteraction(this.line.draw);
           this.line.layer.setMap(null);
         }
       }
     });
     this.ui.addControl(this.line);
+
+    this.poly = new Toggle({
+      className: options.poly.className || 'select-poly',
+      html: options.poly.html || '<i class="far fa-monitor-heart-rate"></i>',
+      tipLabel: options.poly.title || 'Odaberi objekte unutar nacrtanog poligona',
+      handleClick: () => {
+        this.setActive(false);
+        if (this.poly.getActive()) {
+          const activeLayer = this.getMap().getLayers().getArray().find(x => x.get('active'));
+          this.getMap().removeInteraction(this.line.draw);
+          if (this.line.layer) this.line.layer.setMap(null);
+          this.getMap().removeInteraction(this.dragBox);
+          this.poly.source = new VectorSource();
+          this.poly.layer = new VectorLayer({
+            source: this.poly.source
+          });
+          this.poly.layer.setMap(this.getMap());
+          const drawOptions = {
+            source: this.poly.source,
+            type: 'Polygon'
+          };
+          if (options.poly.selectStyle) drawOptions.style = options.poly.selectStyle;
+          this.poly.draw = new Draw(drawOptions);
+          this.getMap().addInteraction(this.poly.draw);
+          this.poly.draw.on('drawend', evt => {
+            this.getFeatures().clear();
+            const p = polygon(evt.feature.getGeometry().getCoordinates());
+            for (const l of this.getMap().getLayers().getArray().filter(x => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
+              for (const f of l.getSource().getFeatures()) {
+                let g = f.getGeometry();
+                try {
+                  if (g.getType() === 'Point') {
+                    const intersect = p.intersect(point(g.getFirstCoordinate()));
+                    if (intersect.length > 0) {
+                      this.getFeatures().push(f);
+                    }
+                  }
+                  if (g.getType() === 'LineString') {
+                    g.forEachSegment((s, e) => {
+                      try {
+                        const ls = segment(point(s), point(e));
+                        if (p.contains(ls)) this.getFeatures().push(f);
+                      } catch (err) { }
+                    });
+                  }
+                  if (g.getType() === 'Polygon') {
+                    try {
+                      if (p.contains(polygon(g.getCoordinates()))) this.getFeatures().push(f);
+                    } catch (err) { }
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              }
+            }
+            this.dispatchEvent('select');
+          });
+          this.poly.source.on('addfeature', evt => {
+            if (this.poly.source) this.poly.source.clear();
+          });
+        }
+        else {
+          this.getMap().removeInteraction(this.poly.draw);
+          this.poly.layer.setMap(null);
+        }
+      }
+    })
+    this.ui.addControl(this.poly);
+
+
+
+
   }
 
   addInfo(control, options) {

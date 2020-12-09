@@ -122,7 +122,6 @@ export default class Properties extends Control {
                 }
             }
         }
-        //console.log(props);
         props = props.filter(x => x.Hidden !== true); //in layer.def.source.schema.properties hiden properties can be defined
         for (const p of props) {
             const div = document.createElement('div'),
@@ -143,7 +142,7 @@ export default class Properties extends Control {
             }
             label.innerText = p.Label || p.Name;
             input.value = p.values.length > 1 ? '*VARIRA*' : p.values[0];
-            input.id = p.Name; // id = property name
+            input.id = layer.get('name') + '-' + p.Name; // id = property name
             input.disabled = this.readOnly;
             div.appendChild(label);
             div.appendChild(input);
