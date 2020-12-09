@@ -86,6 +86,7 @@ export default class DefLayers {
                                 featureProjection: 'EPSG:3765'
                             }).readFeatures(geojson);
                             source.addFeatures(features);
+                            source.getFeatures().map(x => x.set('layer', layer));
                         });
                 }
             });
