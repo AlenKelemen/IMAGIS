@@ -68,6 +68,8 @@ export default class Select extends olSelect {
       handleClick: () => {
         this.setActive(this.rect.getActive());
         this.getMap().removeInteraction(this.line.draw);
+        this.getMap().removeInteraction(this.poly.draw);
+        if (this.poly.layer) this.poly.layer.setMap(null);
         if (this.rect.getActive()) {
           const selectedFeatures = this.getFeatures();
           this.dragBox = new DragBox();
@@ -126,6 +128,8 @@ export default class Select extends olSelect {
         this.line.bufferRadius = options.line.buffer || 5; // buffer radius around points in pixel
         if (this.line.getActive()) {
           this.getMap().removeInteraction(this.dragBox);
+          this.getMap().removeInteraction(this.poly.draw);
+          if (this.poly.layer) this.poly.layer.setMap(null);
           this.line.source = new VectorSource();
           this.line.layer = new VectorLayer({
             source: this.line.source
