@@ -74,6 +74,11 @@ select.addUI(map, {
     className: "select-point",
     html: '<i class="far fa-mouse-pointer"></i>',
     title: "Odaberi objekte"
+  },
+  rect: {
+    className: "select-rect",
+    html: '<i class="far fa-stop"></i>',
+    title: "Odaberi unutar pravokutnika"
   }
 });
 //left controls
@@ -106,7 +111,7 @@ map.getLayers().on('propertychange', evt => theme.setLayer(evt.target.get('activ
 //properties
 const property = new Properties({
   className: "properties-toggle",
-dialogClassName: "properties",
+  dialogClassName: "properties",
   html: '<i class="far fa-info-circle"></i>',
   tipLabel: 'Svojstva',
   select: select
