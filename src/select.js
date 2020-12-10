@@ -255,9 +255,66 @@ export default class Select extends olSelect {
       }
     })
     this.ui.addControl(this.poly);
-
-
-
+    this.inside = new Toggle({
+      className: options.inside.className || 'select-in-selected',
+      html: options.inside.html || '<i class="far fa-layer-plus"></i>',
+      tipLabel: options.inside.title || 'Odaberi objekte koji se nalaze unutar ili sijeku odabrani objekt'
+    })
+    this.inside.on('change:active', evt => {
+      if (evt.active) {
+        const activeLayer = this.getMap().getLayers().getArray().find(x => x.get('active'));
+        this.getFeatures().clear();
+        this.setActive(false);
+        const inSelectOptions = {};
+        if (this.selectStyle) inSelectOptions.style = this.selectStyle;
+        this.inSelect = new olSelect(inSelectOptions);
+        this.getMap().addInteraction(this.inSelect);
+        this.inSelect.on('select', evt => {
+          for (const f of evt.target.getFeatures().getArray()) {
+            const p = polygon(f.getGeometry().getCoordinates());
+            for (const l of this.getMap().getLayers().getArray().filter(x => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
+              for (const f of l.getSource().getFeatures()) {
+                let g = f.getGeometry();
+                try {
+                  if (g.getType() === 'Point') {
+                    const intersect = p.intersect(point(g.getFirstCoordinate()));
+                    if (intersect.length > 0) {
+                      this.getFeatures().push(f);
+                    }
+                  }
+                 /*  if (g.getType() === 'LineString') {
+                    let flag = true;
+                    g.forEachSegment((s, e) => {
+                      try {
+                        const ls = segment(point(s), point(e));
+                        //if (options.inside.intersect && p.intersect(ls).length > 0) this.getFeatures().push(f);
+                        if (!p.contains(ls)) flag = false;
+                      } catch (err) { }
+                    });
+                    //if (flag) this.getFeatures().push(f);
+                  } */
+                  if (g.getType() === 'Polygon') {
+                    try {
+                      if (p.contains(polygon(g.getCoordinates()))) this.getFeatures().push(f);
+                      if (options.inside.intersect && p.intersect(g).length > 0) this.getFeatures().push(f);
+                    } catch (err) { }
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              }
+            }
+          }
+          this.dispatchEvent('select');
+          this.inSelect.getFeatures().clear();
+        });
+      }
+      else {
+        this.inSelect.getFeatures().clear();
+        this.getMap().removeInteraction(this.inSelect);
+      }
+    });
+    this.ui.addControl(this.inside);
 
   }
 

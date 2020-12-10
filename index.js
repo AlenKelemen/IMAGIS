@@ -89,6 +89,11 @@ select.addUI(map, {
     className: "select-poly",
     html: '<i class="far fa-monitor-heart-rate"></i>',
     title: 'Odaberi objekte unutar nacrtanog poligona'
+  },
+ inside: {
+    className: "select-in-selected",
+    html: '<i class="far fa-layer-minus"></i>',
+    title: 'Odaberi objekte koji se nalaze unutar objekta (presjek)'
   }
 });
 //left controls
