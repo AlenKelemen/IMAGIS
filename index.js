@@ -39,8 +39,7 @@ const view = new View({
     })
 });
 const header = new Container({ //menu
-    semantic: 'header',
-    className:'ol-control'
+    semantic: 'header'
 });
 const footer = new Container({ //status
     semantic: 'footer'
@@ -48,18 +47,27 @@ const footer = new Container({ //status
 const aside = new Container({ // contaner for left & right side menus, taskpanes etc
     semantic: 'aside'
 });
-const nav = new Container({ // side menu
-    semantic: 'nav'
+const navRight= new Container({ // right side menu 
+    semantic: 'nav',
+    className:'nav-right'
+});
+const nav = new Container({ // left side nav
+    semantic: 'nav',
+    className:'ol-control'
+});
+const section = new Container({ // left side taskpane section
+    semantic: 'section',
+    className:'ol-control'
 });
 window.map = new Map({
     target: mapContainer,
     view: view,
     controls: [
         new Zoom({
-            target: nav.element
+            target: navRight.element
         }),
         new Rotate({
-            target: nav.element,
+            target: navRight.element,
             tipLabel: 'Sjever gore'
         }),
         new ScaleLine({
@@ -71,11 +79,15 @@ map.addControl(header);
 map.addControl(aside);
 map.addControl(footer);
 
-header.element.innerHTML = '<button>IMAGIS</button>'
-aside.addControl(new DefEditor({
+header.element.innerHTML = '<div class="ol-control"><button>+</button></div>'
+aside.addControl(nav);
+nav.element.innerHTML = '<button>I</button>'
+aside.addControl(section);
+section.addControl(new DefEditor({
     def: def
 }));
-aside.addControl(nav);
+aside.addControl(navRight);
+
 
 const defLayers = new DefLayers({
     def: def,
