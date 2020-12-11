@@ -1,4 +1,4 @@
-import Control from 'ol/control/Control';
+import Control from "ol/control/Control";
 /** Container for controls
  * @constructor
  * @extends {ol_control_Control}
@@ -9,56 +9,64 @@ import Control from 'ol/control/Control';
  */
 
 export default class Container extends Control {
-    constructor(options = {}) {
-        super({
-            element: document.createElement(options.semantic || 'div')
-        });
-        this.element.className = options.className || 'container'; // className
-        this.controls_ = [];
+  constructor(options = {}) {
+    super({
+      element: document.createElement(options.semantic || "div"),
+    });
+    this.element.className = options.className || "container"; // className
+    this.controls_ = [];
+  }
+  setActive(b) {
+    // set element visible
+    if (this.getActive() == b) return;
+    if (b) this.element.classList.add("active");
+    else this.element.classList.remove("active");
+    this.dispatchEvent({
+      type: "change:active",
+      key: "active",
+      oldValue: !b,
+      active: b,
+    });
+  }
+  getActive() {
+    // get element visible
+    return this.element.classList.contains("active");
+  }
+  addControl(control) {
+    // ad control
+    this.controls_.push(control);
+    control.setTarget(this.element);
+    control.set("parent", this);
+    if (this.getMap()) this.getMap().addControl(control);
+  }
+  removeControl(control) {
+    this.controls_.splice(
+      this.controls_.findIndex((x) => x === control),
+      1
+    );
+    this.getMap().removeControl(control);
+  }
+  getControls() {
+    return this.controls_;
+  }
+  /** Get active controls in a container
+   * @return {object []} active controls
+   */
+  getActiveControls() {
+    var active = [];
+    for (const control of this.controls_) {
+      if (control.getActive()) active.push(control);
     }
-    setVisible(visible) { // set element visible
-        this.element.style.display = visible ? 'block' : 'none';
-        this.dispatchEvent({
-            type: 'change:active',
-            key: 'active',
-            oldValue: !visible,
-            active: visible
-        });
+    return active;
+  }
+  /** Deactivate all controls in a container
+   * @param {_ol_control_} except a control to keep active, if except == undefined all controls are deactivated
+   */
+  deactivateControls(except) {
+    for (const control of this.controls_) {
+      if (control !== except) {
+        if (control.getActive()) control.setActive(false);
+      }
     }
-    getVisible() { // get element visible
-        return this.element.style.display === 'none' ? false : true;
-    }
-    addControl(control) { // ad control
-        this.controls_.push(control);
-        control.setTarget(this.element);
-        control.set('parent', this);
-        if (this.getMap()) this.getMap().addControl(control);
-    }
-    removeControl(control) {
-        this.controls_.splice(this.controls_.findIndex(x => x === control), 1);
-        this.getMap().removeControl(control);
-    }
-    getControls() {
-            return this.controls_;
-        }
-        /** Get active controls in a container
-         * @return {object []} active controls
-         */
-    getActiveControls() {
-            var active = [];
-            for (const control of this.controls_) {
-                if (control.getActive()) active.push(control);
-            }
-            return active;
-        }
-        /** Deactivate all controls in a container
-         * @param {_ol_control_} except a control to keep active, if except == undefined all controls are deactivated
-         */
-    deactivateControls(except) {
-        for (const control of this.controls_) {
-            if (control !== except) {
-                if (control.getActive()) control.setActive(false);
-            }
-        }
-    }
+  }
 }

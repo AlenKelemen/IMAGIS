@@ -36,12 +36,22 @@ const view = new View({
     extent: [208311.05, 4614890.75, 724721.78, 5159767.36],
   }),
 });
+/**  ol/map*/
 window.map = new Map({
   target: mapContainer,
   view: view,
   controls: [],
 });
 
+/**  load layers from def*/
+const defLayers = new DefLayers({
+  def: def,
+  map: map,
+});
+defLayers.addTileLayers();
+defLayers.addVectorLayers();
+
+/** UX header */
 const header = new Container({
   semantic: "header",
   className: "header",
@@ -52,32 +62,72 @@ const gui = new Container({
 });
 header.addControl(gui);
 
+/** UX gui control */
+const toggleHome = new Toggle({
+  html: '<i class="far fa-home"></i>',
+  className: "toggle-home",
+  tipLabel: "Opći alati",
+});
+gui.addControl(toggleHome);
+toggleHome.on("change:active", (evt) => {
+  sectionHome.setActive(evt.active);
+});
+
+/** UX left & right side controls */
 const aside = new Container({
-  // contaner for left & right side controls
   semantic: "aside",
   className: "aside",
 });
 map.addControl(aside);
-const section = new Container({// left side taskpane section
+
+/** UX left side controls children of aside */
+const sectionHome = new Container({
   semantic: "section",
-  className: "section",
+  className: "section home",
 });
-aside.addControl(section);
-const navRight = new Container({  // right side controls
+aside.addControl(sectionHome);
+
+/** UX left side control child of section */
+const taskpaneHome = new Container({
+  semantic: "section",
+  className: "taskpane home",
+});
+sectionHome.addControl(taskpaneHome);
+taskpaneHome.addControl(
+  new DefEditor({
+    def: def,
+  })
+);
+const navHome = new Container({
+  semantic: "nav",
+  className: "nav home ol-control",
+});
+sectionHome.addControl(navHome);
+const defEditor = new Toggle({
+  html: '<i class="far fa-brackets-curly"></i>',
+  className: "toggle-defEditor",
+  tipLabel: "Def editor",
+});
+navHome.addControl(defEditor);
+defEditor.on("change:active", (evt) => {
+  taskpaneHome.setActive(evt.active);
+});
+const legend = new Toggle({
+  html: '<i class="far fa-layer-group"></i>',
+  className: "toggle-legend",
+  tipLabel: "Legenda",
+});
+navHome.addControl(legend);
+legend.on("change:active", (evt) => {
+  //taskpaneHome.setActive(evt.active);
+});
+
+/** UX right side control child of aside */
+const navRight = new Container({
   semantic: "nav",
   className: "nav-right",
 });
 aside.addControl(navRight);
-const taskpane = new Container({
-  semantic: "section",
-  className: "taskpane",
-});
-section.addControl(taskpane);
-const nav = new Container({
-    semantic: "nav",
-    className: "nav-left",
-  });
-  section.addControl(nav);
 navRight.addControl(
   new Rotate({
     tipLabel: "Sjever gore",
@@ -85,29 +135,10 @@ navRight.addControl(
 );
 navRight.addControl(new Zoom());
 
+/** UX footer control */
 const footer = new Container({
   semantic: "footer",
   className: "footer",
 });
 map.addControl(footer);
 footer.addControl(new ScaleLine());
-
-const guiNav = new Toggle({
-  html: '<i class="far fa-plus"></i>',
-  tipLabel: "show/hide section",
-});
-gui.addControl(guiNav);
-guiNav.on("change:active", (evt) => {
-  section.setVisible(!evt.active);
-});
-taskpane.addControl(
-  new DefEditor({
-    def: def,
-  })
-);
-const defLayers = new DefLayers({
-  def: def,
-  map: map,
-});
-defLayers.addTileLayers();
-defLayers.addVectorLayers();

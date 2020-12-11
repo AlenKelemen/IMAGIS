@@ -1,37 +1,37 @@
 html {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
   font-family: Verdana, sans-serif;
   font-size: 15px;
   line-height: 1.5;
 }
-
 .ol-overlaycontainer-stopevent {
   display: flex;
   flex-direction: column;
 }
-
 .ol-control,
 .ol-scale-line,
 .ol-rotate {
   position: unset;
   display: inline-block;
+  height: max-content;
+}
+.ol-control button:hover,
+.ol-control button:focus,
+.ol-control button.active {
+  background-color: green;
 }
 .ol-rotate {
   vertical-align: top;
 }
-
 .ol-scale-line {
- margin-left:auto;
+  margin-left: auto;
 }
-
 header {
   margin: 0.5em;
 }
-
 aside {
   flex-grow: 1;
   display: flex;
@@ -39,26 +39,23 @@ aside {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-
 .nav-right {
   margin-left: auto;
   height: fit-content;
 }
+.section,
+.taskpane {
+  display: none;
+}
+.active {
+  display: flex;
+}
 
-section {
+.section.home textarea {
+  resize: horizontal;
+  min-width: 255px;
   height: 100%;
 }
-section textarea {
-  height: inherit;
-  resize: none;
-  width: 40em;
-  border: none;
-  margin: 0;
-  background-color: rgba(0, 60, 136, 0.5);
-  color: white;
-  font-size: 1.14em;
-}
-
 footer {
   display: flex;
   margin: 0.5em;

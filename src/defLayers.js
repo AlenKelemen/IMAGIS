@@ -31,6 +31,11 @@ export default class DefLayers {
         }
         return r;
     }
+    removeTileLayers() {// remove 'wms, osm, bing' layers defined in def from map
+    for (const [i, l] of this.getTileLayers().entries()) {
+        this.map.removeLayer(this.map.getLayers().getArray().find(x => x.get('name') === l.name));
+    }
+}
     addTileLayers() {
         for (const [i, l] of this.getTileLayers().entries()) {
             const s = this.def.sources.find(x => x.name === l.source);
