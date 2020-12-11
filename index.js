@@ -52,8 +52,7 @@ const navRight= new Container({ // right side menu
     className:'nav-right'
 });
 const nav = new Container({ // left side nav
-    semantic: 'nav',
-    className:'ol-control'
+    semantic: 'nav'
 });
 const section = new Container({ // left side taskpane section
     semantic: 'section',
@@ -81,7 +80,7 @@ map.addControl(footer);
 
 header.element.innerHTML = '<div class="ol-control"><button>+</button></div>'
 aside.addControl(nav);
-nav.element.innerHTML = '<button>I</button>'
+nav.element.innerHTML = '<div class="ol-control"><button>i</button></div>'
 aside.addControl(section);
 section.addControl(new DefEditor({
     def: def
