@@ -15,16 +15,13 @@ import baseDef from "./def.json";
 import Container from "./src/container";
 import DefLayers from "./src/defLayers";
 import DefEditor from "./src/defEditor";
+import Toggle from "./src/toggle";
 
-if (localStorage.getItem("def") === null)
-  localStorage.setItem("def", JSON.stringify(baseDef));
+if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
 const def = JSON.parse(localStorage.getItem("def"));
 def.path = window.location.href.split("/").slice(0, -1).join("/"); //base url
 
-proj4.defs(
-  "EPSG:3765",
-  "+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-);
+proj4.defs("EPSG:3765", "+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
 register(proj4);
 const mapContainer = document.createElement("main");
 mapContainer.className = "map";
@@ -39,54 +36,71 @@ const view = new View({
     extent: [208311.05, 4614890.75, 724721.78, 5159767.36],
   }),
 });
-const header = new Container({
-  //menu
-  semantic: "header",
-});
-const footer = new Container({
-  //status
-  semantic: "footer",
-});
-const aside = new Container({
-  // contaner for left & right side menus, taskpanes etc
-  semantic: "aside",
-});
-const navRight = new Container({
-  // right side menu
-  semantic: "nav",
-  className: "nav-right",
-});
-const nav = new Container({
-  // left side nav
-  semantic: "nav",
-});
-const section = new Container({
-  // left side taskpane section
-  semantic: "section",
-});
 window.map = new Map({
   target: mapContainer,
   view: view,
   controls: [],
 });
+
+const header = new Container({
+  semantic: "header",
+  className: "header",
+});
 map.addControl(header);
+const gui = new Container({
+  className: "ol-control",
+});
+header.addControl(gui);
+
+const aside = new Container({
+  // contaner for left & right side controls
+  semantic: "aside",
+  className: "aside",
+});
 map.addControl(aside);
+const section = new Container({// left side taskpane section
+  semantic: "section",
+  className: "section",
+});
 aside.addControl(section);
-aside.addControl(nav);
+const navRight = new Container({  // right side controls
+  semantic: "nav",
+  className: "nav-right",
+});
 aside.addControl(navRight);
-map.addControl(footer);
+const taskpane = new Container({
+  semantic: "section",
+  className: "taskpane",
+});
+section.addControl(taskpane);
+const nav = new Container({
+    semantic: "nav",
+    className: "nav-left",
+  });
+  section.addControl(nav);
 navRight.addControl(
   new Rotate({
     tipLabel: "Sjever gore",
   })
 );
 navRight.addControl(new Zoom());
+
+const footer = new Container({
+  semantic: "footer",
+  className: "footer",
+});
+map.addControl(footer);
 footer.addControl(new ScaleLine());
-header.element.innerHTML = '<div class="ol-control"><button>+</button></div>';
-nav.element.innerHTML =
-  '<div class="ol-control"><button id="section-show">i</button></div>';
-document.getElementById("section-show").addEventListener('click', evt => {section.element.style.display=section.element.style.display==='none'?'block':'none'});
-section.addControl(
+
+const guiNav = new Toggle({
+  html: '<i class="far fa-plus"></i>',
+  tipLabel: "show/hide section",
+});
+gui.addControl(guiNav);
+guiNav.on("change:active", (evt) => {
+  section.setVisible(!evt.active);
+});
+taskpane.addControl(
   new DefEditor({
     def: def,
   })
