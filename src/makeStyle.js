@@ -7,7 +7,7 @@ import {
     RegularShape,
     Style
 } from 'ol/style';
-const images = require('../../img/*.png');
+const images = require('../img/*.png');
 /**
  * 
  * icon style:
@@ -23,12 +23,13 @@ const images = require('../../img/*.png');
  */
 export function makeStyle(styleSpec) {
     if (!styleSpec) return; //default style
-    const sp = Array.isArray(styleSpec) ? styleSpec : [styleSpec];//allways as array
-    return function (feature, resolution) {
+    const sp = Array.isArray(styleSpec) ? styleSpec : [styleSpec]; //allways as array
+    return function(feature, resolution) {
         const styles = [];
         for (const s of sp) {
             let style = new Style();
-            let filterFlag = true, resFlag=true;
+            let filterFlag = true,
+                resFlag = true;
             if (s.filter && feature) {
                 const f = s.filter;
                 if (f.value && f.property) {
@@ -70,13 +71,13 @@ export function makeStyle(styleSpec) {
                     if (!s.text.resolution || (s.text.resolution[0] < resolution && s.text.resolution[1] > resolution)) {
                         style.setText(new Text({
                             font: s.text.font,
-                            scale:s.text.scale,
+                            scale: s.text.scale,
                             maxAngle: s.text.maxAngle,
                             offsetX: s.text.offsetX,
                             offsetY: s.text.offsetY,
-                            placement: s.text.placement,//
+                            placement: s.text.placement, //
                             textAlign: s.text.textAlign,
-                            textBaseline: s.text.textBaseline,//
+                            textBaseline: s.text.textBaseline, //
                             padding: s.text.padding
                         }));
                         if (s.text.text) {
