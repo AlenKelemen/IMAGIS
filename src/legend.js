@@ -39,7 +39,8 @@ export default class Legend extends Control {
           .getArray()
           .find((x) => x === this.content) === undefined
       )
-        this.getMap().addControl(this.content);
+        this.content.setTarget(options.target);
+      this.getMap().addControl(this.content);
       if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls
       if (evt && evt.preventDefault) {
         evt.preventDefault();

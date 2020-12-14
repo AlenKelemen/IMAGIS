@@ -83,8 +83,6 @@ const sectionHome = new Container({
   className: "section home",
 });
 aside.addControl(sectionHome);
-
-/** UX left side control, child of section */
 const taskpaneHome = new Container({
   semantic: "section",
   className: "taskpane home",
@@ -107,18 +105,20 @@ const defEditor = new Toggle({
 });
 navHome.addControl(defEditor);
 defEditor.on("change:active", (evt) => {
-  taskpaneHome.setActive(evt.active);
+  defEditor.setActive(evt.active);
 });
 const legend = new Legend({
   className: "legend-toggle",
   html: '<i class="far fa-layer-group"></i>',
   tipLabel: "Legenda & upravljanje kartom",
-  dialogClassName: "legend"
+  dialogClassName: "legend",
+  target:taskpaneHome.element
 });
+
 navHome.addControl(legend);
-taskpaneHome.addControl(legend.content);
+
 legend.on("change:active", (evt) => {
-  taskpaneHome.setActive(evt.active);
+  legend.setActive(evt.active);
 });
 
 /** UX right side control, child of aside */
