@@ -17,122 +17,137 @@ import Container from "./src/container";
 import DefLayers from "./src/defLayers";
 import DefEditor from "./src/defEditor";
 import Toggle from "./src/toggle";
+import Geolocator from "./src/geoloc";
 
-/**local project def*/
+/**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
 const def = JSON.parse(localStorage.getItem("def"));
+/** map contaner */
 const mapContainer = document.createElement("main");
 mapContainer.className = "map";
 document.body.appendChild(mapContainer);
-const view = new View({
-  center: def.center,
-  zoom: def.zoom,
-  projection: new epsg3765()
-});
+
 /**  ol/map*/
 window.map = new Map({
   target: mapContainer,
-  view: view,
-  controls: []
+  view: new View({
+    center: def.center,
+    zoom: def.zoom,
+    projection: new epsg3765(),
+  }),
+  controls: [],
 });
 
 /**  load layers from def*/
 const defLayers = new DefLayers({
   def: def,
-  map: map
+  map: map,
 });
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
 defLayers.addTHLayers();
 
-/** UX header */
+/** UX header control */
 const header = new Container({
   semantic: "header",
-  className: "header"
+  className: "header",
 });
 map.addControl(header);
 const gui = new Container({
-  className: "ol-control"
+  className: "ol-control",
 });
 header.addControl(gui);
 
-/** UX gui control */
+/** UX home control */
 const toggleHome = new Toggle({
   html: '<i class="far fa-home"></i>',
   className: "toggle-home",
-  tipLabel: "Opći alati"
+  tipLabel: "Opći alati",
 });
 gui.addControl(toggleHome);
-toggleHome.on("change:active", evt => {
+toggleHome.on("change:active", (evt) => {
   sectionHome.setActive(evt.active);
 });
 
-/** UX left & right side controls */
+/** aside: UX left & right side controls contaner */
 const aside = new Container({
   semantic: "aside",
-  className: "aside"
+  className: "aside",
 });
 map.addControl(aside);
 
-/** UX left side controls children of aside */
+/** UX left side controls, children of aside */
 const sectionHome = new Container({
   semantic: "section",
-  className: "section home"
+  className: "section home",
 });
 aside.addControl(sectionHome);
 
-/** UX left side control child of section */
+/** UX left side control, child of section */
 const taskpaneHome = new Container({
   semantic: "section",
-  className: "taskpane home"
+  className: "taskpane home",
 });
 sectionHome.addControl(taskpaneHome);
 taskpaneHome.addControl(
   new DefEditor({
-    def: def
+    def: def,
   })
 );
 const navHome = new Container({
   semantic: "nav",
-  className: "nav home ol-control"
+  className: "nav home ol-control",
 });
 sectionHome.addControl(navHome);
 const defEditor = new Toggle({
   html: '<i class="far fa-brackets-curly"></i>',
   className: "toggle-defEditor",
-  tipLabel: "Def editor"
+  tipLabel: "Def editor",
 });
 navHome.addControl(defEditor);
-defEditor.on("change:active", evt => {
+defEditor.on("change:active", (evt) => {
   taskpaneHome.setActive(evt.active);
 });
 const legend = new Toggle({
   html: '<i class="far fa-layer-group"></i>',
   className: "toggle-legend",
-  tipLabel: "Legenda"
+  tipLabel: "Legenda",
 });
 navHome.addControl(legend);
-legend.on("change:active", evt => {
+legend.on("change:active", (evt) => {
   //taskpaneHome.setActive(evt.active);
 });
 
-/** UX right side control child of aside */
+/** UX right side control, child of aside */
 const navRight = new Container({
   semantic: "nav",
-  className: "nav-right"
+  className: "nav-right",
 });
 aside.addControl(navRight);
-navRight.addControl(
+const rotateZoom = new Container({
+  semantic: "nav",
+  className: "nav-rotateZoom",
+});
+navRight.addControl(rotateZoom);
+rotateZoom.addControl(
   new Rotate({
-    tipLabel: "Sjever gore"
+    tipLabel: "Sjever gore",
   })
 );
-navRight.addControl(new Zoom());
+rotateZoom.addControl(new Zoom());
+/** geolocate control, rightside child of aside */
+const geolocator = new Geolocator({
+  map: map,
+  className: "geolocator ol-control",
+  html: '<i class="far fa-map-marker-alt"></i>',
+  tipLabel: "Pokaži moju lokaciju",
+});
+navRight.addControl(geolocator);
 
 /** UX footer control */
 const footer = new Container({
   semantic: "footer",
-  className: "footer"
+  className: "footer",
 });
 map.addControl(footer);
 footer.addControl(new ScaleLine());

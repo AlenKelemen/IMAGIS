@@ -43,6 +43,9 @@ aside {
   margin-left: auto;
   height: fit-content;
 }
+.nav-right > div {
+  float: right;
+}
 .section,
 .taskpane {
   display: none;
@@ -56,6 +59,7 @@ aside {
   min-width: 255px;
   height: 100%;
 }
+
 footer {
   display: flex;
   margin: 0.5em;
