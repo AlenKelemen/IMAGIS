@@ -18,6 +18,7 @@ import DefLayers from "./src/defLayers";
 import DefEditor from "./src/defEditor";
 import Toggle from "./src/toggle";
 import Geolocator from "./src/geoloc";
+import Legend from "./src/legend";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -108,14 +109,16 @@ navHome.addControl(defEditor);
 defEditor.on("change:active", (evt) => {
   taskpaneHome.setActive(evt.active);
 });
-const legend = new Toggle({
+const legend = new Legend({
+  className: "legend-toggle",
   html: '<i class="far fa-layer-group"></i>',
-  className: "toggle-legend",
-  tipLabel: "Legenda",
+  tipLabel: "Legenda & upravljanje kartom",
+  dialogClassName: "legend"
 });
 navHome.addControl(legend);
+taskpaneHome.addControl(legend.content);
 legend.on("change:active", (evt) => {
-  //taskpaneHome.setActive(evt.active);
+  taskpaneHome.setActive(evt.active);
 });
 
 /** UX right side control, child of aside */
