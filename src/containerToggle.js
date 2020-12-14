@@ -9,12 +9,14 @@ import Toggle from "./toggle";
  * @param {string} options.tipLabel html title of the control
  * @param {string} options.html html to insert in the control
  * @param {function} options.handleClick callback on click
- * @param {HTML element} options.target container target
+ * @param {ol/control} options.target container target
  */
 
 export default class containerToggle extends Toggle {
     constructor(options = {}) {
         super();
+        this.container = new Container;
+        options.target.addControl(this.container);
         this.handleClick = evt => console.log(evt)
     }
 }
