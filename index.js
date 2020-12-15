@@ -19,6 +19,7 @@ import DefEditor from "./src/defEditor";
 import Toggle from "./src/toggle";
 import Geolocator from "./src/geoloc";
 import Legend from "./src/legend";
+import ContainerToggle from "./src/containerToggle.js";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -83,43 +84,31 @@ const sectionHome = new Container({
   className: "section home",
 });
 aside.addControl(sectionHome);
-const taskpaneHome = new Container({
-  semantic: "section",
-  className: "taskpane home",
-});
-sectionHome.addControl(taskpaneHome);
-taskpaneHome.addControl(
-  new DefEditor({
-    def: def,
-  })
-);
+
 const navHome = new Container({
   semantic: "nav",
   className: "nav home ol-control",
 });
 sectionHome.addControl(navHome);
-const defEditor = new Toggle({
-  html: '<i class="far fa-brackets-curly"></i>',
-  className: "toggle-defEditor",
-  tipLabel: "Def editor",
-});
-navHome.addControl(defEditor);
-defEditor.on("change:active", (evt) => {
-  defEditor.setActive(evt.active);
-});
-const legend = new Legend({
-  className: "legend-toggle",
-  html: '<i class="far fa-layer-group"></i>',
-  tipLabel: "Legenda & upravljanje kartom",
-  dialogClassName: "legend",
-  target:taskpaneHome.element
-});
+navHome.addControl(
+  new ContainerToggle({
+    html: '<i class="far fa-brackets-curly"></i>',
+    className: "def-editor-toggle",
+    tipLabel: "Def editor",
+    target: sectionHome,
+    contanerClassName:'def-editor ol-control'
+  })
+);
+navHome.addControl(
+  new ContainerToggle({
+    html: '<i class="far fa-brackets-curly"></i>',
+    className: "def-editor-toggle",
+    tipLabel: "Def editor",
+    target: sectionHome,
+    contanerClassName:'def-editor ol-control'
+  })
+);
 
-navHome.addControl(legend);
-
-legend.on("change:active", (evt) => {
-  legend.setActive(evt.active);
-});
 
 /** UX right side control, child of aside */
 const navRight = new Container({

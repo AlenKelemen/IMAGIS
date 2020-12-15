@@ -30,8 +30,6 @@ export default class Toggle extends Control {
             }
         };
         e.addEventListener("click", evtFunction);
-        e.addEventListener("touchstart", evtFunction);
-        if (options.callback) this.on('change:active', options.callback);
     }
     /**
      * Parent control (navbar)

@@ -1,7 +1,7 @@
 import Container from "./container";
 import Toggle from "./toggle";
 
-/** def JSON editor control
+/** create contaner with toggle
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object=} options Control options.
@@ -13,10 +13,46 @@ import Toggle from "./toggle";
  */
 
 export default class containerToggle extends Toggle {
-    constructor(options = {}) {
-        super();
-        this.container = new Container;
-        options.target.addControl(this.container);
-        this.handleClick = evt => console.log(evt)
-    }
+  constructor(options = {}) {
+    super(options);
+    this.container = new Container({
+      className: options.contanerClassName,
+    });
+    console.log(this.container)
+    this.addHeader("Header");
+    this.addContent(`
+    lwkdfvkermvkmvklwkdfvke
+    rmvkmvklwkdfvke
+    rmvkmvklwkdfvkermv
+    kmvklwkdfvkermvkmvklw
+    kdfvkermvkmvkl
+    wkdfvkermv
+    kmvklwkdfvkermvkmvk
+    lwkdfvkermvkmvklwkdfvke
+    rmvkmvklwkd
+    fvkermvkmvkl
+    wkdfvkermvkmvk
+    lwkdfvkermvkmvklw
+    kdfvkermvk
+    mvklwkdfvkermvkmvk`);
+
+    options.target.addControl(this.container)
+
+    this.on("change:active", (evt) => {
+      if (evt.active) this.container.element.classList.add("active");
+      else this.container.element.classList.remove("active");
+    });
+  }
+  addContent(innerHtml) { 
+    const content = document.createElement("section");
+    content.className = "content";
+    content.innerHTML = innerHtml;
+    this.container.element.appendChild(content); 
+  }
+  addHeader(innerHtml) {
+    const header = document.createElement("header");
+    header.className = "header";
+    header.innerHTML = innerHtml;
+    this.container.element.appendChild(header);
+  }
 }

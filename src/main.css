@@ -39,6 +39,19 @@ aside {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
+.def-editor {
+  display: none;
+  width: 300px;
+  height: unset;
+  position: relative;
+}
+.def-editor .content {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  overflow-y: auto;
+}
+
 .nav-right {
   margin-left: auto;
   height: fit-content;
@@ -46,8 +59,7 @@ aside {
 .nav-right > div {
   float: right;
 }
-.section,
-.taskpane {
+.section {
   display: none;
 }
 .active {
