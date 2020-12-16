@@ -94,18 +94,18 @@ sectionHome.addControl(navHome);
 navHome.addControl(
   new DefEditor({
     html: '<i class="far fa-brackets-curly"></i>',
-    tipLabel: "Def editor",
+    tipLabel: "Uređenje karte",
     target: sectionHome,
     contanerClassName:'def-editor',
     def:def
   })
 );
 navHome.addControl(
-  new ContainerToggle({
-    html: '<i class="far fa-brackets"></i>',
-    tipLabel: "Container toggle",
+  new Legend({
+    html: '<i class="far fa-layer-group"></i>',
+    tipLabel: "Legenda & upravljanje kartom",
     target: sectionHome,
-    contanerClassName:'def-editor ol-control'
+    contanerClassName:'legend ol-control'
   })
 );
 
