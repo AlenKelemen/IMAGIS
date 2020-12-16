@@ -96,7 +96,7 @@ navHome.addControl(
     html: '<i class="far fa-brackets-curly"></i>',
     tipLabel: "Uređenje karte",
     target: sectionHome,
-    contanerClassName:'def-editor',
+    contanerClassName:'def-editor ol-control',
     def:def
   })
 );

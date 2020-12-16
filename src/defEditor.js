@@ -22,7 +22,7 @@ export default class DefEditor extends Toggle {
       className: options.contanerClassName,
     });
     this.def = options.def;
-    this.addHeader("Uredi kartu");
+    this.addHeader("Postavke karte");
     this.addContent();
     options.target.addControl(this.container);
     this.on("change:active", (evt) => {

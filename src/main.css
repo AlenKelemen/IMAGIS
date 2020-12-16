@@ -43,6 +43,7 @@ body {
 .def-editor {
   display: none;
   position: relative;
+  width: 400px;
 }
 .def-editor-header {
   height: 30px;
@@ -54,13 +55,16 @@ body {
   overflow-y: none;
 }
 .def-editor-content textarea {
+  max-width: 400px;
+  max-height: 100%;
+  width: 100%;
   height: 100%;
-  width: 400px;
 }
 
 .legend {
   display: none;
   position: relative;
+  width: 300px;
 }
 .legend-header {
   height: 30px;
