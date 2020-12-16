@@ -79,21 +79,21 @@ const aside = new Container({
 map.addControl(aside);
 
 /** UX left side controls, children of aside */
+/**Home */
 const sectionHome = new Container({
   semantic: "section",
   className: "section home",
 });
 aside.addControl(sectionHome);
-
 const navHome = new Container({
   semantic: "nav",
   className: "nav home ol-control",
 });
 sectionHome.addControl(navHome);
+/** Home content */
 navHome.addControl(
   new ContainerToggle({
     html: '<i class="far fa-brackets-curly"></i>',
-    className: "def-editor-toggle",
     tipLabel: "Def editor",
     target: sectionHome,
     contanerClassName:'def-editor ol-control'
@@ -101,8 +101,7 @@ navHome.addControl(
 );
 navHome.addControl(
   new ContainerToggle({
-    html: '<i class="far fa-brackets-curly"></i>',
-    className: "def-editor-toggle",
+    html: '<i class="far fa-brackets"></i>',
     tipLabel: "Def editor",
     target: sectionHome,
     contanerClassName:'def-editor ol-control'

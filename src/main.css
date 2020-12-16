@@ -16,7 +16,6 @@ body {
 .ol-rotate {
   position: unset;
   display: inline-block;
-  height: max-content;
 }
 .ol-control button:hover,
 .ol-control button:focus,
@@ -39,10 +38,10 @@ aside {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
+
 .def-editor {
   display: none;
   width: 300px;
-  height: unset;
   position: relative;
 }
 .def-editor .content {
@@ -62,17 +61,12 @@ aside {
 .section {
   display: none;
 }
-.active {
-  display: flex;
-}
 
-.section.home textarea {
-  resize: horizontal;
-  min-width: 255px;
-  height: 100%;
-}
 
 footer {
   display: flex;
   margin: 0.5em;
+}
+.active {
+  display: flex;
 }
