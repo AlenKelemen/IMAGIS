@@ -55,10 +55,10 @@ const header = new Container({
   className: "header",
 });
 map.addControl(header);
-const gui = new Container({
+const nav = new Container({
   className: "ol-control",
 });
-header.addControl(gui);
+header.addControl(nav);
 
 /** UX home control */
 const toggleHome = new Toggle({
@@ -66,7 +66,7 @@ const toggleHome = new Toggle({
   className: "toggle-home",
   tipLabel: "Opći alati",
 });
-gui.addControl(toggleHome);
+nav.addControl(toggleHome);
 toggleHome.on("change:active", (evt) => {
   sectionHome.setActive(evt.active);
 });
@@ -92,7 +92,7 @@ const navHome = new Container({
 sectionHome.addControl(navHome);
 /** Home content */
 navHome.addControl(
-  new ContainerToggle({
+  new DefEditor({
     html: '<i class="far fa-brackets-curly"></i>',
     tipLabel: "Def editor",
     target: sectionHome,
@@ -102,7 +102,7 @@ navHome.addControl(
 navHome.addControl(
   new ContainerToggle({
     html: '<i class="far fa-brackets"></i>',
-    tipLabel: "Def editor",
+    tipLabel: "Container toggle",
     target: sectionHome,
     contanerClassName:'def-editor ol-control'
   })

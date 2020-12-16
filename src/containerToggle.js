@@ -15,10 +15,8 @@ import Toggle from "./toggle";
 export default class containerToggle extends Toggle {
   constructor(options = {}) {
     super(options);
-    this.container = new Container({
-      className: options.contanerClassName,
-    });
-    console.log(this.container)
+    this.container = new Container({ semantic: "section", className: options.contanerClassName });
+
     this.addHeader("Header");
     this.addContent(`
     lwkdfvkermvkmvklwkdfvke
@@ -36,18 +34,18 @@ export default class containerToggle extends Toggle {
     kdfvkermvk
     mvklwkdfvkermvkmvk`);
 
-    options.target.addControl(this.container)
+    options.target.addControl(this.container);
 
     this.on("change:active", (evt) => {
       if (evt.active) this.container.element.classList.add("active");
       else this.container.element.classList.remove("active");
     });
   }
-  addContent(innerHtml) { 
+  addContent(innerHtml) {
     const content = document.createElement("section");
     content.className = "content";
     content.innerHTML = innerHtml;
-    this.container.element.appendChild(content); 
+    this.container.element.appendChild(content);
   }
   addHeader(innerHtml) {
     const header = document.createElement("header");

@@ -28,10 +28,10 @@ body {
 .ol-scale-line {
   margin-left: auto;
 }
-header {
+.header {
   margin: 0.5em;
 }
-aside {
+.aside {
   flex-grow: 1;
   display: flex;
   pointer-events: none !important;
@@ -43,6 +43,11 @@ aside {
   display: none;
   width: 300px;
   position: relative;
+}
+.def-editor .content-header {
+  position: absolute;
+  
+ 
 }
 .def-editor .content {
   position: absolute;
@@ -63,7 +68,7 @@ aside {
 }
 
 
-footer {
+.footer {
   display: flex;
   margin: 0.5em;
 }
