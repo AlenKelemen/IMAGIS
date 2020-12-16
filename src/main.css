@@ -41,19 +41,21 @@ body {
 
 .def-editor {
   display: none;
-  width: 300px;
   position: relative;
 }
-.def-editor .content-header {
-  position: absolute;
-  
- 
+.def-editor-header {
+  height:30px
 }
-.def-editor .content {
+.def-editor-content {
   position: absolute;
   top: 30px;
   bottom: 0;
-  overflow-y: auto;
+  overflow-y: none;
+
+}
+.def-editor-content textarea{
+  height:100%;
+  width:400px
 }
 
 .nav-right {

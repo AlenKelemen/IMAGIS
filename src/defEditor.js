@@ -18,43 +18,45 @@ export default class DefEditor extends Toggle {
   constructor(options = {}) {
     super(options);
     this.container = new Container({
-      semantic:'section',
+      semantic: "section",
       className: options.contanerClassName,
     });
-
+    this.def = options.def;
     this.addHeader("Uredi kartu");
-    this.addContent(`
-    lwkdfvkermvkmvklwkdfvke
-    rmvkmvklwkdfvke
-    rmvkmvklwkdfvkermv
-    kmvklwkdfvkermvkmvklw
-    kdfvkermvkmvkl
-    wkdfvkermv
-    kmvklwkdfvkermvkmvk
-    lwkdfvkermvkmvklwkdfvke
-    rmvkmvklwkd
-    fvkermvkmvkl
-    wkdfvkermvkmvk
-    lwkdfvkermvkmvklw
-    kdfvkermvk
-    mvklwkdfvkermvkmvk`);
-
-    options.target.addControl(this.container)
-
+    this.addContent();
+    options.target.addControl(this.container);
     this.on("change:active", (evt) => {
       if (evt.active) this.container.element.classList.add("active");
       else this.container.element.classList.remove("active");
     });
   }
-  addContent(innerHtml) { 
+  addContent() {
     const content = document.createElement("section");
-    content.className = "content";
-    content.innerHTML = innerHtml;
-    this.container.element.appendChild(content); 
+    content.className = "def-editor-content";
+    this.textarea = document.createElement("textarea");
+    this.textarea.innerHTML = JSON.stringify(this.def, null, 2);
+    const defLayers = new DefLayers({
+      def: this.def,
+      map: map,
+    });
+    this.textarea.addEventListener("input", (evt) => {
+      const v = evt.target.value;
+      try {
+        defLayers.setDef(JSON.parse(v));
+        defLayers.removeVectorLayers();
+        defLayers.addVectorLayers();
+        defLayers.removeTileLayers();
+        defLayers.addTileLayers();
+      } catch (err) {
+        console.log("DefEditor err: ", err);
+      }
+    });
+    content.appendChild(this.textarea);
+    this.container.element.appendChild(content);
   }
   addHeader(innerHtml) {
     const header = document.createElement("header");
-    header.className = "content-header";
+    header.className = "def-editor-header";
     header.innerHTML = innerHtml;
     this.container.element.appendChild(header);
   }

@@ -96,7 +96,8 @@ navHome.addControl(
     html: '<i class="far fa-brackets-curly"></i>',
     tipLabel: "Def editor",
     target: sectionHome,
-    contanerClassName:'def-editor ol-control'
+    contanerClassName:'def-editor',
+    def:def
   })
 );
 navHome.addControl(
