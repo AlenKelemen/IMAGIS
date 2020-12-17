@@ -102,11 +102,10 @@ export default class containerToggle extends Toggle {
       });
       //  active/inactive (for single layer select & similar action) ! changes layer active property
       const active = item.querySelector(".header .active-layer");
-      console.log(active)
       if (l instanceof VectorLayer === false) active.style.visibility = "hidden";
       active.innerHTML = l.get("active") ? '<i class="far fa-check-square fa-fw"></i>' : '<i class="far fa-square fa-fw"></i>';
       active.addEventListener("click", (evt) => {
-        console.log('faesfdea')
+        console.log("faesfdea");
         const oldValue = l.get("active");
         for (const l_ of ls) {
           l_.set("active", false);
@@ -120,6 +119,34 @@ export default class containerToggle extends Toggle {
           .getLayers()
           .set("active", l.get("active") ? l : null);
       });
+      this.getMap()
+        .getView()
+        .on("change:resolution", () => {
+          if (item.style.display !== "none") this.getIcons(l, item.querySelector(".icon"), item.querySelector(".thematic"));
+        });
+      l.on("change:opacity", (evt) => {
+        item.querySelector(".icon").style.opacity = evt.target.getOpacity();
+      });
+      if (l.get("def")) {
+        // set layer properties to def if def exists
+        l.on("propertychange", (evt) => {
+          l.get("def").zIndex = evt.target.getZIndex();
+          l.get("def").visible = evt.target.getVisible() === undefined ? true : evt.target.getVisible();
+          l.get("def").opacity = evt.target.getOpacity() === undefined ? 1 : evt.target.getOpacity();
+          l.get("def").active = evt.target.get("active") === undefined ? false : evt.target.get("active");
+          //localStorage.setItem('def', JSON.stringify(this.getMap().get('def')));
+        });
+      }
+      //  z-order
+    Sortable.create(this.content, {
+      handle: ".sort",
+      onEnd: (evt) => {
+        for (let i = 0; i < this.content.children.length; i++) {
+          const layer = ls.find((x) => x.get("name") === this.content.children[i].id);
+          layer.setZIndex(this.content.children.length - i);
+        }
+      },
+    });
     }
   }
   addHeader(innerHtml) {
@@ -128,8 +155,8 @@ export default class containerToggle extends Toggle {
     header.innerHTML = innerHtml;
     this.container.element.appendChild(header);
   }
-   /** Get icons for layer - from div json & attaches to container */
-   getIcons(layer, singleStyleContaner, multipleStyleContainer, iconSize = [16, 16]) {
+  /** Get icons for layer - from div json & attaches to container */
+  getIcons(layer, singleStyleContaner, multipleStyleContainer, iconSize = [16, 16]) {
     if (layer instanceof VectorLayer === false) return;
     singleStyleContaner.title = "";
     multipleStyleContainer.innerHTML = "";
@@ -205,5 +232,12 @@ export default class containerToggle extends Toggle {
         }
       }
     }
-  } 
+  }
+  /** Get style as array of object */
+  styleObj(layer) {
+    if (layer instanceof VectorLayer) {
+      const style = typeof layer.getStyle() === "function" ? layer.getStyle().call(this, undefined, this.getMap().getView().getResolution()) : layer.getStyle();
+      return Array.isArray(style) ? style : [style];
+    } else return null;
+  }
 }
