@@ -43,18 +43,18 @@ body {
 .def-editor {
   display: none;
   position: relative;
-  width:32.33em;
+  width: 32.33em;
 }
 .def-editor-header {
   height: 30px;
-  background-color:rgba(0,60,136,0.5);
-  color:white;
-  width:100%
+  background-color: rgba(0, 60, 136, 0.5);
+  color: white;
+  width: 100%;
 }
 .def-editor-content {
   position: absolute;
   top: 30px;
-  width:100%;
+  width: 100%;
   bottom: 0;
   overflow-y: none;
 }
@@ -92,6 +92,13 @@ body {
 .footer {
   display: flex;
   margin: 0.5em;
+}
+.footer .active-layer-info {
+  background: rgba(0, 60, 136, 0.3);
+  border-radius: 4px;
+  color: #eee;
+  font-size: 12px;
+  padding:2px;
 }
 .active {
   display: flex;

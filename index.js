@@ -96,19 +96,17 @@ navHome.addControl(
     html: '<i class="far fa-brackets-curly"></i>',
     tipLabel: "Uređenje karte",
     target: sectionHome,
-    contanerClassName:'def-editor ol-control',
-    def:def
+    contanerClassName: "def-editor ol-control",
+    def: def,
   })
 );
-navHome.addControl(
-  new Legend({
-    html: '<i class="far fa-layer-group"></i>',
-    tipLabel: "Legenda & upravljanje kartom",
-    target: sectionHome,
-    contanerClassName:'legend ol-control'
-  })
-);
-
+const legend = new Legend({
+  html: '<i class="far fa-layer-group"></i>',
+  tipLabel: "Legenda & upravljanje kartom",
+  target: sectionHome,
+  contanerClassName: "legend ol-control",
+});
+navHome.addControl(legend);
 
 /** UX right side control, child of aside */
 const navRight = new Container({
@@ -142,4 +140,8 @@ const footer = new Container({
   className: "footer",
 });
 map.addControl(footer);
+legend.activeLayerInfo({
+  className: "active-layer-info",
+  targetControl: footer,
+});
 footer.addControl(new ScaleLine());

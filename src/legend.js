@@ -1,5 +1,6 @@
 import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
+import Control from "ol/control/Control";
 import Container from "./container";
 import Toggle from "./toggle";
 import VectorLayer from "ol/layer/Vector";
@@ -35,6 +36,31 @@ export default class containerToggle extends Toggle {
         this.container.element.classList.remove("active");
       }
     });
+  }
+  activeLayerInfo(options) {
+    const activeInfo = new Control({
+      element: document.createElement("div"),
+    });
+    
+    if(options.targetControl)options.targetControl.addControl(activeInfo); else this.getMap().addControl(activeInfo);
+    activeInfo.element.className = options.className || "active-info";
+    const active = this.getMap()
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active"));
+    if (active) activeInfo.element.innerHTML = "aktivni sloj: " + active.get("label") || active.get("name");
+    else activeInfo.element.style.display = "none";
+    this.getMap()
+      .getLayers()
+      .on("propertychange", (evt) => {
+        const active = evt.target.get("active");
+        if (active) {
+          activeInfo.element.style.display = "inline-block";
+          activeInfo.element.innerHTML = "aktivni sloj: " + active.get("label") || active.get("name");
+        } else {
+          activeInfo.element.style.display = "none";
+        }
+      });
   }
   contentUpdate() {
     this.content.innerHTML = "";
