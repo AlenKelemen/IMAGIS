@@ -43,13 +43,13 @@ export default class Theme extends Toggle {
   }
   addContent(innerHtml) {
     const content = document.createElement("section");
-    content.className = "content";
+    content.className = "theme-content";
     content.innerHTML = innerHtml;
     this.container.element.appendChild(content);
   }
   addHeader(innerHtml) {
     const header = document.createElement("header");
-    header.className = "header";
+    header.className = "theme-header";
     header.innerHTML = innerHtml;
     this.container.element.appendChild(header);
   }

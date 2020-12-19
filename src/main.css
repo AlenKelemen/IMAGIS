@@ -65,6 +65,11 @@ body {
   display: none;
   position: relative;
   width: 300px;
+  word-wrap: break-word;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+  background: rgba(0, 60, 136, 0.5);
 }
 .theme-header {
   height: 30px;
