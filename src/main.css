@@ -39,7 +39,42 @@ body {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-
+.legend {
+  display: none;
+  position: relative;
+  width: 300px;
+  word-wrap: break-word;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+  background: rgba(0, 60, 136, 0.5);
+}
+.legend:hover{
+  background: rgba(0, 60, 136, 0.5);
+}
+.legend-header {
+  height: 30px;
+}
+.legend-content {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  overflow-y: auto;
+}
+.theme {
+  display: none;
+  position: relative;
+  width: 300px;
+}
+.theme-header {
+  height: 30px;
+}
+.theme-content {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  overflow-y: auto;
+}
 .def-editor {
   display: none;
   position: relative;
@@ -63,20 +98,6 @@ body {
   height: 100%;
 }
 
-.legend {
-  display: none;
-  position: relative;
-  width: 300px;
-}
-.legend-header {
-  height: 30px;
-}
-.legend-content {
-  position: absolute;
-  top: 30px;
-  bottom: 0;
-  overflow-y: auto;
-}
 /** right nav*/
 .nav-right {
   margin-left: auto;
@@ -98,7 +119,7 @@ body {
   border-radius: 4px;
   color: #eee;
   font-size: 12px;
-  padding:2px;
+  padding: 2px;
 }
 .active {
   display: flex;
