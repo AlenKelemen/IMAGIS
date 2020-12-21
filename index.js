@@ -35,15 +35,15 @@ window.map = new Map({
   view: new View({
     center: def.center,
     zoom: def.zoom,
-    projection: new epsg3765()
+    projection: new epsg3765(),
   }),
-  controls: []
+  controls: [],
 });
 
 /**  load layers from def*/
 const defLayers = new DefLayers({
   def: def,
-  map: map
+  map: map,
 });
 defLayers.addTileLayers();
 defLayers.addVectorLayers();
@@ -52,11 +52,11 @@ defLayers.addTHLayers();
 /** UX header control */
 const header = new Container({
   semantic: "header",
-  className: "header"
+  className: "header",
 });
 map.addControl(header);
 const nav = new Container({
-  className: "ol-control"
+  className: "ol-control",
 });
 header.addControl(nav);
 
@@ -64,17 +64,17 @@ header.addControl(nav);
 const toggleHome = new Toggle({
   html: '<i class="far fa-home"></i>',
   className: "toggle-home",
-  tipLabel: "Opći alati"
+  tipLabel: "Opći alati",
 });
 nav.addControl(toggleHome);
-toggleHome.on("change:active", evt => {
+toggleHome.on("change:active", (evt) => {
   sectionHome.setActive(evt.active);
 });
 
 /** aside: UX left & right side controls contaner */
 const aside = new Container({
   semantic: "aside",
-  className: "aside"
+  className: "aside",
 });
 map.addControl(aside);
 
@@ -82,12 +82,12 @@ map.addControl(aside);
 /**Home */
 const sectionHome = new Container({
   semantic: "section",
-  className: "section home"
+  className: "section home",
 });
 aside.addControl(sectionHome);
 const navHome = new Container({
   semantic: "nav",
-  className: "nav home ol-control"
+  className: "nav home ol-control",
 });
 sectionHome.addControl(navHome);
 /** Home content */
@@ -96,39 +96,45 @@ const legend = new Legend({
   html: '<i class="far fa-layer-group"></i>',
   tipLabel: "Legenda & upravljanje kartom",
   target: sectionHome,
-  contanerClassName: "legend ol-control"
+  contanerClassName: "legend ol-control",
 });
 navHome.addControl(legend);
 const theme = new Theme({
   html: '<i class="far fa-images"></i>',
   tipLabel: "Tema i stil",
   target: sectionHome,
-  contanerClassName: "theme ol-control"
+  contanerClassName: "theme ol-control",
+  layer: map
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active")),
+ 
 });
 navHome.addControl(theme);
+
 navHome.addControl(
   new DefEditor({
     html: '<i class="far fa-brackets-curly"></i>',
     tipLabel: "Uređenje karte",
     target: sectionHome,
-    contanerClassName: "def-editor",
-    layer: map.getLayers().getArray().find(x => x.get('active'))
+    def:def,
+    contanerClassName: "def-editor" 
   })
 );
 /** UX right side control, child of aside */
 const navRight = new Container({
   semantic: "nav",
-  className: "nav-right"
+  className: "nav-right",
 });
 aside.addControl(navRight);
 const rotateZoom = new Container({
   semantic: "nav",
-  className: "nav-rotateZoom"
+  className: "nav-rotateZoom",
 });
 navRight.addControl(rotateZoom);
 rotateZoom.addControl(
   new Rotate({
-    tipLabel: "Sjever gore"
+    tipLabel: "Sjever gore",
   })
 );
 rotateZoom.addControl(new Zoom());
@@ -137,18 +143,18 @@ const geolocator = new Geolocator({
   map: map,
   className: "geolocator ol-control",
   html: '<i class="far fa-map-marker-alt"></i>',
-  tipLabel: "Pokaži moju lokaciju"
+  tipLabel: "Pokaži moju lokaciju",
 });
 navRight.addControl(geolocator);
 
 /** UX footer control */
 const footer = new Container({
   semantic: "footer",
-  className: "footer"
+  className: "footer",
 });
 map.addControl(footer);
 legend.activeLayerInfo({
   className: "active-layer-info",
-  targetControl: footer
+  targetControl: footer,
 });
 footer.addControl(new ScaleLine());

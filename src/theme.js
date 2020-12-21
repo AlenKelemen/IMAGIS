@@ -32,6 +32,7 @@ export default class Theme extends Toggle {
     this.cp = new Picker({
       popup: "bottom",
     });
+    console.log(options.layer)
     this.setLayer(options.layer); // should have get('def')
     this.htmlItem = `
     <ul class="item">
