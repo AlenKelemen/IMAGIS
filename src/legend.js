@@ -131,7 +131,6 @@ export default class containerToggle extends Toggle {
       if (l instanceof VectorLayer === false) active.style.visibility = "hidden";
       active.innerHTML = l.get("active") ? '<i class="far fa-check-square fa-fw"></i>' : '<i class="far fa-square fa-fw"></i>';
       active.addEventListener("click", (evt) => {
-        console.log("faesfdea");
         const oldValue = l.get("active");
         for (const l_ of ls) {
           l_.set("active", false);

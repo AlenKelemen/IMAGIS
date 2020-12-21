@@ -112,7 +112,7 @@ navHome.addControl(
     tipLabel: "Uređenje karte",
     target: sectionHome,
     contanerClassName: "def-editor",
-    def: def
+    layer: map.getLayers().getArray().find(x => x.get('active'))
   })
 );
 /** UX right side control, child of aside */
