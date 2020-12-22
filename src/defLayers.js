@@ -22,6 +22,17 @@ export default class DefLayers {
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.def.gitPath, this.localFolder);
   }
+  removeTHLayers() {
+    // remove 'gTH' layers defined in def from map
+    for (const [i, l] of this.getTHLayers().entries()) {
+      this.map.removeLayer(
+        this.map
+          .getLayers()
+          .getArray()
+          .find(x => x.get("name") === l.name)
+      );
+    }
+  }
   getTHLayers() {
     const r = [];
     for (const [i, l] of this.def.layers.entries()) {

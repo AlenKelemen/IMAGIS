@@ -54,6 +54,8 @@ export default class DefEditor extends Toggle {
         defLayers.setDef(JSON.parse(v));
         defLayers.removeVectorLayers();
         defLayers.addVectorLayers();
+        defLayers.removeTHLayers();
+        defLayers.addTHLayers();
         defLayers.removeTileLayers();
         defLayers.addTileLayers();
       } catch (err) {

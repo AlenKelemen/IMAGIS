@@ -113,10 +113,6 @@ const theme = new Theme({
   })(),
 });
 map.getLayers().on("propertychange", (evt) => {
-  for (const l of map.getLayers().getArray()){
-    const dl = def.layers.find(x => x.name === l.get('name'));
-    dl = l.get('def');
-  }
   defEditor.setDef(def);
   theme.setLayer(evt.target.get("active"));
 });
