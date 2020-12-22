@@ -25,6 +25,8 @@ export default class DefEditor extends Toggle {
     this.addHeader("Postavke karte");
     this.addContent();
     options.target.addControl(this.container);
+    this.callback = options.callback;
+
     this.on("change:active", (evt) => {
       if (evt.active) this.container.element.classList.add("active");
       else this.container.element.classList.remove("active");
@@ -34,6 +36,7 @@ export default class DefEditor extends Toggle {
     this.def = def;
     this.content.remove();
     this.addContent();
+    
   }
   addContent() {
     this.content = document.createElement("section");
@@ -58,6 +61,7 @@ export default class DefEditor extends Toggle {
         defLayers.addTHLayers();
         defLayers.removeTileLayers();
         defLayers.addTileLayers();
+        this.callback.call(this,this.def);
       } catch (err) {
         console.log("DefEditor err: ", err);
       }

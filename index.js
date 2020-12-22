@@ -111,9 +111,9 @@ const theme = new Theme({
       .getArray()
       .find((x) => x.get("active"));
   })(),
+  callback:(def,layer)=> defEditor.setDef(def)
 });
 map.getLayers().on("propertychange", (evt) => {
-  defEditor.setDef(def);
   theme.setLayer(evt.target.get("active"));
 });
 navHome.addControl(theme);
@@ -124,6 +124,7 @@ const defEditor =  new DefEditor({
   target: sectionHome,
   def: def,
   contanerClassName: "def-editor",
+  callback:(def) => theme.setLayer(map.getLayers().getArray().find(x => x.get('active')))
 })
 navHome.addControl(defEditor);
 /** UX right side control, child of aside */

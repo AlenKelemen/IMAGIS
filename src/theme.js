@@ -37,7 +37,8 @@ export default class Theme extends Toggle {
     this.cp = new Picker({
       popup: "bottom",
     });
-    this.setLayer(options.layer || null); // should have get('def')
+    this.setLayer(options.layer || null);
+    this.callback = options.callback;
     this.htmlItem = `
     <ul class="item">
         <li class="caret">Stil <i class="far fa-trash-alt fa-fw style"></i></li>
@@ -118,11 +119,6 @@ export default class Theme extends Toggle {
          </ul>
     </ul>
     `;
-  }
-
-  updateDef(def) {
-    const l = def.layers.find((x) => x.name === this.layer.get("def").name);
-    if (l) l.style = this.layer.get("def").style;
   }
 
   setLayer(layer) {
@@ -288,7 +284,9 @@ export default class Theme extends Toggle {
     }
     this.layer.get("def").style = ns;
     this.layer.setStyle(makeStyle(ns));
-    map.getLayers().dispatchEvent("propertychange");
+    console.log(ns)
+    this.def.layers.find(x => x.name === ds.name).style = ns;
+    if(this.callback) this.callback.call(this,this.def,this.layer);
   }
   fillOperators_(itemElement) {
     for (const e of itemElement.querySelectorAll(".operators")) {
