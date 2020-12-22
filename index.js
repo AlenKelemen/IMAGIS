@@ -104,23 +104,32 @@ const theme = new Theme({
   tipLabel: "Tema i stil",
   target: sectionHome,
   contanerClassName: "theme ol-control",
-  layer: map
+  def:def,
+  layer: (() => {
+    map
       .getLayers()
       .getArray()
-      .find((x) => x.get("active")),
- 
+      .find((x) => x.get("active"));
+  })(),
+});
+map.getLayers().on("propertychange", (evt) => {
+  for (const l of map.getLayers().getArray()){
+    const dl = def.layers.find(x => x.name === l.get('name'));
+    dl = l.get('def');
+  }
+  defEditor.setDef(def);
+  theme.setLayer(evt.target.get("active"));
 });
 navHome.addControl(theme);
 
-navHome.addControl(
-  new DefEditor({
-    html: '<i class="far fa-brackets-curly"></i>',
-    tipLabel: "Uređenje karte",
-    target: sectionHome,
-    def:def,
-    contanerClassName: "def-editor" 
-  })
-);
+const defEditor =  new DefEditor({
+  html: '<i class="far fa-brackets-curly"></i>',
+  tipLabel: "Uređenje karte",
+  target: sectionHome,
+  def: def,
+  contanerClassName: "def-editor",
+})
+navHome.addControl(defEditor);
 /** UX right side control, child of aside */
 const navRight = new Container({
   semantic: "nav",

@@ -30,17 +30,26 @@ export default class DefEditor extends Toggle {
       else this.container.element.classList.remove("active");
     });
   }
+  setDef(def) {
+    this.def = def;
+    this.content.remove();
+    this.addContent();
+  }
   addContent() {
-    const content = document.createElement("section");
-    content.className = "def-editor-content";
+    this.content = document.createElement("section");
+    this.content.className = "def-editor-content";
     this.textarea = document.createElement("textarea");
     this.textarea.innerHTML = JSON.stringify(this.def, null, 2);
     const defLayers = new DefLayers({
       def: this.def,
       map: map,
     });
-    this.textarea.addEventListener("input", (evt) => {
-      const v = evt.target.value;
+    this.content.appendChild(this.textarea);
+    this.ok = document.createElement("button");
+    this.ok.innerText = "OK";
+    this.content.appendChild(this.ok);
+    this.ok.addEventListener("click", (evt) => {
+      const v = this.textarea.value;
       try {
         defLayers.setDef(JSON.parse(v));
         defLayers.removeVectorLayers();
@@ -51,8 +60,7 @@ export default class DefEditor extends Toggle {
         console.log("DefEditor err: ", err);
       }
     });
-    content.appendChild(this.textarea);
-    this.container.element.appendChild(content);
+    this.container.element.appendChild(this.content);
   }
   addHeader(innerHtml) {
     const header = document.createElement("header");

@@ -62,6 +62,7 @@ body {
   overflow-y: auto;
 }
 .theme {
+  flex-direction: column;
   display: none;
   position: relative;
   width: 300px;
@@ -74,15 +75,90 @@ body {
 .theme:hover{
   background: rgba(0, 60, 136, 0.5);
 }
-.theme-header {
-  height: 30px;
+
+.theme .middle {
+  align-self: center;
+  margin: auto;
 }
-.theme-content {
-  position: absolute;
-  top: 30px;
-  bottom: 0;
+
+.theme .top .controls{
+  padding: 4px;
+  float: right;
+}
+.theme .top div{
+  padding: 4px;
+  float: left;
+}
+.theme .theme-body{
   overflow-y: auto;
+  position: absolute;
+  top: 90px;
+  bottom: 0;
+  width: 100%;
 }
+.theme .wrapper ul {
+  list-style-type: none;
+  padding-left: 8px;
+  margin: 0;
+}
+.theme .caret {
+  cursor: pointer;
+  user-select: none;
+}
+.theme .style {
+  color: red;
+}
+.theme .nested {
+  display: none;
+}
+.theme .caret::before {
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 900;
+  font-size: 16px;
+  content: "\f0da";
+  display: inline-block;
+  margin-right: 6px;
+}
+.theme .caret-down::before {
+  transform: rotate(90deg);
+}
+.theme input,
+.theme select,
+.theme .color {
+    margin-right: 8px;
+    padding: 2px;
+    border: 0;
+    width: 95%
+}
+.theme .color {
+  height: 18px;
+  background-color: white;
+  border: 2px solid white;
+  padding: 0;
+}
+
+.theme .color:hover {
+  cursor: pointer;
+}
+.picker_editor,
+.picker_sample,
+.picker_done,
+.picker_cancel,
+.picker_arrow {
+    display: none;
+}
+
+.picker_wrapper {
+    box-shadow: unset !important;
+    width: 220px !important;
+    margin: 0 !important
+}
+
+
+
+
+
+
 .def-editor {
   display: none;
   position: relative;
