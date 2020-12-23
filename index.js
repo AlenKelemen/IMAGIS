@@ -10,7 +10,7 @@ import Zoom from "ol/control/Zoom";
 import Projection from "ol/proj/Projection";
 import { register } from "ol/proj/proj4.js";
 import proj4 from "proj4";
-import Select from 'ol/interaction/Select';
+import Select from "ol/interaction/Select";
 
 import baseDef from "./def.json";
 import epsg3765 from "./src/EPSG3765";
@@ -22,6 +22,7 @@ import Legend from "./src/legend";
 import Theme from "./src/theme.js";
 import Properties from "./src/properties.js";
 import DefEditor from "./src/defEditor";
+import SelectInfo from "./src/selectInfo";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -163,7 +164,7 @@ const geolocator = new Geolocator({
 navRight.addControl(geolocator);
 
 /** select control, rightside child of aside */
-const select = new Select;
+const select = new Select();
 map.addInteraction(select);
 select.setActive(false);
 const selectContaner = new Container({
@@ -178,7 +179,7 @@ const selectToggle = new Toggle({
 });
 selectContaner.addControl(selectToggle);
 
-selectToggle.on('change:active', evt=> {
+selectToggle.on("change:active", (evt) => {
   select.setActive(evt.active);
 });
 const selectRectToggle = new Toggle({
@@ -187,7 +188,6 @@ const selectRectToggle = new Toggle({
   tipLabel: "Odaberi na druge načine",
 });
 selectContaner.addControl(selectRectToggle);
-
 
 /** UX footer control */
 const footer = new Container({
@@ -199,4 +199,8 @@ legend.activeLayerInfo({
   className: "active-layer-info",
   targetControl: footer,
 });
+const selectInfo = new SelectInfo({
+  select: select,
+});
+map.addControl(selectInfo);
 footer.addControl(new ScaleLine());
