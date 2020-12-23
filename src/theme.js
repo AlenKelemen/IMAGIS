@@ -7,15 +7,16 @@ const images = require("../img/*.png");
 import { makeStyle } from "./makeStyle";
 import { toStringHDMS } from "ol/coordinate";
 
-/** create contaner with toggle
+/** thematic editor
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object=} options Control options.
  * @param {string[]} options.className clase to add to control
  * @param {string} options.tipLabel html title of the control
  * @param {string} options.html html to insert in the control
- * @param {function} options.handleClick callback on click
+ * @param {function} options.callback callback on click
  * @param {ol/control} options.target container target
+ * @param {Object} options.def map definition object
  */
 
 export default class Theme extends Toggle {

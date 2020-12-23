@@ -20,6 +20,7 @@ import Toggle from "./src/toggle";
 import Geolocator from "./src/geoloc";
 import Legend from "./src/legend";
 import Theme from "./src/theme.js";
+import Properties from "./src/properties.js";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -91,7 +92,6 @@ const navHome = new Container({
 });
 sectionHome.addControl(navHome);
 /** Home content */
-
 const legend = new Legend({
   html: '<i class="far fa-layer-group"></i>',
   tipLabel: "Legenda & upravljanje kartom",
@@ -99,6 +99,7 @@ const legend = new Legend({
   contanerClassName: "legend ol-control",
 });
 navHome.addControl(legend);
+
 const theme = new Theme({
   html: '<i class="far fa-images"></i>',
   tipLabel: "Tema i stil",
@@ -118,13 +119,21 @@ map.getLayers().on("propertychange", (evt) => {
 });
 navHome.addControl(theme);
 
+const properties =  new Properties({
+  html: '<i class="far fa-info-circle"></i>',
+  tipLabel: "Info",
+  target: sectionHome,
+  contanerClassName: "properties ol-control"
+})
+navHome.addControl(properties);
+
+
 const defEditor =  new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
   tipLabel: "Uređenje karte",
   target: sectionHome,
   def: def,
-  contanerClassName: "def-editor",
-  //callback:(def) => theme.setLayer(map.getLayers().getArray().find(x => x.get('active')) )
+  contanerClassName: "def-editor"
 })
 navHome.addControl(defEditor);
 /** UX right side control, child of aside */

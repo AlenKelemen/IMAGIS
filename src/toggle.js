@@ -16,9 +16,9 @@ export default class Toggle extends Control {
         super({
             element: e
         });
-        e.className = options.className;
+        if(options.className) e.className = options.className;
         e.innerHTML = options.html || '';
-        e.title = options.tipLabel || '';
+        if(e.title) e.title = options.tipLabel;
         this.set('name', options.name || 'toggle');
         const evtFunction = evt => {
             if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls
@@ -81,7 +81,7 @@ export default class Toggle extends Control {
         return this.element.style.pointerEvents === 'none';
     }
     setDisabled(b) {
-        this.element.style.pointerEvents = b ? 'none' : 'auto';
+        this.element.style.pointerEvents = b ? 'none' : null;
         if (b) this.element.classList.add(this.classNameDisabled);
         else this.element.classList.remove(this.classNameDisabled);
         this.dispatchEvent({
