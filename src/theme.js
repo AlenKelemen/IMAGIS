@@ -49,14 +49,6 @@ export default class Theme extends Toggle {
                     <li><label>Min, Max</label><input class="resolution" value ="0,1000"></li>
                 </ul>
             </ul>
-            <ul class="icon">
-                <li class="caret"><i class="far fa-square fa-fw"></i> Ikona</li>
-                <ul class="nested">
-                    <li><label>Ime ikone</label><select class="src"><option selected disabled>odaberi ikonu</option></select></li>
-                    <li><label>Skala</label><input class="scale" value ="1"></li>
-                    <li><label>Točka umetanja, x,y</label><input class="anchor" value ="0,0"></li>
-                </ul>
-            </ul>
             <ul class="regularShape">
                 <li class="caret"><i class="far fa-square fa-fw"></i> Simetrični simbol</li>
                 <ul class="nested">
@@ -67,6 +59,14 @@ export default class Theme extends Toggle {
                     <li><label>Debljina ruba</label><input class="stroke width" value="1"></li>
                 </ul>
             </ul>
+            <ul class="icon">
+            <li class="caret"><i class="far fa-square fa-fw"></i> Ikona</li>
+            <ul class="nested">
+                <li><label>Ime ikone</label><select class="src"><option selected disabled>odaberi ikonu</option></select></li>
+                <li><label>Skala</label><input class="scale" value ="1"></li>
+                <li><label>Točka umetanja, x,y</label><input class="anchor" value ="0,0"></li>
+            </ul>
+        </ul>
             <ul class="stroke">
                 <li class="caret"><i class="far fa-square fa-fw"></i> Rub poligona ili linija</li>
                 <ul class="nested">
@@ -238,30 +238,30 @@ export default class Theme extends Toggle {
         if (e.closest("ul").className === "resolution") {
           is.resolution = e.closest("ul").querySelector(".resolution").value.split(",");
         }
+        if (e.closest("ul").className === "regularShape") {
+          is.regularShape = {};
+          is.regularShape.points = e.closest("ul").querySelector(".points").value;
+          is.regularShape.radius = e.closest("ul").querySelector(".radius").value;
+          is.regularShape.fill = {};
+          is.regularShape.fill.color = e.closest("ul").querySelector(".fill.color").style.backgroundColor || "rgba(255,255,255,1)";
+          is.regularShape.stroke = {};
+          is.regularShape.stroke.color = e.closest("ul").querySelector(".stroke.color").style.backgroundColor || "rgba(255,255,255,1)";
+          is.regularShape.stroke.width = e.closest("ul").querySelector(".stroke.width").value;
+        }
         if (e.closest("ul").className === "icon") {
           is.icon = {};
           is.icon.src = e.closest("ul").querySelector(".src").value;
           is.icon.scale = e.closest("ul").querySelector(".scale").value;
           is.icon.anchor = e.closest("ul").querySelector(".anchor").value.split(",");
         }
-        if (e.closest("ul").className === "regularShape") {
-          is.regularShape = {};
-          is.regularShape.points = e.closest("ul").querySelector(".points").value;
-          is.regularShape.radius = e.closest("ul").querySelector(".radius").value;
-          is.regularShape.fill = {};
-          is.regularShape.fill.color = e.closest("ul").querySelector(".fill.color").style.backgroundColor || 'rgba(255,255,255,1)'
-          is.regularShape.stroke = {};
-          is.regularShape.stroke.color = e.closest("ul").querySelector(".stroke.color").style.backgroundColor || 'rgba(255,255,255,1)';
-          is.regularShape.stroke.width = e.closest("ul").querySelector(".stroke.width").value;
-        }
         if (e.closest("ul").className === "stroke") {
           is.stroke = {};
-          is.stroke.color = e.closest("ul").querySelector(".color").style.backgroundColor || 'rgba(255,255,255,1)';
+          is.stroke.color = e.closest("ul").querySelector(".color").style.backgroundColor || "rgba(255,255,255,1)";
           is.stroke.width = e.closest("ul").querySelector(".width").value;
         }
         if (e.closest("ul").className === "fill") {
           is.fill = {};
-          is.fill.color = e.closest("ul").querySelector(".color").style.backgroundColor || 'rgba(255,255,255,1)';
+          is.fill.color = e.closest("ul").querySelector(".color").style.backgroundColor || "rgba(255,255,255,1)";
         }
         if (e.closest("ul").className === "text") {
           is.text = {};
@@ -284,9 +284,9 @@ export default class Theme extends Toggle {
     }
     this.layer.get("def").style = ns;
     this.layer.setStyle(makeStyle(ns));
-    this.def.layers.find(x => x.name === ds.name).style = ns;
-    if(this.callback) this.callback.call(this,this.def,this.layer);
-    console.log(ns)
+    this.def.layers.find((x) => x.name === ds.name).style = ns;
+    if (this.callback) this.callback.call(this, this.def, this.layer);
+    console.log(ns);
   }
   fillOperators_(itemElement) {
     for (const e of itemElement.querySelectorAll(".operators")) {
