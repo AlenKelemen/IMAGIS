@@ -10,6 +10,7 @@ import Zoom from "ol/control/Zoom";
 import Projection from "ol/proj/Projection";
 import { register } from "ol/proj/proj4.js";
 import proj4 from "proj4";
+import Select from 'ol/interaction/Select';
 
 import baseDef from "./def.json";
 import epsg3765 from "./src/EPSG3765";
@@ -162,23 +163,30 @@ const geolocator = new Geolocator({
 navRight.addControl(geolocator);
 
 /** select control, rightside child of aside */
+const select = new Select;
+map.addInteraction(select);
+select.setActive(false);
 const selectContaner = new Container({
   semantic: "nav",
   className: "nav-select ol-control",
 });
 navRight.addControl(selectContaner);
-const select = new Toggle({
+const selectToggle = new Toggle({
   html: '<i class="far fa-mouse-pointer"></i>',
   className: "select",
   tipLabel: "Odaberi",
 });
-selectContaner.addControl(select);
-const selectEx = new Toggle({
+selectContaner.addControl(selectToggle);
+
+selectToggle.on('change:active', evt=> {
+  select.setActive(evt.active);
+});
+const selectRectToggle = new Toggle({
   html: '<i class="far fa-lasso"></i>',
   className: "select-ex",
   tipLabel: "Odaberi na druge načine",
 });
-selectContaner.addControl(selectEx);
+selectContaner.addControl(selectRectToggle);
 
 
 /** UX footer control */
