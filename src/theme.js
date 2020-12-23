@@ -249,19 +249,19 @@ export default class Theme extends Toggle {
           is.regularShape.points = e.closest("ul").querySelector(".points").value;
           is.regularShape.radius = e.closest("ul").querySelector(".radius").value;
           is.regularShape.fill = {};
-          is.regularShape.fill.color = e.closest("ul").querySelector(".fill.color").style.backgroundColor;
+          is.regularShape.fill.color = e.closest("ul").querySelector(".fill.color").style.backgroundColor || 'rgba(255,255,255,1)'
           is.regularShape.stroke = {};
-          is.regularShape.stroke.color = e.closest("ul").querySelector(".stroke.color").style.backgroundColor;
+          is.regularShape.stroke.color = e.closest("ul").querySelector(".stroke.color").style.backgroundColor || 'rgba(255,255,255,1)';
           is.regularShape.stroke.width = e.closest("ul").querySelector(".stroke.width").value;
         }
         if (e.closest("ul").className === "stroke") {
           is.stroke = {};
-          is.stroke.color = e.closest("ul").querySelector(".color").style.backgroundColor;
+          is.stroke.color = e.closest("ul").querySelector(".color").style.backgroundColor || 'rgba(255,255,255,1)';
           is.stroke.width = e.closest("ul").querySelector(".width").value;
         }
         if (e.closest("ul").className === "fill") {
           is.fill = {};
-          is.fill.color = e.closest("ul").querySelector(".color").style.backgroundColor;
+          is.fill.color = e.closest("ul").querySelector(".color").style.backgroundColor || 'rgba(255,255,255,1)';
         }
         if (e.closest("ul").className === "text") {
           is.text = {};
@@ -284,9 +284,9 @@ export default class Theme extends Toggle {
     }
     this.layer.get("def").style = ns;
     this.layer.setStyle(makeStyle(ns));
-    console.log(ns)
     this.def.layers.find(x => x.name === ds.name).style = ns;
     if(this.callback) this.callback.call(this,this.def,this.layer);
+    console.log(ns)
   }
   fillOperators_(itemElement) {
     for (const e of itemElement.querySelectorAll(".operators")) {
