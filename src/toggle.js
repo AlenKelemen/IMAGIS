@@ -18,7 +18,7 @@ export default class Toggle extends Control {
         });
         if(options.className) e.className = options.className;
         e.innerHTML = options.html || '';
-        if(e.title) e.title = options.tipLabel;
+        if(options.tipLabel) e.title = options.tipLabel;
         this.set('name', options.name || 'toggle');
         const evtFunction = evt => {
             if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls

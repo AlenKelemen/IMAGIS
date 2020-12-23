@@ -199,11 +199,16 @@ body {
   margin-left: auto;
   height: fit-content;
 }
-.nav-right > div {
+.geolocator{
   float: right;
 }
+
 .section {
   display: none;
+}
+.nav-select{
+  float:right;
+  clear: both;
 }
 
 .footer {

@@ -11,16 +11,16 @@ import Projection from "ol/proj/Projection";
 import { register } from "ol/proj/proj4.js";
 import proj4 from "proj4";
 
-import epsg3765 from "./src/EPSG3765";
 import baseDef from "./def.json";
+import epsg3765 from "./src/EPSG3765";
 import Container from "./src/container";
-import DefLayers from "./src/defLayers";
-import DefEditor from "./src/defEditor";
 import Toggle from "./src/toggle";
+import DefLayers from "./src/defLayers";
 import Geolocator from "./src/geoloc";
 import Legend from "./src/legend";
 import Theme from "./src/theme.js";
 import Properties from "./src/properties.js";
+import DefEditor from "./src/defEditor";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -105,36 +105,35 @@ const theme = new Theme({
   tipLabel: "Tema i stil",
   target: sectionHome,
   contanerClassName: "theme ol-control",
-  def:def,
+  def: def,
   layer: (() => {
     map
       .getLayers()
       .getArray()
       .find((x) => x.get("active"));
   })(),
-  callback:(def,layer)=> defEditor.setDef(def)
+  callback: (def, layer) => defEditor.setDef(def),
 });
 map.getLayers().on("propertychange", (evt) => {
   theme.setLayer(evt.target.get("active"));
 });
 navHome.addControl(theme);
 
-const properties =  new Properties({
+const properties = new Properties({
   html: '<i class="far fa-info-circle"></i>',
   tipLabel: "Info",
   target: sectionHome,
-  contanerClassName: "properties ol-control"
-})
+  contanerClassName: "properties ol-control",
+});
 navHome.addControl(properties);
 
-
-const defEditor =  new DefEditor({
+const defEditor = new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
   tipLabel: "Uređenje karte",
   target: sectionHome,
   def: def,
-  contanerClassName: "def-editor"
-})
+  contanerClassName: "def-editor",
+});
 navHome.addControl(defEditor);
 /** UX right side control, child of aside */
 const navRight = new Container({
@@ -161,6 +160,26 @@ const geolocator = new Geolocator({
   tipLabel: "Pokaži moju lokaciju",
 });
 navRight.addControl(geolocator);
+
+/** select control, rightside child of aside */
+const selectContaner = new Container({
+  semantic: "nav",
+  className: "nav-select ol-control",
+});
+navRight.addControl(selectContaner);
+const select = new Toggle({
+  html: '<i class="far fa-mouse-pointer"></i>',
+  className: "select",
+  tipLabel: "Odaberi",
+});
+selectContaner.addControl(select);
+const selectEx = new Toggle({
+  html: '<i class="far fa-lasso"></i>',
+  className: "select-ex",
+  tipLabel: "Odaberi na druge načine",
+});
+selectContaner.addControl(selectEx);
+
 
 /** UX footer control */
 const footer = new Container({
