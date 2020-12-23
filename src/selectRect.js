@@ -1,7 +1,7 @@
 import Container from "./contaner";
 import Toggle from "./toggle";
 
-/** select controls
+/** select rectangle control
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object=} options Control options.
