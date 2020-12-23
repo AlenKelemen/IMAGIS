@@ -124,7 +124,7 @@ const defEditor =  new DefEditor({
   target: sectionHome,
   def: def,
   contanerClassName: "def-editor",
-  callback:(def) => theme.setLayer(map.getLayers().getArray().find(x => x.get('active')))
+  //callback:(def) => theme.setLayer(map.getLayers().getArray().find(x => x.get('active')) )
 })
 navHome.addControl(defEditor);
 /** UX right side control, child of aside */

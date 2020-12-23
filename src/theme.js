@@ -31,13 +31,14 @@ export default class Theme extends Toggle {
     this.body.className = "theme-body";
     this.container.element.appendChild(this.body);
     this.on("change:active", (evt) => {
-      if (evt.active) this.container.element.classList.add("active");
-      else this.container.element.classList.remove("active");
+      if (evt.active) {
+        this.container.element.classList.add("active");
+        this.setLayer(this.getMap().getLayers().getArray().find(x => x.get('active')))
+      } else this.container.element.classList.remove("active");
     });
     this.cp = new Picker({
       popup: "bottom",
     });
-    this.setLayer(options.layer || null);
     this.callback = options.callback;
     this.htmlItem = `
     <ul class="item">
@@ -286,7 +287,6 @@ export default class Theme extends Toggle {
     this.layer.setStyle(makeStyle(ns));
     this.def.layers.find((x) => x.name === ds.name).style = ns;
     if (this.callback) this.callback.call(this, this.def, this.layer);
-    console.log(ns);
   }
   fillOperators_(itemElement) {
     for (const e of itemElement.querySelectorAll(".operators")) {

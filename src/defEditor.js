@@ -54,6 +54,7 @@ export default class DefEditor extends Toggle {
     this.ok.addEventListener("click", (evt) => {
       const v = this.textarea.value;
       try {
+        const activeLayer = this.getMap().getLayers().getArray().find(x => x.get('active'));
         defLayers.setDef(JSON.parse(v));
         defLayers.removeVectorLayers();
         defLayers.addVectorLayers();
@@ -61,7 +62,8 @@ export default class DefEditor extends Toggle {
         defLayers.addTHLayers();
         defLayers.removeTileLayers();
         defLayers.addTileLayers();
-        this.callback.call(this,this.def);
+        this.getMap().getLayers().getArray().find(x => x.get('name') === activeLayer.get('name')).set('active', true);
+        if(this.callback) this.callback.call(this,this.def);
       } catch (err) {
         console.log("DefEditor err: ", err);
       }
