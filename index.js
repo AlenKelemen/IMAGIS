@@ -23,6 +23,7 @@ import Theme from "./src/theme.js";
 import Properties from "./src/properties.js";
 import DefEditor from "./src/defEditor";
 import SelectInfo from "./src/selectInfo";
+import selectRect from "./src/selectRect";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -188,6 +189,10 @@ const selectRectToggle = new Toggle({
   tipLabel: "Odaberi na druge načine",
 });
 selectContaner.addControl(selectRectToggle);
+selectRectToggle.on("change:active", (evt) => {
+  console.log(evt.active)
+  selectRect(select, evt.active);
+});
 
 /** UX footer control */
 const footer = new Container({
@@ -196,11 +201,12 @@ const footer = new Container({
 });
 map.addControl(footer);
 legend.activeLayerInfo({
-  className: "active-layer-info",
+  className: "active-layer-info ol-control",
   targetControl: footer,
 });
 const selectInfo = new SelectInfo({
   select: select,
+  className: "select-info",
 });
-map.addControl(selectInfo);
+footer.addControl(selectInfo);
 footer.addControl(new ScaleLine());

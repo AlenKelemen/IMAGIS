@@ -9,7 +9,7 @@ import Control from "ol/control/Control";
  */
 export default class SelectInfo extends Control {
   constructor(options = {}) {
-    super({ element: document.createElement("span") });
+    super({ element: document.createElement("div") });
     this.select=options.select;
     if (options.className) this.element.className = options.className;
     this.element.innerHTML = "Odabrano: 0";

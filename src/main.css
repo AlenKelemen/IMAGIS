@@ -215,12 +215,17 @@ body {
   display: flex;
   margin: 0.5em;
 }
-.footer .active-layer-info {
+.footer .active-layer-info,
+.footer .select-info {
   background: rgba(0, 60, 136, 0.3);
   border-radius: 4px;
   color: #eee;
   font-size: 12px;
   padding: 2px;
+}
+.footer div:not(:first-child):not(:last-child){
+  margin-left:4px;
+  margin-right:4px;
 }
 .active {
   display: flex;
