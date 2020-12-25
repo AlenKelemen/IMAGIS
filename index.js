@@ -190,7 +190,6 @@ const selectRectToggle = new Toggle({
 });
 selectContaner.addControl(selectRectToggle);
 selectRectToggle.on("change:active", (evt) => {
-  console.log(evt.active)
   selectRect(select, evt.active);
 });
 

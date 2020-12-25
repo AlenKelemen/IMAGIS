@@ -18,10 +18,10 @@ body {
   display: inline-block;
 }
 .ol-control button:hover,
-.ol-control button:focus,
-.ol-control button.active {
+.ol-control button:focus{
   background-color: rgb(0, 136, 77, 0.7);
 }
+
 
 .ol-rotate {
   vertical-align: top;
