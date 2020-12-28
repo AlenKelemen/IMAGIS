@@ -24,6 +24,7 @@ import Properties from "./src/properties.js";
 import DefEditor from "./src/defEditor";
 import SelectInfo from "./src/selectInfo";
 import SelectRect from "./src/selectRect";
+import SelectEx from "./src/selectEx";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -99,7 +100,7 @@ const legend = new Legend({
   html: '<i class="far fa-layer-group"></i>',
   tipLabel: "Legenda & upravljanje kartom",
   target: sectionHome,
-  contanerClassName: "legend ol-control",
+  contanerClassName: "legend",
 });
 navHome.addControl(legend);
 
@@ -107,7 +108,7 @@ const theme = new Theme({
   html: '<i class="far fa-images"></i>',
   tipLabel: "Tema i stil",
   target: sectionHome,
-  contanerClassName: "theme ol-control",
+  contanerClassName: "theme",
   def: def,
   layer: (() => {
     map
@@ -126,9 +127,17 @@ const properties = new Properties({
   html: '<i class="far fa-info-circle"></i>',
   tipLabel: "Info",
   target: sectionHome,
-  contanerClassName: "properties ol-control",
+  contanerClassName: "properties",
 });
 navHome.addControl(properties);
+
+const selectEx = new SelectEx({
+  html: '<i class="far fa-object-ungroup"></i>',
+  tipLabel: "Prošireni odabir",
+  target: sectionHome,
+  contanerClassName: "select-ex",
+});
+navHome.addControl(selectEx);
 
 const defEditor = new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
@@ -192,7 +201,6 @@ selectContaner.addControl(selectRectToggle);
 const selectRect = new SelectRect({
   select:select
 });
-selectRect.setClear(false)
 selectRectToggle.on("change:active", (evt) => {
   if (evt.active) map.addInteraction(selectRect);
   else map.removeInteraction(selectRect);

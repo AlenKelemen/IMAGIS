@@ -47,9 +47,7 @@ body {
   color: white;
   background: rgba(0, 60, 136, 0.5);
 }
-.legend:hover{
-  background: rgba(0, 60, 136, 0.5);
-}
+
 .legend-header {
   height: 30px;
 }
@@ -68,9 +66,6 @@ body {
   border-radius: 4px;
   padding: 2px;
   color: white;
-  background: rgba(0, 60, 136, 0.5);
-}
-.theme:hover{
   background: rgba(0, 60, 136, 0.5);
 }
 
@@ -164,8 +159,17 @@ body {
   background: rgba(0, 60, 136, 0.5);
 }
 
-
-
+.select-ex{
+  flex-direction: column;
+  display: none;
+  position: relative;
+  width: 300px;
+  word-wrap: break-word;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+  background: rgba(0, 60, 136, 0.5);
+}
 .def-editor {
   display: none;
   position: relative;
