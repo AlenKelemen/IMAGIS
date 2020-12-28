@@ -1,6 +1,10 @@
 import Control from "ol/control/Control";
 import Container from "./container";
 import Toggle from "./toggle";
+import VectorSource from "ol/source/Vector";
+import VectorLayer from "ol/layer/Vector";
+import Draw from "ol/interaction/Draw";
+import { point, segment, circle, polygon } from "@flatten-js/core";
 
 /** create contaner with toggle
  * @constructor
@@ -19,41 +23,39 @@ export default class SelectEx extends Toggle {
     this.container = new Container({ semantic: "section", className: options.contanerClassName });
     this.header = document.createElement("header");
     this.header.className = "select-ex-header";
-    this.header.innerHTML = `Proširene mogućnosti odabira`;
+    this.header.innerHTML = `Dodatne mogućnosti odabira`;
     this.container.element.appendChild(this.header);
-    this.body = document.createElement("section");
-    this.body.className = "select-ex-body";
-    this.container.element.appendChild(this.body);
     options.target.addControl(this.container);
     this.on("change:active", (evt) => {
       if (evt.active) this.container.element.classList.add("active");
       else this.container.element.classList.remove("active");
     });
 
+    this.menu = new Container({
+      semantic: "section",
+      className: "select-ex-menu",
+    });
+    this.container.addControl(this.menu);
+
     this.line = new Toggle({
       className: "select-line",
       html: '<i class="far fa-heart-rate"></i>',
       tipLabel: "Odaberi objekte koji sijeku nacrtanu liniju",
     });
-    this.container.addControl(this.line)
-    this.body.appendChild(this.line.element);
+    this.menu.addControl(this.line);
 
     this.poly = new Toggle({
       className: "select-poly",
       html: '<i class="far fa-monitor-heart-rate"></i>',
       tipLabel: "Odaberi objekte unutar nacrtanog poligona",
     });
-    this.container.addControl(this.poly)
-    this.body.appendChild(this.poly.element);
-    
+    this.menu.addControl(this.poly)
+
     this.inside = new Toggle({
       className: "select-inside",
       html: '<i class="far fa-layer-plus"></i>',
       tipLabel: "Odaberi objekte koji se nalaze unutar ili sijeku odabrani objekt",
     });
-    this.container.addControl(this.inside)
-    this.body.appendChild(this.inside.element);
-
-
+    this.menu.addControl(this.inside)
   }
 }

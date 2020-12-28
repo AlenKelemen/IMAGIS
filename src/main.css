@@ -171,7 +171,6 @@ body {
   background: rgba(0, 60, 136, 0.5);
 }
 .select-ex button{
-  display: block;
   margin: 1px;
   padding: 0;
   color: white;
@@ -247,5 +246,6 @@ body {
   display: flex;
 }
 button.active{
-  background-color:rgba(127, 185, 0, 0.835)!important
+  background-color:rgba(127, 185, 0, 0.835)!important;
+  display:inline-block
 }

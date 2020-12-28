@@ -139,6 +139,8 @@ const selectEx = new SelectEx({
 });
 navHome.addControl(selectEx);
 
+
+
 const defEditor = new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
   tipLabel: "Uređenje karte",
@@ -202,8 +204,12 @@ const selectRect = new SelectRect({
   select:select
 });
 selectRectToggle.on("change:active", (evt) => {
-  if (evt.active) map.addInteraction(selectRect);
+  if (evt.active) {
+    map.addInteraction(selectRect);
+    selectEx.menu.deactivateControls();
+  }
   else map.removeInteraction(selectRect);
+
 });
 
 /** UX footer control */
