@@ -37,6 +37,23 @@ export default class SelectEx extends Toggle {
     });
     this.container.addControl(this.line)
     this.body.appendChild(this.line.element);
+
+    this.poly = new Toggle({
+      className: "select-poly",
+      html: '<i class="far fa-monitor-heart-rate"></i>',
+      tipLabel: "Odaberi objekte unutar nacrtanog poligona",
+    });
+    this.container.addControl(this.poly)
+    this.body.appendChild(this.poly.element);
     
+    this.inside = new Toggle({
+      className: "select-inside",
+      html: '<i class="far fa-layer-plus"></i>',
+      tipLabel: "Odaberi objekte koji se nalaze unutar ili sijeku odabrani objekt",
+    });
+    this.container.addControl(this.inside)
+    this.body.appendChild(this.inside.element);
+
+
   }
 }
