@@ -23,7 +23,7 @@ import Theme from "./src/theme.js";
 import Properties from "./src/properties.js";
 import DefEditor from "./src/defEditor";
 import SelectInfo from "./src/selectInfo";
-import selectRect from "./src/selectRect";
+import SelectRect from "./src/selectRect";
 
 /**  local project def*/
 if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
@@ -189,8 +189,13 @@ const selectRectToggle = new Toggle({
   tipLabel: "Odaberi na druge načine",
 });
 selectContaner.addControl(selectRectToggle);
+const selectRect = new SelectRect({
+  select:select
+});
+selectRect.setClear(false)
 selectRectToggle.on("change:active", (evt) => {
-  selectRect(select, evt.active);
+  if (evt.active) map.addInteraction(selectRect);
+  else map.removeInteraction(selectRect);
 });
 
 /** UX footer control */
