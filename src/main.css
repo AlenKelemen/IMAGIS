@@ -17,11 +17,6 @@ body {
   position: unset;
   display: inline-block;
 }
-.ol-control button:hover,
-.ol-control button:focus{
-  background-color: rgb(0, 136, 77, 0.7);
-}
-
 
 .ol-rotate {
   vertical-align: top;
@@ -229,4 +224,7 @@ body {
 }
 .active {
   display: flex;
+}
+button.active{
+  background-color:rgba(127, 185, 0, 0.835)!important
 }
