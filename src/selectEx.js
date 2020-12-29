@@ -31,4 +31,7 @@ export default class SelectEx extends Toggle {
     });
     this.container.addControl(this.line);
   }
+  getContainer(){
+    return this.container;
+  }
 }

@@ -162,6 +162,10 @@ body {
 .select-ex {
   display:none;
   vertical-align: top;
+  float:left;
+}
+.select-base{
+  float:right;
 }
 .select-ex.active {
   display: inline-block;

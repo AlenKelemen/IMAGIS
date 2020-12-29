@@ -175,19 +175,13 @@ const selectContaner = new Container({
   className: "nav-select",
 });
 navRight.addControl(selectContaner);
-const selectEx = new SelectEx({
-  html: '<i class="far fa-ellipsis-h"></i>',
-  className: "select-more",
-  tipLabel: "Odaberi na druge načine",
-  target: selectContaner,
-  contanerClassName: 'select-ex ol-control',
-});
+
 const selectContanerBase = new Container({
   semantic: "nav",
   className: "select-base ol-control",
 });
 selectContaner.addControl(selectContanerBase);
-selectContanerBase.addControl(selectEx);
+
 const selectToggle = new Toggle({
   html: '<i class="far fa-mouse-pointer"></i>',
   className: "select",
@@ -212,6 +206,15 @@ selectRectToggle.on("change:active", (evt) => {
     map.addInteraction(selectRect);
   } else map.removeInteraction(selectRect);
 });
+
+const selectEx = new SelectEx({
+  html: '<i class="far fa-ellipsis-h"></i>',
+  className: "select-more",
+  tipLabel: "Odaberi na druge načine",
+  target: selectContaner,
+  contanerClassName: "select-ex ol-control",
+});
+selectContanerBase.addControl(selectEx);
 
 /** UX footer control */
 const footer = new Container({
