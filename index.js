@@ -131,16 +131,6 @@ const properties = new Properties({
 });
 navHome.addControl(properties);
 
-const selectEx = new SelectEx({
-  html: '<i class="far fa-object-ungroup"></i>',
-  tipLabel: "Prošireni odabir",
-  target: sectionHome,
-  contanerClassName: "select-ex",
-});
-navHome.addControl(selectEx);
-
-
-
 const defEditor = new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
   tipLabel: "Uređenje karte",
@@ -179,37 +169,48 @@ navRight.addControl(geolocator);
 const select = new Select();
 map.addInteraction(select);
 select.setActive(false);
+
 const selectContaner = new Container({
   semantic: "nav",
-  className: "nav-select ol-control",
+  className: "nav-select",
 });
 navRight.addControl(selectContaner);
+const selectEx = new SelectEx({
+  html: '<i class="far fa-ellipsis-h"></i>',
+  className: "select-more",
+  tipLabel: "Odaberi na druge načine",
+  target: selectContaner,
+  contanerClassName: 'select-ex ol-control',
+});
+const selectContanerBase = new Container({
+  semantic: "nav",
+  className: "select-base ol-control",
+});
+selectContaner.addControl(selectContanerBase);
+selectContanerBase.addControl(selectEx);
 const selectToggle = new Toggle({
   html: '<i class="far fa-mouse-pointer"></i>',
   className: "select",
   tipLabel: "Odaberi",
 });
-selectContaner.addControl(selectToggle);
+selectContanerBase.addControl(selectToggle);
 
 selectToggle.on("change:active", (evt) => {
   select.setActive(evt.active);
 });
 const selectRectToggle = new Toggle({
   html: '<i class="far fa-lasso"></i>',
-  className: "select-ex",
-  tipLabel: "Odaberi na druge načine",
+  className: "select-rect",
+  tipLabel: "Odaberi zahvatom",
 });
-selectContaner.addControl(selectRectToggle);
+selectContanerBase.addControl(selectRectToggle);
 const selectRect = new SelectRect({
-  select:select
+  select: select,
 });
 selectRectToggle.on("change:active", (evt) => {
   if (evt.active) {
     map.addInteraction(selectRect);
-    selectEx.menu.deactivateControls();
-  }
-  else map.removeInteraction(selectRect);
-
+  } else map.removeInteraction(selectRect);
 });
 
 /** UX footer control */
