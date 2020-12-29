@@ -208,6 +208,7 @@ selectRectToggle.on("change:active", (evt) => {
 });
 
 const selectEx = new SelectEx({
+  select: select,
   html: '<i class="far fa-ellipsis-h"></i>',
   className: "select-more",
   tipLabel: "Odaberi na druge načine",

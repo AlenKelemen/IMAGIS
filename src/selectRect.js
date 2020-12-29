@@ -5,7 +5,7 @@ import VectorLayer from "ol/layer/Vector";
  * @extends {ol_control_Control}
  * @param {Object} options Control options.
  * @param {Object} options.select ol/interaction/Select
- * @param {boolean} [options.clear = true] clear selection on DragBox
+ * @param {boolean} [options.clear = true] clear previous on selection
  */
 export default class SelectRect extends DragBox {
   constructor(options = {}) {
