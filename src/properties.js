@@ -58,7 +58,7 @@ export default class Properties extends Toggle {
           const ld = document.createElement("div");
           ld.className = "layer";
           ld.innerHTML = `
-          <div class="header"><button class="show-more"><i class="far fa-plus"></i></button> ${i.layer.get("label") || i.layer.get("name")} (${i.features.length})</div>
+          <div class="header"><span class="show-more"><i class="far fa-plus"></i></span> ${i.layer.get("label") || i.layer.get("name")} (${i.features.length})</div>
           `;
           this.body.appendChild(ld);
           ld.querySelector('.show-more').addEventListener('click',evt => {
@@ -66,16 +66,16 @@ export default class Properties extends Toggle {
             ld.querySelector('.items').style.display = ld.querySelector('.items').style.display === 'none' ? 'block' : 'none';
             e.innerHTML = ld.querySelector('.items').style.display === 'none' ? '<i class="far fa-plus"></i>' : '<i class="far fa-minus"></i>';
           })
-          const content = document.createElement('div');
-          content.className = 'items';
-          if (index === 0) {
-              content.style.display = 'block';
-              ld.querySelector('.show-more').innerHTML = '<i class="far fa-minus"></i>';
-          } else {
-              content.style.display = 'none';
-              ld.querySelector('.show-more').innerHTML = '<i class="far fa-plus"></i>';
-          }
-          ld.appendChild(content);
+           const content = document.createElement('div');
+                        content.className = 'items';
+                        if (index === 0) {
+                            content.style.display = 'block';
+                            ld.querySelector('.show-more').innerHTML = '<i class="far fa-minus"></i>';
+                        } else {
+                            content.style.display = 'none';
+                            ld.querySelector('.show-more').innerHTML = '<i class="far fa-plus"></i>';
+                        }
+                        ld.appendChild(content);
         }
       } else {
         this.body.innerHTML = this.noFeaturesTxt;

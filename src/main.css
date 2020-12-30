@@ -162,9 +162,7 @@ body {
   align-self: center;
   margin: auto;
 }
-.properties .show-more{
-  all: unset;
-}
+
 
 .select-ex {
   display:none;
