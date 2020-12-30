@@ -45,9 +45,19 @@ window.map = new Map({
   controls: [],
 });
 /** ol/interaction/Select */
-const select = new Select();
+const select = new Select({
+  filter: (feature, layer) => {
+    const activeLayer = map
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active"));
+    if (!activeLayer) return true;
+    else return layer === activeLayer;
+  },
+});
 map.addInteraction(select);
 select.setActive(false);
+
 /** Load ol/Layer (s) from def*/
 const defLayers = new DefLayers({
   def: def,

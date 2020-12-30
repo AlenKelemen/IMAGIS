@@ -158,6 +158,13 @@ body {
   color: white;
   background: rgba(0, 60, 136, 0.5);
 }
+.properties .middle {
+  align-self: center;
+  margin: auto;
+}
+.properties .show-more{
+  all: unset;
+}
 
 .select-ex {
   display:none;
