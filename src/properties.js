@@ -2,7 +2,7 @@ import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import Container from "./container";
 import Toggle from "./toggle";
-/** create contaner with toggle
+/** Feature property info/edit sidebar
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object=} options Control options.
@@ -10,6 +10,7 @@ import Toggle from "./toggle";
  * @param {string} options.tipLabel html title of the control
  * @param {string} options.html html string to insert in the control
  * @param {Object} options.select ol/interaction/Select
+ * @param {boolean} [options.readOnly = true] ol/interaction/Select
  * @param {Object} options.target target Container
  */
 
@@ -18,6 +19,7 @@ export default class Properties extends Toggle {
     super(options);
     this.def = options.def;
     this.select = options.select;
+    this.readOnly = options.readOnly;
     this.noFeaturesTxt = options.noFeaturesTxt || "Odaberi objekte na karti.";
     this.container = new Container({ semantic: "section", className: options.contanerClassName });
     options.target.addControl(this.container);
@@ -61,26 +63,131 @@ export default class Properties extends Toggle {
           <div class="header"><span class="show-more"><i class="far fa-plus"></i></span> ${i.layer.get("label") || i.layer.get("name")} (${i.features.length})</div>
           `;
           this.body.appendChild(ld);
-          ld.querySelector('.show-more').addEventListener('click',evt => {
+          ld.querySelector(".show-more").addEventListener("click", (evt) => {
             const e = evt.currentTarget;
-            ld.querySelector('.items').style.display = ld.querySelector('.items').style.display === 'none' ? 'block' : 'none';
-            e.innerHTML = ld.querySelector('.items').style.display === 'none' ? '<i class="far fa-plus"></i>' : '<i class="far fa-minus"></i>';
-          })
-           const content = document.createElement('div');
-                        content.className = 'items';
-                        if (index === 0) {
-                            content.style.display = 'block';
-                            ld.querySelector('.show-more').innerHTML = '<i class="far fa-minus"></i>';
-                        } else {
-                            content.style.display = 'none';
-                            ld.querySelector('.show-more').innerHTML = '<i class="far fa-plus"></i>';
-                        }
-                        ld.appendChild(content);
+            ld.querySelector(".items").style.display = ld.querySelector(".items").style.display === "none" ? "block" : "none";
+            e.innerHTML = ld.querySelector(".items").style.display === "none" ? '<i class="far fa-plus"></i>' : '<i class="far fa-minus"></i>';
+          });
+          const content = document.createElement("div");
+          content.className = "items";
+          if (index === 0) {
+            content.style.display = "block";
+            ld.querySelector(".show-more").innerHTML = '<i class="far fa-minus"></i>';
+          } else {
+            content.style.display = "none";
+            ld.querySelector(".show-more").innerHTML = '<i class="far fa-plus"></i>';
+          }
+          ld.appendChild(content);
+          this.dialog_(i.layer, i.features, content);
         }
       } else {
         this.body.innerHTML = this.noFeaturesTxt;
         this.body.classList.add("middle");
       }
     });
+  }
+  dialog_(layer, features, element) {
+    const props = []; //consolidated props
+    const schema = layer.getSource().get("def").schema;
+    for (const f of features) {
+      for (const key of f.getKeys()) {
+        if (key !== f.getGeometryName() && key !== 'layer' && props.find((x) => x.Name === key) === undefined) {
+          props.push(
+            schema.properties.find((x) => x.Name === key) || {
+              Name: key,
+            }
+          );
+          props[props.length - 1].values = [];
+        }
+      }
+    }
+    for (const f of features) {
+      for (const p of props) {
+        if (p.values.indexOf(f.get(p.Name)) === -1) {
+          p.values.push(f.get(p.Name));
+        }
+      }
+    }
+    console.log(props)
+    for (const p of props) {
+      console.log(p)
+      if (!p.Hidden) {
+        //in layer.def.source.schema.properties
+        const div = document.createElement("div"),
+          label = document.createElement("label");
+        let input = document.createElement("input");
+        div.className = "item";
+        input.className = "input";
+        if (p.Constrains && !this.readOnly) {
+          input = document.createElement("select");
+          input.className = "input";
+          for (const constrain of p.Constrains) {
+            const option = document.createElement("option");
+            option.value = constrain;
+            option.innerHTML = constrain;
+            input.appendChild(option);
+          }
+          if (p.values.length > 1) input.options[input.options.length] = new Option("*VARIRA*", "*VARIRA*");
+        }
+        label.innerText = p.Label || p.Name;
+        input.value = p.values.length > 1 ? "*VARIRA*" : p.values[0];
+        input.id = layer.get('name') + '-' + p.Name; // id = property name
+        input.disabled = this.readOnly;
+        div.appendChild(label);
+        div.appendChild(input);
+        element.appendChild(div);
+        switch (p.DataType) {
+          case undefined || null || 0 || '':
+              console.log('dataType: undefined ||null||0||"" for:' + input.id);
+              break;
+          case 1: //boolean
+              input.setAttribute('type', 'checkbox');
+              input.className = 'input';
+              if (item.values.length > 1) {
+                  input.indeterminate = true;
+              } else {
+                  input.checked = item.values[0];
+              }
+              break;
+          case 3: //datetime
+              input.placeholder = 'YYYY-MM-DD HH:mm:ss';
+              input.addEventListener('focus', evt => {
+                  input.oldValue = evt.target.value;
+              });
+              input.addEventListener('change', evt => {
+                  let value = evt.target.value;
+                  if (value == '') return;
+                  let momentValue = moment(value, 'YYYY-MM-DD HH:mm:ss');
+                  evt.target.value = momentValue.isValid() ? momentValue.format('YYYY-MM-DD HH:mm:ss') : input.oldValue;
+              });
+              break;
+          case 6:
+          case 7:
+          case 8: // integer
+              input.placeholder = 'cijeli broj';
+              input.addEventListener('focus', evt => {
+                  input.oldValue = evt.target.value;
+              });
+              input.addEventListener('change', evt => {
+                  evt.target.value = isNaN(parseInt(evt.target.value, 10)) ? input.oldValue : parseInt(evt.target.value, 10);
+              });
+              break;
+          case 4:
+          case 5:
+          case 15: //float
+              input.placeholder = 'decimalni broj';
+              input.addEventListener('focus', evt => {
+                  input.oldValue = evt.target.value;
+              });
+              input.addEventListener('change', evt => {
+                  evt.target.value = isNaN(parseFloat(evt.target.value, 10)) ? input.oldValue : parseFloat(evt.target.value, 10);
+              });
+              break;
+          case 9: //string
+              break;
+          default: //geometry
+      }
+      }
+    }
   }
 }
