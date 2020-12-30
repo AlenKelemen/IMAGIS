@@ -109,7 +109,6 @@ export default class Properties extends Toggle {
         }
       }
     }
-    console.log(props);
     for (const p of props) {
       if (!p.Hidden) {
         //in layer.def.source.schema.properties
