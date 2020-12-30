@@ -1,9 +1,0 @@
-{
-    "editor.autoIndent": "none",
-    "editor.autoClosingOvertype": "never",
-    "editor.autoSurround": "never",
-    "editor.accessibilitySupport": "off",
-    "diffEditor.ignoreTrimWhitespace": false,
-    "diffEditor.renderSideBySide": false,
-    "html.format.wrapLineLength": 240
-}
