@@ -1,0 +1,294 @@
+html {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Verdana, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.ol-overlaycontainer-stopevent {
+  display: flex;
+  flex-direction: column;
+}
+.ol-control,
+.ol-scale-line,
+.ol-rotate {
+  position: unset;
+  display: inline-block;
+}
+
+.ol-rotate {
+  vertical-align: top;
+}
+.ol-scale-line {
+  margin-left: auto;
+}
+.header {
+  margin: 0.5em;
+}
+.aside {
+  flex-grow: 1;
+  display: flex;
+  pointer-events: none !important;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.aside .nav {
+  height: fit-content;
+}
+.legend {
+  display: none;
+  position: relative;
+  width: 300px;
+  word-wrap: break-word;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+  background: rgba(0, 60, 136, 0.5);
+}
+
+.legend-header {
+  height: 30px;
+}
+.legend-content {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  overflow-y: auto;
+}
+.theme {
+  flex-direction: column;
+  display: none;
+  position: relative;
+  width: 300px;
+  word-wrap: break-word;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+  background: rgba(0, 60, 136, 0.5);
+}
+
+.theme .middle {
+  align-self: center;
+  margin: auto;
+}
+
+.theme .top .controls {
+  padding: 4px;
+  float: right;
+}
+.theme .top div {
+  padding: 4px;
+  float: left;
+}
+.theme .theme-body {
+  overflow-y: auto;
+  position: absolute;
+  top: 90px;
+  bottom: 0;
+  width: 100%;
+}
+.theme .wrapper ul {
+  list-style-type: none;
+  padding-left: 8px;
+  margin: 0;
+}
+.theme .caret {
+  cursor: pointer;
+  user-select: none;
+}
+.theme .style {
+  color: red;
+}
+.theme .nested {
+  display: none;
+}
+.theme .caret::before {
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 900;
+  font-size: 16px;
+  content: "\f0da";
+  display: inline-block;
+  margin-right: 6px;
+}
+.theme .caret-down::before {
+  transform: rotate(90deg);
+}
+.theme input,
+.theme select,
+.theme .color {
+  margin-right: 8px;
+  padding: 2px;
+  border: 0;
+  width: 95%;
+}
+.theme .color {
+  height: 18px;
+  background-color: white;
+  border: 2px solid white;
+  padding: 0;
+}
+
+.theme .color:hover {
+  cursor: pointer;
+}
+.picker_editor,
+.picker_sample,
+.picker_done,
+.picker_cancel,
+.picker_arrow {
+  display: none;
+}
+
+.picker_wrapper {
+  box-shadow: unset !important;
+  width: 220px !important;
+  margin: 0 !important;
+}
+
+.properties {
+  flex-direction: column;
+  display: none;
+  padding: 8px;
+  width: 350px;
+  word-wrap: break-word;
+  border-radius: 4px;
+  color: white;
+  background: rgba(0, 60, 136, 0.5);
+  position: relative;
+}
+.properties .header {
+  margin: 0;
+}
+.properties .properties-body.middle {
+  align-self: center;
+  margin: auto;
+  position: static;
+}
+.properties > div {
+  padding: 6px;
+}
+.properties .properties-body {
+  right: 0;
+  left: 0;
+  position: absolute;
+  overflow-y: auto;
+  top: 30px;
+  bottom: 6px;
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.properties .items label {
+  display: block;
+  max-width: 100%;
+  font-weight: 400;
+}
+
+.properties .items input,
+.properties .items select {
+  width: 100%;
+  border-radius: 4px;
+  background-color: unset;
+  border: solid;
+  border-color: gray;
+  border-width: 1px;
+  padding: 4px;
+}
+.properties .items input:disabled,
+.properties .items select:disabled {
+  color: black;
+  cursor: default;
+}
+
+.select-ex {
+  display: none;
+  vertical-align: top;
+  float: left;
+}
+.select-base {
+  float: right;
+}
+.select-ex.active {
+  display: inline-block;
+}
+.select-ex button {
+  margin: 1px;
+  padding: 0;
+  color: white;
+  font-size: 1.14em;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  height: 1.375em;
+  width: 1.375em;
+  line-height: 0.4em;
+  background-color: rgba(0, 60, 136, 0.5);
+  border: none;
+  border-radius: 2px;
+}
+
+.def-editor {
+  display: none;
+  position: relative;
+  width: 32.33em;
+}
+.def-editor-header {
+  height: 30px;
+  background-color: rgba(0, 60, 136, 0.5);
+  color: white;
+  width: 100%;
+}
+.def-editor-content {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  bottom: 0;
+  overflow-y: none;
+}
+.def-editor-content textarea {
+  width: 100%;
+  height: 100%;
+}
+
+/** right nav*/
+.nav-right {
+  margin-left: auto;
+  height: fit-content;
+}
+.geolocator {
+  float: right;
+}
+
+.section {
+  display: none;
+}
+.nav-select {
+  float: right;
+  clear: both;
+}
+
+.footer {
+  display: flex;
+  margin: 0.5em;
+}
+.footer .active-layer-info,
+.footer .select-info {
+  background: rgba(0, 60, 136, 0.3);
+  border-radius: 4px;
+  color: #eee;
+  font-size: 12px;
+  padding: 2px;
+}
+.footer div:not(:first-child):not(:last-child) {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.active {
+  display: flex;
+}
+button.active {
+  background-color: rgba(127, 185, 0, 0.835) !important;
+  display: inline-block;
+}
