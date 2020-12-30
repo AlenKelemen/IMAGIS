@@ -6,17 +6,18 @@ import Toggle from "./toggle";
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object=} options Control options.
- * @param {string[]} options.className clase to add to control
+ * @param {string} options.className Control.element class name
  * @param {string} options.tipLabel html title of the control
- * @param {string} options.html html to insert in the control
- * @param {function} options.callback callback on click
- * @param {ol/control} options.target container target
+ * @param {string} options.html html string to insert in the control
+ * @param {Object} options.select ol/interaction/Select
+ * @param {Object} options.target target Container 
  */
 
 export default class Properties extends Toggle {
   constructor(options = {}) {
     super(options);
     this.def = options.def;
+    this.select = options.select;
     this.container = new Container({ semantic: "section", className: options.contanerClassName });
     options.target.addControl(this.container);
     this.header = document.createElement("header");
@@ -32,14 +33,9 @@ export default class Properties extends Toggle {
     this.on("change:active", (evt) => {
       if (evt.active) {
         this.container.element.classList.add("active");
-        this.onActive();
-        if (this.callback) this.callback.call(this); //
       } else this.container.element.classList.remove("active");
     });
+   
   }
-  onActive() {
-    this.getMap().getInteractions().on("add", (evt) => {
-      console.log(evt);
-    });
-  }
+
 }
