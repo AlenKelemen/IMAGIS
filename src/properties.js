@@ -92,7 +92,7 @@ export default class Properties extends Toggle {
     const schema = layer.getSource().get("def").schema;
     for (const f of features) {
       for (const key of f.getKeys()) {
-        if (key !== f.getGeometryName() && key !== "layer" && props.find((x) => x.Name === key) === undefined) {
+        if (key !== f.getGeometryName() && key !== "layer" && key !== "Klasa" && props.find((x) => x.Name === key) === undefined) {
           props.push(
             schema.properties.find((x) => x.Name === key) || {
               Name: key,
