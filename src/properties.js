@@ -2,6 +2,7 @@ import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import Container from "./container";
 import Toggle from "./toggle";
+import moment from 'moment';
 /** Feature property info/edit sidebar
  * @constructor
  * @extends {ol_control_Control}
@@ -91,7 +92,7 @@ export default class Properties extends Toggle {
     const schema = layer.getSource().get("def").schema;
     for (const f of features) {
       for (const key of f.getKeys()) {
-        if (key !== f.getGeometryName() && key !== 'layer' && props.find((x) => x.Name === key) === undefined) {
+        if (key !== f.getGeometryName() && key !== "layer" && props.find((x) => x.Name === key) === undefined) {
           props.push(
             schema.properties.find((x) => x.Name === key) || {
               Name: key,
@@ -108,9 +109,8 @@ export default class Properties extends Toggle {
         }
       }
     }
-    console.log(props)
+    console.log(props);
     for (const p of props) {
-      console.log(p)
       if (!p.Hidden) {
         //in layer.def.source.schema.properties
         const div = document.createElement("div"),
@@ -131,62 +131,67 @@ export default class Properties extends Toggle {
         }
         label.innerText = p.Label || p.Name;
         input.value = p.values.length > 1 ? "*VARIRA*" : p.values[0];
-        input.id = layer.get('name') + '-' + p.Name; // id = property name
+        input.id = layer.get("name") + "-" + p.Name; // id = property name
         input.disabled = this.readOnly;
         div.appendChild(label);
         div.appendChild(input);
         element.appendChild(div);
         switch (p.DataType) {
-          case undefined || null || 0 || '':
-              console.log('dataType: undefined ||null||0||"" for:' + input.id);
-              break;
+          case undefined || null || 0 || "":
+            console.log('dataType: undefined ||null||0||"" for:' + input.id);
+            break;
           case 1: //boolean
-              input.setAttribute('type', 'checkbox');
-              input.className = 'input';
-              if (item.values.length > 1) {
-                  input.indeterminate = true;
-              } else {
-                  input.checked = item.values[0];
-              }
-              break;
+            input.setAttribute("type", "checkbox");
+            input.className = "input";
+            if (item.values.length > 1) {
+              input.indeterminate = true;
+            } else {
+              input.checked = item.values[0];
+            }
+            break;
           case 3: //datetime
-              input.placeholder = 'YYYY-MM-DD HH:mm:ss';
-              input.addEventListener('focus', evt => {
-                  input.oldValue = evt.target.value;
-              });
-              input.addEventListener('change', evt => {
-                  let value = evt.target.value;
-                  if (value == '') return;
-                  let momentValue = moment(value, 'YYYY-MM-DD HH:mm:ss');
-                  evt.target.value = momentValue.isValid() ? momentValue.format('YYYY-MM-DD HH:mm:ss') : input.oldValue;
-              });
-              break;
+            input.placeholder = "YYYY-MM-DD HH:mm:ss";
+            input.addEventListener("focus", (evt) => {
+              input.oldValue = evt.target.value;
+            });
+            input.addEventListener("change", (evt) => {
+              let value = evt.target.value;
+              if (value == "") return;
+              let momentValue = moment(value, "YYYY-MM-DD HH:mm:ss");
+              evt.target.value = momentValue.isValid() ? momentValue.format("YYYY-MM-DD HH:mm:ss") : input.oldValue;
+            });
+            break;
           case 6:
           case 7:
           case 8: // integer
-              input.placeholder = 'cijeli broj';
-              input.addEventListener('focus', evt => {
-                  input.oldValue = evt.target.value;
-              });
-              input.addEventListener('change', evt => {
-                  evt.target.value = isNaN(parseInt(evt.target.value, 10)) ? input.oldValue : parseInt(evt.target.value, 10);
-              });
-              break;
+            input.placeholder = "cijeli broj";
+            input.addEventListener("focus", (evt) => {
+              input.oldValue = evt.target.value;
+            });
+            input.addEventListener("change", (evt) => {
+              evt.target.value = isNaN(parseInt(evt.target.value, 10)) ? input.oldValue : parseInt(evt.target.value, 10);
+            });
+            break;
           case 4:
           case 5:
           case 15: //float
-              input.placeholder = 'decimalni broj';
-              input.addEventListener('focus', evt => {
-                  input.oldValue = evt.target.value;
-              });
-              input.addEventListener('change', evt => {
-                  evt.target.value = isNaN(parseFloat(evt.target.value, 10)) ? input.oldValue : parseFloat(evt.target.value, 10);
-              });
-              break;
+            input.placeholder = "decimalni broj";
+            input.addEventListener("focus", (evt) => {
+              input.oldValue = evt.target.value;
+            });
+            input.addEventListener("change", (evt) => {
+              evt.target.value = isNaN(parseFloat(evt.target.value, 10)) ? input.oldValue : parseFloat(evt.target.value, 10);
+            });
+            break;
           case 9: //string
-              break;
+            break;
           default: //geometry
-      }
+        }
+        if(this.onChange){
+          if (input.tagName === "INPUT") input.addEventListener("change", (evt) => this.onChange.call(this, evt));
+          if (input.tagName === "SELECT") input.addEventListener("change", (evt) => this.onChange.call(this, evt));
+        }
+       
       }
     }
   }

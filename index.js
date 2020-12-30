@@ -142,6 +142,7 @@ const properties = new Properties({
   tipLabel: "Info",
   target: sectionHome,
   contanerClassName: "properties",
+  readOnly:true
 });
 navHome.addControl(properties);
 
