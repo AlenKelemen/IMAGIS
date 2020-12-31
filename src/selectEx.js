@@ -75,7 +75,7 @@ export default class SelectEx extends Toggle {
         ps.on("select", (evt) => {
           const fs = evt.target.getFeatures().getArray();
           for (const f of fs) {
-            selectInside(f);
+            this.selectInside(f);
           }
         });
       } else {
