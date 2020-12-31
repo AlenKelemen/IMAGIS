@@ -51,6 +51,77 @@ export default class SelectEx extends Toggle {
       tipLabel: "Odaberi objekte koji sijeku nacrtanu liniju",
     });
     this.container.addControl(this.line);
+    this.selectByLine();
+
+    this.poly = new Toggle({
+      className: "select-poly",
+      html: '<i class="far fa-monitor-heart-rate"></i>',
+      tipLabel: "Odaberi objekte unutar nacrtanog poligona",
+    });
+    this.container.addControl(this.poly);
+    this.selectByPoly();
+
+    this.inside = new Toggle({
+      className: "select-in-selected",
+      html: '<i class="far fa-layer-plus"></i>',
+      tipLabel: "Odaberi objekte koji se nalaze unutar ili sijeku odabrani objekt",
+    });
+    this.container.addControl(this.inside);
+    this.selectInside();
+  }
+  selectInside() {}
+  selectByPoly() {
+    this.poly.draw = new Draw({
+      type: "Polygon",
+      source: this.vectorSource,
+      style: this.style,
+    });
+    this.poly.on("change:active", (evt) => {
+      if (evt.active) {
+        this.getMap().addInteraction(this.poly.draw);
+        this.poly.draw.on("drawend", (evt) => {
+          const p = polygon(evt.feature.getGeometry().getCoordinates());
+          const activeLayer = this.getMap()
+            .getLayers()
+            .getArray()
+            .find((x) => x.get("active"));
+          for (const l of this.getMap()
+            .getLayers()
+            .getArray()
+            .filter((x) => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
+            for (const f of l.getSource().getFeatures()) {
+              let g = f.getGeometry();
+              try {
+                if (g.getType() === "Point") {
+                  const intersect = p.intersect(point(g.getFirstCoordinate()));
+                  if (intersect.length > 0) {
+                    this.select.getFeatures().push(f);
+                  }
+                }
+                if (g.getType() === "LineString") {
+                  g.forEachSegment((s, e) => {
+                    try {
+                      const ls = segment(point(s), point(e));
+                      if (p.contains(ls)) this.select.getFeatures().push(f);
+                    } catch (err) {}
+                  });
+                }
+                if (g.getType() === "Polygon") {
+                  try {
+                    if (p.contains(polygon(g.getCoordinates()))) this.select.getFeatures().push(f);
+                  } catch (err) {}
+                }
+              } catch (err) {
+                console.log(err);
+              }
+            }
+            this.select.dispatchEvent("select");
+          }
+        });
+      } else this.getMap().removeInteraction(this.poly.draw);
+    });
+  }
+  selectByLine() {
     this.line.draw = new Draw({
       type: "LineString",
       source: this.vectorSource,
@@ -96,11 +167,11 @@ export default class SelectEx extends Toggle {
               }
             }
           });
+          this.select.dispatchEvent("select");
         });
       } else {
         this.getMap().removeInteraction(this.line.draw);
       }
     });
-    
   }
 }

@@ -238,7 +238,7 @@ export default class Select extends olSelect {
                     g.forEachSegment((s, e) => {
                       try {
                         const ls = segment(point(s), point(e));
-                        if (p.contains(ls)) this.getFeatures().push(f);
+                        if (p.contains(ls)) this.select.getFeatures().push(f);
                       } catch (err) {}
                     });
                   }
