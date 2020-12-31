@@ -46,6 +46,7 @@ window.map = new Map({
 });
 /** ol/interaction/Select */
 const select = new Select({
+  hitTolerance: 5,
   filter: (feature, layer) => {
     const activeLayer = map
       .getLayers()
@@ -142,7 +143,7 @@ const properties = new Properties({
   tipLabel: "Info",
   target: sectionHome,
   contanerClassName: "properties",
-  readOnly:false
+  readOnly: false,
 });
 navHome.addControl(properties);
 
