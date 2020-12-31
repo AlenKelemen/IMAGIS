@@ -34,7 +34,7 @@ const mapContainer = document.createElement("main");
 mapContainer.className = "map";
 document.body.appendChild(mapContainer);
 
-/**  ol/map*/
+/**  ol/Map*/
 window.map = new Map({
   target: mapContainer,
   view: new View({
@@ -44,8 +44,21 @@ window.map = new Map({
   }),
   controls: [],
 });
+/** ol/interaction/Select */
+const select = new Select({
+  filter: (feature, layer) => {
+    const activeLayer = map
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active"));
+    if (!activeLayer) return true;
+    else return layer === activeLayer;
+  },
+});
+map.addInteraction(select);
+select.setActive(false);
 
-/**  load layers from def*/
+/** Load ol/Layer (s) from def*/
 const defLayers = new DefLayers({
   def: def,
   map: map,
@@ -124,10 +137,12 @@ map.getLayers().on("propertychange", (evt) => {
 navHome.addControl(theme);
 
 const properties = new Properties({
+  select: select,
   html: '<i class="far fa-info-circle"></i>',
   tipLabel: "Info",
   target: sectionHome,
   contanerClassName: "properties",
+  readOnly:false
 });
 navHome.addControl(properties);
 
@@ -165,10 +180,7 @@ const geolocator = new Geolocator({
 });
 navRight.addControl(geolocator);
 
-/** select control, rightside child of aside */
-const select = new Select();
-map.addInteraction(select);
-select.setActive(false);
+/** rightside, child of aside */
 
 const selectContaner = new Container({
   semantic: "nav",

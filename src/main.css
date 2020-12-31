@@ -150,22 +150,65 @@ body {
 .properties {
   flex-direction: column;
   display: none;
-  position: relative;
-  width: 300px;
+  padding: 8px;
+  width: 350px;
   word-wrap: break-word;
   border-radius: 4px;
-  padding: 2px;
   color: white;
   background: rgba(0, 60, 136, 0.5);
+  position: relative;
+}
+.properties .header {
+  margin: 0;
+}
+.properties .properties-body.middle {
+  align-self: center;
+  margin: auto;
+  position: static;
+}
+.properties > div {
+  padding: 6px;
+}
+.properties .properties-body {
+  right: 0;
+  left: 0;
+  position: absolute;
+  overflow-y: auto;
+  top: 30px;
+  bottom: 6px;
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.properties .items label {
+  display: block;
+  max-width: 100%;
+  font-weight: 400;
+}
+
+.properties .items input,
+.properties .items select {
+  width: 100%;
+  border-radius: 4px;
+  background-color: unset;
+  border: solid;
+  border-color: gray;
+  border-width: 1px;
+  padding: 4px;
+}
+.properties .items input:disabled,
+.properties .items select:disabled {
+  color: black;
+  cursor: default;
 }
 
 .select-ex {
-  display:none;
+  display: none;
   vertical-align: top;
-  float:left;
+  float: left;
 }
-.select-base{
-  float:right;
+.select-base {
+  float: right;
 }
 .select-ex.active {
   display: inline-block;
