@@ -68,23 +68,67 @@ export default class SelectEx extends Toggle {
       tipLabel: "Odaberi objekte koji se nalaze unutar ili sijeku odabrani objekt",
     });
     this.container.addControl(this.inside);
+    const ps = new Select({
+      hitTolerance: 5,
+      filter: (feature, layer) => {
+        return feature.getGeometry().getType() === "Polygon";
+      },
+    });
     this.inside.on("change:active", (evt) => {
       if (evt.active) {
-        const ps = new Select();
         this.getMap().addInteraction(ps);
         ps.on("select", (evt) => {
           const fs = evt.target.getFeatures().getArray();
           for (const f of fs) {
             this.selectInside(f);
           }
+          evt.target.getFeatures().clear();
+          this.select.dispatchEvent("select");
         });
       } else {
         this.getMap().removeInteraction(ps);
       }
     });
   }
-  selectInside(poly) {
-    console.log(poly)
+  selectInside(f) {
+    const p = polygon(f.getGeometry().getCoordinates());
+    const activeLayer = this.getMap()
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active"));
+    for (const l of this.getMap()
+      .getLayers()
+      .getArray()
+      .filter((x) => x instanceof VectorLayer && (x === activeLayer || activeLayer === undefined))) {
+      for (const f of l.getSource().getFeatures()) {
+        let g = f.getGeometry();
+        try {
+          if (g.getType() === "Point") {
+            const intersect = p.intersect(point(g.getFirstCoordinate()));
+            if (intersect.length > 0) {
+              this.select.getFeatures().push(f);
+            }
+          }
+          if (g.getType() === "LineString") {
+            let flag = g.forEachSegment((s, e) => {
+              const ls = segment(point(s), point(e));
+              try {
+                return !p.contains(ls);
+              } catch (err) {}
+            });
+            if (!flag) this.select.getFeatures().push(f);
+          }
+
+          if (g.getType() === "Polygon") {
+            try {
+              if (p.contains(polygon(g.getCoordinates()))) this.select.getFeatures().push(f);
+            } catch (err) {}
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
   }
   selectByPoly() {
     this.poly.draw = new Draw({
