@@ -1,196 +1,105 @@
 import Control from 'ol/control/Control';
-import olSelect from 'ol/interaction/Select';
-import moment from 'moment';
-import 'w3-css/w3.css';
+import {
+    Select
+} from 'ol/interaction';
+import Draw from 'ol/interaction/Draw';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import {
+    point,
+    segment,
+    polygon
+} from '@flatten-js/core';
 
-export default class Properties extends Control {
+export default class SelectInSelected extends Control {
     constructor(options = {}) {
         super({
-            element: document.createElement('div')
+            element: document.createElement('button')
         });
-        this.map = options.map || map; //from windows.map=map if map set in main
-        this.set('name', options.name || 'properties'); // control name
-        this.element.className = `w3-sidebar ${options.className || 'ol-properties'}`;
-        this.def = options.def || this.map.def; //if map.def is set in main
-        this.onChange = options.onChange; // function when feature properties changed
-        this.readOnly = options.readOnly; // edit properties or read only
-        this.setVisible(options.visible || false); // visible
-        this.body = document.createElement('div');
-        this.element.appendChild(this.body);
-        this.map.getInteractions().on('add', evt => {
-            if (evt.element instanceof olSelect) {
-                const select = evt.element;
-                select.on('select', evt => {
-                    const item = [];
-                    this.body.innerHTML = '';
-                    for (const f of select.getFeatures().getArray()) {
-                        if (item.find(x => x.layer === select.getLayer(f))) {
-                            item.find(x => x.layer === select.getLayer(f)).features.push(f);
-                        } else {
-                            item.push({
-                                layer: select.getLayer(f),
-                                features: [f]
-                            });
-                        }
-                    }
-                    for (const [index, i] of item.entries()) {
-                        const ld = document.createElement('div');
-                        ld.className = 'layer';
-                        ld.innerHTML = `
-                        <div class="header"><button class="w3-button show-more"><i class="far fa-plus"></i></button> ${i.layer.get('label') || i.layer.get('name')} (${i.features.length})</div>
-                        `;
-                        ['click', 'touchend'].forEach(event => ld.querySelector('.show-more').addEventListener(event, evt => {
-                            const e = evt.currentTarget;
-                            ld.querySelector('.items').style.display = ld.querySelector('.items').style.display === 'none' ? 'block' : 'none';
-                            e.innerHTML = ld.querySelector('.items').style.display === 'none' ? '<i class="far fa-plus"></i>' : '<i class="far fa-minus"></i>';
-                        }));
-                        this.body.appendChild(ld);
-                        const content = document.createElement('div');
-                        content.className = 'items';
-                        if (index === 0) {
-                            content.style.display = 'block';
-                            ld.querySelector('.show-more').innerHTML = '<i class="far fa-minus"></i>';
-                        } else {
-                            content.style.display = 'none';
-                            ld.querySelector('.show-more').innerHTML = '<i class="far fa-plus"></i>';
-                        }
-                        ld.appendChild(content);
-                        this._dialog(i.layer, i.features, content);
-                    }
-                });
-            }
-        });
-        this.map.getInteractions().on('remove', evt => {
-            if (evt.element instanceof olSelect) {
-                this.body.innerHTML = '';
-            }
+        this.element.className = options.className;
+        this.element.innerHTML = options.html || '';
+        this.element.title = options.tipLabel || '';
+        this.select = options.select;
+        this.selectStyle = options.selectStyle; // selection draw style
+        this.deselect = options.deselect || true; //deselect on click on map
+        this.intersect = options.intersect; // select contains and crossing features 
+        this.element.addEventListener('click', evt => {
+            this.setActive(!this.getActive());
+            this.select.setActive(false);
         });
     }
-    _dialog(layer, features, element) {
-        const props = []; //consolidated props
-        for (const f of features) {
-            for (const key of f.getKeys()) {
-                if (key !== f.getGeometryName() && props.find(x => x.Name === key) === undefined) {
-                    props.push(layer.def.source.schema.properties.find(x => x.Name === key) || {
-                        Name: key
-                    });
-                    props[props.length - 1].values = [];
-                }
-            }
-        }
-        for (const f of features) {
-            for (const p of props) {
-                if (p.values.indexOf(f.get(p.Name)) === -1) {
-                    p.values.push(
-                        f.get(p.Name)
-                    );
-                }
-            }
-        }
-        for (const p of props) {
-            if (!p.Hidden) { //in layer.def.source.schema.properties
-                const div = document.createElement('div'),
-                    label = document.createElement('label');
-                let input = document.createElement('input');
-                div.className = 'item';
-                input.className = 'w3-input w3-border input';
-                if (p.Constrains && !this.readOnly) {
-                    input = document.createElement('select');
-                    input.className = 'w3-select w3-border input';
-                    for (const constrain of p.Constrains) {
-                        const option = document.createElement('option');
-                        option.value = constrain;
-                        option.innerHTML = constrain;
-                        input.appendChild(option);
-                    }
-                    if (p.values.length > 1) input.options[input.options.length] = new Option('*VARIRA*', '*VARIRA*');
-                }
-                label.innerText = p.Label || p.Name;
-                input.value = p.values.length > 1 ? '*VARIRA*' : p.values[0];
-                input.id = p.Name; // id = property name
-                input.disabled = this.readOnly;
-                div.appendChild(label);
-                div.appendChild(input);
-                element.appendChild(div);
-                switch (p.DataType) {
-                    case undefined || null || 0 || '':
-                        console.log('dataType: undefined ||null||0||"" for:' + input.id);
-                        break;
-                    case 1: //boolean
-                        input.setAttribute('type', 'checkbox');
-                        input.className = 'w3-check w3-border input';
-                        if (item.values.length > 1) {
-                            input.indeterminate = true;
-                        } else {
-                            input.checked = item.values[0];
-                        }
-                        break;
-                    case 3: //datetime
-                        input.placeholder = 'YYYY-MM-DD HH:mm:ss';
-                        input.addEventListener('focus', evt => {
-                            input.oldValue = evt.target.value;
-                        });
-                        input.addEventListener('change', evt => {
-                            let value = evt.target.value;
-                            if (value == '') return;
-                            let momentValue = moment(value, 'YYYY-MM-DD HH:mm:ss');
-                            evt.target.value = momentValue.isValid() ? momentValue.format('YYYY-MM-DD HH:mm:ss') : input.oldValue;
-                        });
-                        break;
-                    case 6:
-                    case 7:
-                    case 8: // integer
-                        input.placeholder = 'cijeli broj';
-                        input.addEventListener('focus', evt => {
-                            input.oldValue = evt.target.value;
-                        });
-                        input.addEventListener('change', evt => {
-                            evt.target.value = isNaN(parseInt(evt.target.value, 10)) ? input.oldValue : parseInt(evt.target.value, 10);
-                        });
-                        break;
-                    case 4:
-                    case 5:
-                    case 15: //float
-                        input.placeholder = 'decimalni broj';
-                        input.addEventListener('focus', evt => {
-                            input.oldValue = evt.target.value;
-                        });
-                        input.addEventListener('change', evt => {
-                            evt.target.value = isNaN(parseFloat(evt.target.value, 10)) ? input.oldValue : parseFloat(evt.target.value, 10);
-                        });
-                        break;
-                    case 9: //string
-                        break;
-                    default: //geometry
-                }
-                if (input.tagName === 'INPUT') input.addEventListener('change', evt => this.onChange.call(this, evt));
-                if (input.tagName === 'SELECT') input.addEventListener('change', evt => this.onChange.call(this, evt));
-            }
-        }
-    }
+    setActive(b) {
+        if (this.getActive() == b) return;
+        if (b) {
+            this.element.classList.add('active');
+            if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
+            const inSelectOptions = {};
+            if (this.selectStyle) inSelectOptions.style = this.selectStyle;
+            this.inSelect = new Select(inSelectOptions);
+            this.getMap().addInteraction(this.inSelect);
+            this.inSelect.on('select', evt => {
+                for (const f of evt.target.getFeatures().getArray()) {
+                    const p = polygon(f.getGeometry().getCoordinates());
+                    for (const l of map.getLayers().getArray()) {
+                        if (l instanceof VectorLayer)
+                            for (const f of l.getSource().getFeatures()) {
+                                let g = f.getGeometry();
+                                try {
+                                    if (g.getType() === 'Point') {
+                                        const intersect = p.intersect(point(g.getFirstCoordinate()));
+                                        if (intersect.length > 0) {
+                                            this.select.getFeatures().push(f);
+                                        }
+                                    }
+                                    if (g.getType() === 'LineString') {
+                                        let flag = true;
+                                        g.forEachSegment((s, e) => {
+                                            try {
+                                                const ls = segment(point(s), point(e));
+                                                if (this.intersect && p.intersect(ls).length > 0) this.select.getFeatures().push(f);
+                                                if (!p.contains(ls)) flag=false;
+                                            } catch (err) {}
+                                        });
+                                        if (flag) this.select.getFeatures().push(f);
+                                    }
+                                    if (g.getType() === 'Polygon') {
+                                        try {
+                                            if (p.contains(polygon(g.getCoordinates()))) this.select.getFeatures().push(f);
+                                            if (this.intersect && p.intersect(g).length > 0) this.select.getFeatures().push(f);
+                                        } catch (err) {}
+                                    }
+                                } catch (err) {
+                                    console.log(err);
+                                }
 
-    getVisible() {
-        return this.element.style.display === 'none' ? false : true;
-    }
-    setVisible(b) { //show/hide sidebar
-        this.element.style.display = b ? 'block' : 'none';
+                            }
+                        this.select.dispatchEvent('select');
+                    }
+                }
+                this.inSelect.getFeatures().clear();
+            });
+        } else {
+            this.element.classList.remove('active');
+            this.inSelect.getFeatures().clear();
+            this.getMap().removeInteraction(this.inSelect);
+        }
         this.dispatchEvent({
-            type: 'change:visible',
-            key: 'visible',
+            type: 'change:active',
+            key: 'active',
             oldValue: !b,
-            visible: b
+            active: b
         });
     }
-    getDisabled() { //disable sidebar
-        return this.element.style.pointerEvents === 'none';
+    getActive() {
+        return this.element.classList.contains('active');
     }
-    setDisabled(b) {
-        this.element.style.pointerEvents = b ? 'none' : 'auto';
-        this.dispatchEvent({
-            type: 'change:disabled',
-            key: 'disabled',
-            oldValue: !b,
-            disabled: b
-        });
+    /**
+     * Parent control (navbar)
+     * @return {bool}.
+     */
+    getParent() {
+        if (this.get('parent')) {
+            return this.get('parent');
+        }
     }
 }
