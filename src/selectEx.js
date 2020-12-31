@@ -83,7 +83,6 @@ export default class SelectEx extends Toggle {
             this.selectInside(f);
           }
           evt.target.getFeatures().clear();
-          this.select.dispatchEvent("select");
         });
       } else {
         this.getMap().removeInteraction(ps);
@@ -111,14 +110,15 @@ export default class SelectEx extends Toggle {
           }
           if (g.getType() === "LineString") {
             let flag = g.forEachSegment((s, e) => {
-              const ls = segment(point(s), point(e));
-              try {
+              if (s[0] !== e[0] || s[1] !== e[1]) {
+                const ls = segment(point(s), point(e));
                 return !p.contains(ls);
-              } catch (err) {}
+              }
             });
-            if (!flag) this.select.getFeatures().push(f);
+            if (!flag) {
+              console.log(f,this.select.getFeatures().getArray().length);
+              this.select.getFeatures().push(f);}
           }
-
           if (g.getType() === "Polygon") {
             try {
               if (p.contains(polygon(g.getCoordinates()))) this.select.getFeatures().push(f);
@@ -128,6 +128,8 @@ export default class SelectEx extends Toggle {
           console.log(err);
         }
       }
+      this.select.dispatchEvent("select");
+      console.log(this.select.getFeatures().getArray().length);
     }
   }
   selectByPoly() {
