@@ -113,11 +113,10 @@ export default class SelectEx extends Toggle {
             let flag = g.forEachSegment((s, e) => {
               const ls = segment(point(s), point(e));
               try {
-                return p.contains(ls);
+                return !p.contains(ls);
               } catch (err) {}
             });
-            console.log(flag)
-            if (flag) this.select.getFeatures().push(f);
+            if (!flag) this.select.getFeatures().push(f);
           }
 
           if (g.getType() === "Polygon") {
