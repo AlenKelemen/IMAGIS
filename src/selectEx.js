@@ -6,6 +6,7 @@ import Toggle from "./toggle";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import Draw from "ol/interaction/Draw";
+import Select from "ol/interaction/Select";
 import { point, segment, circle, polygon } from "@flatten-js/core";
 
 /** extended select interactions
@@ -67,9 +68,24 @@ export default class SelectEx extends Toggle {
       tipLabel: "Odaberi objekte koji se nalaze unutar ili sijeku odabrani objekt",
     });
     this.container.addControl(this.inside);
-    this.selectInside();
+    this.inside.on("change:active", (evt) => {
+      if (evt.active) {
+        const ps = new Select();
+        this.getMap().addInteraction(ps);
+        ps.on("select", (evt) => {
+          const fs = evt.target.getFeatures().getArray();
+          for (const f of fs) {
+            selectInside(f);
+          }
+        });
+      } else {
+        this.getMap().removeInteraction(ps);
+      }
+    });
   }
-  selectInside() {}
+  selectInside(poly) {
+    console.log(poly)
+  }
   selectByPoly() {
     this.poly.draw = new Draw({
       type: "Polygon",
