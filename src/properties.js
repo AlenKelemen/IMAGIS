@@ -29,12 +29,6 @@ export default class Properties extends Toggle {
     this.header.innerHTML = `
     <div>Svojstva</div>
      `;
-     
-    this.save = document.createElement("div");
-    this.save.className = "save";
-    this.save.innerHTML = "Spremi";
-    if(!this.readOnly)this.header.appendChild(this.save);
-
     this.container.element.appendChild(this.header);
     this.body = document.createElement("section");
     this.body.className = "properties-body middle";
@@ -141,6 +135,15 @@ export default class Properties extends Toggle {
         div.appendChild(label);
         div.appendChild(input);
         element.appendChild(div);
+        if (!this.readOnly) input.addEventListener("change", (evt) => { // save to feature properties on input change
+          const layerName = evt.target.id.split("-")[0];
+          const property = evt.target.id.split("-")[1];
+          const value = evt.target.value;
+          const fs = features.filter((x) => x.get("layer").get("name") === layerName);
+          for (const f of fs) {
+            f.set(property, value);
+          }
+        });
         switch (p.DataType) {
           case undefined || null || 0 || "":
             console.log('dataType: undefined ||null||0||"" for:' + input.id);

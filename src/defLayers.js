@@ -21,6 +21,11 @@ export default class DefLayers {
     this.localFolder = "/datas";
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.def.gitPath, this.localFolder);
+    //
+    this.result.then(x => console.log(x))
+    this.status = this.vc.status(this.localFolder , 'vodovodOmis/vod.json');
+    this.status.then(r => console.log(r))
+    //
   }
   removeTHLayers() {
     // remove 'gTH' layers defined in def from map

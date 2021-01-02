@@ -114,7 +114,7 @@ const legend = new Legend({
   html: '<i class="far fa-layer-group"></i>',
   tipLabel: "Legenda & upravljanje kartom",
   target: sectionHome,
-  contanerClassName: "legend",
+  contanerClassName: "pane-legend",
 });
 navHome.addControl(legend);
 
@@ -122,7 +122,7 @@ const theme = new Theme({
   html: '<i class="far fa-images"></i>',
   tipLabel: "Tema i stil",
   target: sectionHome,
-  contanerClassName: "theme",
+  contanerClassName: "pane-theme",
   def: def,
   layer: (() => {
     map
@@ -142,7 +142,7 @@ const properties = new Properties({
   html: '<i class="far fa-info-circle"></i>',
   tipLabel: "Info",
   target: sectionHome,
-  contanerClassName: "properties",
+  contanerClassName: "pane-properties",
   readOnly: false,
 });
 navHome.addControl(properties);
@@ -152,7 +152,7 @@ const defEditor = new DefEditor({
   tipLabel: "Uređenje karte",
   target: sectionHome,
   def: def,
-  contanerClassName: "def-editor",
+  contanerClassName: "pane-def-editor",
 });
 navHome.addControl(defEditor);
 /** UX right side control, child of aside */

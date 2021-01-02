@@ -34,16 +34,4 @@ export default class VersionControl {
     };
     return await git.status(fileInfo);
   }
-  async commit(dir) {
-    const config = {
-      fs: this.fs,
-      dir: dir,
-      author: {
-        name: "Alen Kelemen",
-        email: "alen@edc.hr",
-      },
-      message: "Test",
-    };
-    return await git.commit(config);
-  }
 }
