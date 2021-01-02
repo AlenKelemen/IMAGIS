@@ -206,7 +206,7 @@ export default class SelectEx extends Toggle {
                 let g = f.getGeometry();
                 try {
                   if (g.getType() === "Point") {
-                    const intersect = sls.intersect(circle(point(g.getFirstCoordinate()), this.line.bufferRadius * this.getMap().getView().getResolution()));
+                    const intersect = sls.intersect(circle(point(g.getFirstCoordinate()), this.buffer * this.getMap().getView().getResolution()));
                     if (intersect.length > 0) this.select.getFeatures().push(f);
                   }
                   if (g.getType() === "LineString")
