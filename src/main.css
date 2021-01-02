@@ -26,6 +26,7 @@ body {
 }
 .header {
   margin: 0.5em;
+  pointer-events: none !important;
 }
 .aside {
   flex-grow: 1;
@@ -279,6 +280,7 @@ body {
 .footer {
   display: flex;
   margin: 0.5em;
+  pointer-events: none !important;
 }
 .footer .active-layer-info,
 .footer .select-info {
