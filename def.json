@@ -84,6 +84,12 @@
                         "Label": "Datum unosa",
                         "Description": "Datum unosa podataka",
                         "DataType": 3
+                    },
+                    {
+                        "Name": "Napomena",
+                        "Label": "Napomena",
+                        "Description": "Napomena",
+                        "DataType": 9
                     }
                 ]
             }
@@ -161,6 +167,12 @@
                         "Label": "Datum unosa",
                         "Description": "Datum unosa podataka",
                         "DataType": 3
+                    },
+                    {
+                        "Name": "Napomena",
+                        "Label": "Napomena",
+                        "Description": "Napomena",
+                        "DataType": 9
                     }
                 ]
             }
@@ -218,6 +230,12 @@
                     "Label": "Datum unosa",
                     "Description": "Datum unosa podataka",
                     "DataType": 3
+                },
+                {
+                    "Name": "Napomena",
+                    "Label": "Napomena",
+                    "Description": "Napomena",
+                    "DataType": 9
                 }]
             }
         },
@@ -274,6 +292,12 @@
                     "Label": "Datum unosa",
                     "Description": "Datum unosa podataka",
                     "DataType": 3
+                },
+                {
+                    "Name": "Napomena",
+                    "Label": "Napomena",
+                    "Description": "Napomena",
+                    "DataType": 9
                 }]
             }
         },

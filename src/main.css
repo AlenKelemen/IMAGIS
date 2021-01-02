@@ -24,18 +24,18 @@ body {
 .ol-scale-line {
   margin-left: auto;
 }
-.header {
+.map-header {
   margin: 0.5em;
   pointer-events: none !important;
 }
-.aside {
+.map-aside {
   flex-grow: 1;
   display: flex;
   pointer-events: none !important;
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-.aside .nav {
+.nap-aside .nav {
   height: fit-content;
 }
 .pane-legend {

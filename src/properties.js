@@ -88,24 +88,32 @@ export default class Properties extends Toggle {
     });
   }
   dialog_(layer, features, element) {
-    const props = []; //consolidated props
+    const props = []; //props from def.sources[].schema
     const schema = layer.getSource().get("def").schema;
-    for (const f of features) {
-      for (const key of f.getKeys()) {
-        if (key !== f.getGeometryName() && key !== "layer" && key !== "Klasa" && props.find((x) => x.Name === key) === undefined) {
-          props.push(
+    for (const p of schema.properties) {
+      props.push({ Name: p.Name });
+      props[props.length - 1].values = [];
+    }
+    /**
+     * properties can be aquired from feat keys also (in case no schema from instance..)
+     * in that case all features must have same properties empty or not, also there is no description 
+     */
+    /*
+     for (const f of features) {
+       if (key !== f.getGeometryName() && key !== "layer" && key !== "Klasa" && props.find((x) => x.Name === key) === undefined) {
+         props.push(
             schema.properties.find((x) => x.Name === key) || {
               Name: key,
             }
           );
           props[props.length - 1].values = [];
-        }
-      }
-    }
+       }
+     }
+    */
     for (const f of features) {
       for (const p of props) {
         if (p.values.indexOf(f.get(p.Name)) === -1) {
-          p.values.push(f.get(p.Name));
+          p.values.push(f.get(p.Name) || '');
         }
       }
     }
@@ -135,15 +143,17 @@ export default class Properties extends Toggle {
         div.appendChild(label);
         div.appendChild(input);
         element.appendChild(div);
-        if (!this.readOnly) input.addEventListener("change", (evt) => { // save to feature properties on input change
-          const layerName = evt.target.id.split("-")[0];
-          const property = evt.target.id.split("-")[1];
-          const value = evt.target.value;
-          const fs = features.filter((x) => x.get("layer").get("name") === layerName);
-          for (const f of fs) {
-            f.set(property, value);
-          }
-        });
+        if (!this.readOnly)
+          input.addEventListener("change", (evt) => {
+            // save to feature properties on input change
+            const layerName = evt.target.id.split("-")[0];
+            const property = evt.target.id.split("-")[1];
+            const value = evt.target.value;
+            const fs = features.filter((x) => x.get("layer").get("name") === layerName);
+            for (const f of fs) {
+              f.set(property, value);
+            }
+          });
         switch (p.DataType) {
           case undefined || null || 0 || "":
             console.log('dataType: undefined ||null||0||"" for:' + input.id);

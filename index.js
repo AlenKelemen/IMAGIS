@@ -71,7 +71,7 @@ defLayers.addTHLayers();
 /** UX header control */
 const header = new Container({
   semantic: "header",
-  className: "header",
+  className: "map-header",
 });
 map.addControl(header);
 const nav = new Container({
@@ -93,7 +93,7 @@ toggleHome.on("change:active", (evt) => {
 /** aside: UX left & right side controls contaner */
 const aside = new Container({
   semantic: "aside",
-  className: "aside",
+  className: "map-aside",
 });
 map.addControl(aside);
 
