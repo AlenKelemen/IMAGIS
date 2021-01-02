@@ -2,7 +2,7 @@ import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import Container from "./container";
 import Toggle from "./toggle";
-import moment from 'moment';
+import moment from "moment";
 /** Feature property info/edit sidebar
  * @constructor
  * @extends {ol_control_Control}
@@ -29,6 +29,12 @@ export default class Properties extends Toggle {
     this.header.innerHTML = `
     <div>Svojstva</div>
      `;
+     
+    this.save = document.createElement("div");
+    this.save.className = "save";
+    this.save.innerHTML = "Spremi";
+    if(!this.readOnly)this.header.appendChild(this.save);
+
     this.container.element.appendChild(this.header);
     this.body = document.createElement("section");
     this.body.className = "properties-body middle";
@@ -186,11 +192,10 @@ export default class Properties extends Toggle {
             break;
           default: //geometry
         }
-        if(this.onChange){
+        if (this.onChange) {
           if (input.tagName === "INPUT") input.addEventListener("change", (evt) => this.onChange.call(this, evt));
           if (input.tagName === "SELECT") input.addEventListener("change", (evt) => this.onChange.call(this, evt));
         }
-       
       }
     }
   }

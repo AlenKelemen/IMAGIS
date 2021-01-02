@@ -158,9 +158,16 @@ body {
   background: rgba(0, 60, 136, 0.5);
   position: relative;
 }
-.properties .header {
+.properties .properties-header {
   margin: 0;
 }
+.properties .properties-header>div{
+  display:inline;
+}
+.properties .properties-header .save{
+  float:right;
+}
+
 .properties .properties-body.middle {
   align-self: center;
   margin: auto;
