@@ -95,7 +95,7 @@ export default class Properties extends Toggle {
       props[props.length - 1].values = [];
     }
     /**
-     * properties can be aquired from feat keys also (in case no schema from instance..)
+     * properties can be aquired from feat keys also (in case no schema defined)
      * in that case all features must have same properties empty or not, also there is no description 
      */
     /*
