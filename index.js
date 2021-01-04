@@ -2,6 +2,7 @@ import "ol/ol.css";
 import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import "./src/main.css";
+import BaseObject from "ol/Object";
 import Map from "ol/Map";
 import View from "ol/View";
 import ScaleLine from "ol/control/ScaleLine";
@@ -25,10 +26,19 @@ import DefEditor from "./src/defEditor";
 import SelectInfo from "./src/selectInfo";
 import SelectRect from "./src/selectRect";
 import SelectEx from "./src/selectEx";
+import Project from "./src/project.js";
 
-/**  local project def*/
-if (localStorage.getItem("def") === null) localStorage.setItem("def", JSON.stringify(baseDef));
-const def = JSON.parse(localStorage.getItem("def"));
+/**  local project, def*/
+
+const ls = new BaseObject({
+  def: localStorage.getItem("def") || JSON.stringify(baseDef),
+});
+ls.on("propertychange", (evt) => {
+  console.log("localstorage changed", evt.key, evt.target.get(evt.key));
+  localStorage.setItem(evt.key, evt.target.get(evt.key));
+});
+
+
 /** map contaner */
 const mapContainer = document.createElement("main");
 mapContainer.className = "map";
@@ -38,8 +48,8 @@ document.body.appendChild(mapContainer);
 window.map = new Map({
   target: mapContainer,
   view: new View({
-    center: def.center,
-    zoom: def.zoom,
+    center: JSON.parse(ls.get("def")).center,
+    zoom: JSON.parse(ls.get("def")).zoom,
     projection: new epsg3765(),
   }),
   controls: [],
@@ -61,7 +71,7 @@ select.setActive(false);
 
 /** Load ol/Layer (s) from def*/
 const defLayers = new DefLayers({
-  def: def,
+  def: JSON.parse(ls.get("def")),
   map: map,
 });
 defLayers.addTileLayers();
@@ -123,14 +133,14 @@ const theme = new Theme({
   tipLabel: "Tema i stil",
   target: sectionHome,
   contanerClassName: "pane-theme",
-  def: def,
+  def: JSON.parse(ls.get("def")),
   layer: (() => {
     map
       .getLayers()
       .getArray()
       .find((x) => x.get("active"));
   })(),
-  callback: (def, layer) => defEditor.setDef(def),
+  callback:(def, layer) =>{ls.set('def', JSON.stringify(def))},
 });
 map.getLayers().on("propertychange", (evt) => {
   theme.setLayer(evt.target.get("active"));
@@ -147,11 +157,20 @@ const properties = new Properties({
 });
 navHome.addControl(properties);
 
+const project = new Project({
+  html: '<i class="far fa-book-user"></i>',
+  tipLabel: "Projekt",
+  target: sectionHome,
+  def: JSON.parse(ls.get("def")),
+  contanerClassName: "pane-project",
+});
+navHome.addControl(project);
+
 const defEditor = new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
   tipLabel: "Uređenje karte",
   target: sectionHome,
-  def: def,
+  def: JSON.parse(ls.get("def")),
   contanerClassName: "pane-def-editor",
 });
 navHome.addControl(defEditor);
