@@ -147,6 +147,15 @@ const properties = new Properties({
 });
 navHome.addControl(properties);
 
+const project = new Project({
+  html: '<i class="far fa-book-user"></i>',
+  tipLabel: "Projekt",
+  target: sectionHome,
+  def: JSON.parse(ls.get("def")),
+  contanerClassName: "pane-project",
+});
+navHome.addControl(project);
+
 const defEditor = new DefEditor({
   html: '<i class="far fa-brackets-curly"></i>',
   tipLabel: "Uređenje karte",
