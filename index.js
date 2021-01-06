@@ -1,6 +1,7 @@
 import "ol/ol.css";
 import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
+import "./src/imagis.css";
 
 import Map from "ol/Map";
 import View from "ol/View";
@@ -11,6 +12,7 @@ import Select from "ol/interaction/Select";
  */
 import baseDef from "./def.json";
 import epsg3765 from "./src/EPSG3765";
+import Def from "./src/def";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
 import Control from "ol/control/Control";
@@ -24,24 +26,29 @@ if (!localStorage.getItem("def")) {
   localStorage.setItem("def", JSON.stringify(Imagis.def));
 } else Imagis.def = JSON.parse(localStorage.getItem("def"));
 
-/** map contaner */
-Imagis.mapEl = document.createElement("main");
-Imagis.mapEl.className = "map";
-document.body.appendChild(Imagis.mapEl);
+/** UX map contaner */
+Imagis.ux = document.createElement("main");
+Imagis.ux.className = "map";
+document.body.appendChild(Imagis.ux);
 
 /**  ol/Map*/
-Imagis.mapOl = new Map({
-  target: Imagis.mapEl,
+Imagis.map = new Map({
+  target: Imagis.ux,
   view: new View({
-    center: Imagis.def.centar,
-    zoom: Imagis.def.center,
     projection: new epsg3765(),
   }),
   controls: [],
 });
+/**Map from def */
+const def = new Def({
+  def: Imagis.def,
+  map: Imagis.map,
+});
+def.toMap();
+def.toLayer();
 
 /** ol/interaction/Select */
-Imagis.selectOl = new Select({
+Imagis.select = new Select({
   hitTolerance: 5,
   filter: (feature, layer) => {
     const activeLayer = map
@@ -52,8 +59,8 @@ Imagis.selectOl = new Select({
     else return layer === activeLayer;
   },
 });
-Imagis.mapOl.addInteraction(Imagis.selectOl);
-Imagis.selectOl.setActive(false);
+Imagis.map.addInteraction(Imagis.select);
+Imagis.select.setActive(false);
 
 /** Load ol/Layer (s) from def*/
 Imagis.defLayers = new DefLayers({
@@ -63,9 +70,29 @@ Imagis.defLayers = new DefLayers({
 Imagis.defLayers.addTileLayers();
 Imagis.defLayers.addVectorLayers();
 Imagis.defLayers.addTHLayers();
+console.log(Imagis.defLayers.getTHLayers());
 
-Imagis.mapOl.addControl(
-  new Control({
-    element: document.createElement("div"),
-  })
-);
+/** UX header control */
+Imagis.header = new Container({
+  semantic: "header",
+  className: "map-header",
+});
+Imagis.map.addControl(Imagis.header);
+Imagis.nav = new Container({
+  className: "ol-control",
+});
+Imagis.header.addControl(Imagis.nav);
+
+/** aside: UX left & right side controls contaner */
+Imagis.aside = new Container({
+  semantic: "aside",
+  className: "map-aside",
+});
+Imagis.map.addControl(Imagis.aside);
+
+/** UX footer control */
+Imagis.footer = new Container({
+  semantic: "footer",
+  className: "map-footer",
+});
+Imagis.map.addControl(Imagis.footer);
