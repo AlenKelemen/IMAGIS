@@ -45,7 +45,7 @@ const def = new Def({
   map: Imagis.map,
 });
 def.toMap();
-def.toLayer();
+def.addLayers();
 
 /** ol/interaction/Select */
 Imagis.select = new Select({
