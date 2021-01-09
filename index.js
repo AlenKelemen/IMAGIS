@@ -63,14 +63,14 @@ Imagis.map.addInteraction(Imagis.select);
 Imagis.select.setActive(false);
 
 /** Load ol/Layer (s) from def*/
-Imagis.defLayers = new DefLayers({
+/* Imagis.defLayers = new DefLayers({
   def: Imagis.def,
   map: Imagis.map,
 });
 Imagis.defLayers.addTileLayers();
 Imagis.defLayers.addVectorLayers();
 Imagis.defLayers.addTHLayers();
-console.log(Imagis.defLayers.getTHLayers());
+console.log(Imagis.defLayers.getTHLayers()); */
 
 /** UX header control */
 Imagis.header = new Container({
