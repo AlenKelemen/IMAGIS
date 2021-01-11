@@ -10,7 +10,7 @@ import Select from "ol/interaction/Select";
  * baseDef Imagis definition JSON file.
  * @type {Object}
  */
-import baseDef from "./def.json";
+import cfg from "./cfg.json";
 import epsg3765 from "./src/EPSG3765";
 import Def from "./src/def";
 import Container from "./src/container";
@@ -21,10 +21,10 @@ import DefLayers from "./src/defLayers";
 window.Imagis = {};
 
 /** baseDef or def from localStorage */
-if (!localStorage.getItem("def")) {
-  Imagis.def = baseDef;
-  localStorage.setItem("def", JSON.stringify(Imagis.def));
-} else Imagis.def = JSON.parse(localStorage.getItem("def"));
+if (!localStorage.getItem("cfg")) {
+  Imagis.cfg = cfg;
+  localStorage.setItem("cfg", JSON.stringify(Imagis.cfg));
+} else Imagis.cfg = JSON.parse(localStorage.getItem("cfg"));
 
 /** UX map contaner */
 Imagis.ux = document.createElement("main");
@@ -39,13 +39,16 @@ Imagis.map = new Map({
   }),
   controls: [],
 });
-/**Map from def */
+/**Map from cfg */
 const def = new Def({
-  def: Imagis.def,
+  cfg: Imagis.cfg,
   map: Imagis.map,
 });
 def.toMap();
-def.addLayers();
+/**layers from cfg */
+def.toLayers();
+def.toLayers();
+
 
 /** ol/interaction/Select */
 Imagis.select = new Select({
@@ -61,16 +64,6 @@ Imagis.select = new Select({
 });
 Imagis.map.addInteraction(Imagis.select);
 Imagis.select.setActive(false);
-
-/** Load ol/Layer (s) from def*/
-/* Imagis.defLayers = new DefLayers({
-  def: Imagis.def,
-  map: Imagis.map,
-});
-Imagis.defLayers.addTileLayers();
-Imagis.defLayers.addVectorLayers();
-Imagis.defLayers.addTHLayers();
-console.log(Imagis.defLayers.getTHLayers()); */
 
 /** UX header control */
 Imagis.header = new Container({
