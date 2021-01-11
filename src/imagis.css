@@ -1,33 +1,42 @@
 html {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: Verdana, sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-  }
-  .ol-overlaycontainer-stopevent {
-    display: flex;
-    flex-direction: column;
-  }
-  .map-header {
-    margin: 0.5em;
-    pointer-events: none !important;
-  }
-  .map-aside {
-    flex-grow: 1;
-    display: flex;
-    pointer-events: none !important;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-  }
-  .footer {
-    display: flex;
-    margin: 0.5em;
-    pointer-events: none !important;
-  }
-  .footer div:not(:first-child):not(:last-child) {
-    margin-left: 4px;
-    margin-right: 4px;
-  }
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Verdana, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.ol-overlaycontainer-stopevent {
+  display: flex;
+  flex-direction: column;
+}
+/** UX header control */
+.map-header {
+  margin: 0.5em;
+  pointer-events: none !important;
+}
+/** aside: UX left & right side controls contaner */
+.map-aside {
+  flex-grow: 1;
+  display: flex;
+  pointer-events: none !important;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+/** UX left side child of aside */
+
+/** UX right side child of aside */
+.map-aside .right-nav {
+  margin-left: auto;
+}
+/** UX footer control */
+.map-footer {
+  display: flex;
+  margin: 0.5em;
+  pointer-events: none !important;
+}
+.map-footer div:not(:first-child):not(:last-child) {
+  margin-left: 4px;
+  margin-right: 4px;
+}

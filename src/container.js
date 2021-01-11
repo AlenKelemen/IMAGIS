@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
  * @param {Object} options Control options.
  * @param {string[=div]} options.semantic semantic element ['nav','aside','footer','header','section']
  * @param {string[]} options.className clases to add to control
+ * @param {string[]} options.name control name
  * @param {boolean[=true]} options.visible initally visible
  */
 
@@ -14,6 +15,7 @@ export default class Container extends Control {
       element: document.createElement(options.semantic || "div"),
     });
     this.element.className = options.className || "container"; // className
+    this.set("name", options.name);
     this.controls_ = [];
   }
   setActive(b) {
@@ -46,8 +48,10 @@ export default class Container extends Control {
     );
     this.getMap().removeControl(control);
   }
-  getControls() {
-    return this.controls_;
+  getControls(name) {
+    if (name) {
+      return this.controls_.find((x) => x.get("name") === name);
+    } else return this.controls_;
   }
   /** Get active controls in a container
    * @return {object []} active controls

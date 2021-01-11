@@ -18,6 +18,8 @@ export default class Def {
     this.localFolder = "/datas";
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
+    this.toMap();
+    this.toLayers();
   }
   /**
    * map properties from cfg, changet only to def
@@ -32,7 +34,8 @@ export default class Def {
     m.getView().setZoom(cfg.zoom);
     m.getView().on("change:resolution", (evt) => (cfg.zoom = evt.target.getZoom()));
   }
-  toLayers() {//layer's source can't be changed
+  toLayers() {
+    //layer's source can't be changed
     for (const [i, l] of this.cfg.layers.entries()) {
       const layer = this.map
         .getLayers()
@@ -40,23 +43,55 @@ export default class Def {
         .find((x) => x.get("name") === l.name);
       if (!layer) {
         const s = this.cfg.sources.find((x) => x.name === l.source);
+        if (s.type === "osm") {
+          layer = new TileLayer({
+            name: l.name,
+          });
+          layer.setSource(new OSM());
+          this.map.addLayer(layer);
+        }
+        if (s.type === "bing") {
+          layer = new TileLayer({
+            name: l.name,
+          });
+          layer.setSource(
+            new BingMaps({
+              key: s.APIKey,
+              imagerySet: s.imagerySet,
+            })
+          );
+          this.map.addLayer(layer);
+        }
+        if (s.type === "wms") {
+          layer = new TileLayer({
+            name: l.name,
+          });
+          layer.setSource(
+            new TileWMS({
+              url: s.path,
+              params: s.params,
+              crossOrigin: "anonymous",
+            })
+          );
+          this.map.addLayer(layer);
+        }
         if (["geojson"].includes(s.type)) {
           layer = new VectorLayer({
             name: l.name,
           });
           const source = new VectorSource({
             loader: (extent, resolution, projection) => {
-              this.result.then(r => {
-                this.vc.readFile(this.localFolder + "/" + this.cfg.path + "/" + l.name + ".json").then(r => {
+              this.result.then((r) => {
+                this.vc.readFile(this.localFolder + "/" + this.cfg.path + "/" + l.name + ".json").then((r) => {
                   const features = new GeoJSON({
                     dataProjection: "EPSG:4326",
-                    featureProjection: "EPSG:3765"
+                    featureProjection: "EPSG:3765",
                   }).readFeatures(r);
                   source.addFeatures(features);
-                  source.getFeatures().map(x => x.set("layer", layer));
+                  source.getFeatures().map((x) => x.set("layer", layer));
                 });
               });
-            }
+            },
           });
           layer.setSource(source);
           this.map.addLayer(layer);
@@ -103,15 +138,12 @@ export default class Def {
           this.map.addLayer(layer);
         }
       }
-     else{
       for (const [key, value] of Object.entries(l)) {
-        if(key !== 'source' && key != 'style') layer.set(key,value)
-        if(key === 'style'){
-          if(layer instanceof VectorLayer) layer.setStyle(makeStyle(value));
+        if (key !== "source" && key != "style") layer.set(key, value);
+        if (key === "style") {
+          if (layer instanceof VectorLayer) layer.setStyle(makeStyle(value));
         }
       }
-     }
     }
   }
 }
- 

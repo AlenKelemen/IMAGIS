@@ -15,8 +15,7 @@ import epsg3765 from "./src/EPSG3765";
 import Def from "./src/def";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
-import Control from "ol/control/Control";
-import DefLayers from "./src/defLayers";
+import {Rotate, Zoom, Control} from "ol/control";
 
 window.Imagis = {};
 
@@ -39,16 +38,11 @@ Imagis.map = new Map({
   }),
   controls: [],
 });
-/**Map from cfg */
+/**Map with layers as defined in cfg */
 Imagis.def = new Def({
   cfg: Imagis.cfg,
   map: Imagis.map,
 });
-Imagis.def.toMap();
-
-/**layers from cfg */
-Imagis.def.toLayers();
-Imagis.def.toLayers();
 
 /** ol/interaction/Select */
 Imagis.select = new Select({
@@ -70,18 +64,57 @@ Imagis.header = new Container({
   semantic: "header",
   className: "map-header",
 });
-Imagis.map.addControl(Imagis.header);
-Imagis.nav = new Container({
-  className: "ol-control",
+Imagis.map.addControl(Imagis.header); /** UX home control */
+Imagis.header.home = new Toggle({
+  html: '<i class="far fa-home"></i>',
+  className: "toggle-home",
+  tipLabel: "Opći alati",
 });
-Imagis.header.addControl(Imagis.nav);
+Imagis.header.addControl(Imagis.header.home);
+Imagis.header.home.on("change:active", (evt) => Imagis.aside.home.setActive(evt.active));
 
 /** aside: UX left & right side controls contaner */
 Imagis.aside = new Container({
   semantic: "aside",
   className: "map-aside",
 });
+
+/** UX left side child of aside */
 Imagis.map.addControl(Imagis.aside);
+Imagis.aside.addControl(
+  new Container({
+    semantic: "section",
+    className: "home-section",
+    name: "home",
+  })
+);
+Imagis.aside.getControls("home").addControl(
+  new Container({
+    semantic: "nav",
+    className: "home-nav ol-control",
+    name: "homeNav",
+  })
+);
+/** UX right side child of aside */
+Imagis.aside.right = new Container({
+  semantic: "nav",
+  className: "right-nav",
+  name: "rightNav",
+});
+Imagis.aside.addControl(Imagis.aside.right);
+Imagis.aside.right.addControl(
+  new Container({
+    semantic: "nav",
+    className: "rotate-zoom",
+    name: "rotateZoom",
+  })
+);
+Imagis.aside.right.getControls("rotateZoom").addControl(
+  new Rotate({
+    tipLabel: "Sjever gore",
+  })
+);
+Imagis.aside.right.getControls("rotateZoom").addControl(new Zoom);
 
 /** UX footer control */
 Imagis.footer = new Container({
