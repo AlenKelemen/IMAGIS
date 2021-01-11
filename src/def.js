@@ -15,6 +15,9 @@ export default class Def {
   constructor(options = {}) {
     this.cfg = options.cfg;
     this.map = options.map;
+    this.localFolder = "/datas";
+    this.vc = new VersionControl("fs");
+    this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
   }
   /**
    * map properties from cfg, changet only to def
@@ -37,6 +40,27 @@ export default class Def {
         .find((x) => x.get("name") === l.name);
       if (!layer) {
         const s = this.cfg.sources.find((x) => x.name === l.source);
+        if (["geojson"].includes(s.type)) {
+          layer = new VectorLayer({
+            name: l.name,
+          });
+          const source = new VectorSource({
+            loader: (extent, resolution, projection) => {
+              this.result.then(r => {
+                this.vc.readFile(this.localFolder + "/" + this.cfg.path + "/" + l.name + ".json").then(r => {
+                  const features = new GeoJSON({
+                    dataProjection: "EPSG:4326",
+                    featureProjection: "EPSG:3765"
+                  }).readFeatures(r);
+                  source.addFeatures(features);
+                  source.getFeatures().map(x => x.set("layer", layer));
+                });
+              });
+            }
+          });
+          layer.setSource(source);
+          this.map.addLayer(layer);
+        }
         if (["th", "TH"].includes(s.type)) {
           layer = new VectorLayer({
             name: l.name,
@@ -83,8 +107,7 @@ export default class Def {
       for (const [key, value] of Object.entries(l)) {
         if(key !== 'source' && key != 'style') layer.set(key,value)
         if(key === 'style'){
-          console.log(key,value)
-          layer.setStyle(makeStyle(value));
+          if(layer instanceof VectorLayer) layer.setStyle(makeStyle(value));
         }
       }
      }

@@ -40,15 +40,15 @@ Imagis.map = new Map({
   controls: [],
 });
 /**Map from cfg */
-const def = new Def({
+Imagis.def = new Def({
   cfg: Imagis.cfg,
   map: Imagis.map,
 });
-def.toMap();
-/**layers from cfg */
-def.toLayers();
-def.toLayers();
+Imagis.def.toMap();
 
+/**layers from cfg */
+Imagis.def.toLayers();
+Imagis.def.toLayers();
 
 /** ol/interaction/Select */
 Imagis.select = new Select({
