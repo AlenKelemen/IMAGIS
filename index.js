@@ -15,7 +15,8 @@ import epsg3765 from "./src/EPSG3765";
 import Def from "./src/def";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
-import {Rotate, Zoom, Control} from "ol/control";
+import Legend from "./src/legend";
+import { Rotate, Zoom,ScaleLine, Control } from "ol/control";
 
 window.Imagis = {};
 
@@ -62,7 +63,7 @@ Imagis.select.setActive(false);
 /** UX header control */
 Imagis.header = new Container({
   semantic: "header",
-  className: "map-header",
+  className: "map-header control",
 });
 Imagis.map.addControl(Imagis.header); /** UX home control */
 Imagis.header.home = new Toggle({
@@ -71,7 +72,7 @@ Imagis.header.home = new Toggle({
   tipLabel: "Opći alati",
 });
 Imagis.header.addControl(Imagis.header.home);
-Imagis.header.home.on("change:active", (evt) => Imagis.aside.home.setActive(evt.active));
+Imagis.header.home.on("change:active", (evt) => Imagis.home.setActive(evt.active));
 
 /** aside: UX left & right side controls contaner */
 Imagis.aside = new Container({
@@ -88,13 +89,25 @@ Imagis.aside.addControl(
     name: "home",
   })
 );
-Imagis.aside.getControls("home").addControl(
+Imagis.home = Imagis.aside.getControls("home");
+Imagis.home.addControl(
   new Container({
     semantic: "nav",
-    className: "home-nav ol-control",
+    className: "home-nav control",
     name: "homeNav",
   })
 );
+Imagis.homeNav = Imagis.home.getControls('homeNav');
+Imagis.homeNav.addControl(
+  new Legend({
+    html: '<i class="far fa-layer-group"></i>',
+    tipLabel: "Legenda & upravljanje kartom",
+    target: Imagis.aside,
+    contanerClassName: "legend control",
+  })
+);
+
+
 /** UX right side child of aside */
 Imagis.aside.right = new Container({
   semantic: "nav",
@@ -102,19 +115,30 @@ Imagis.aside.right = new Container({
   name: "rightNav",
 });
 Imagis.aside.addControl(Imagis.aside.right);
-Imagis.aside.right.addControl(
-  new Container({
-    semantic: "nav",
-    className: "rotate-zoom",
-    name: "rotateZoom",
-  })
-);
-Imagis.aside.right.getControls("rotateZoom").addControl(
+
+Imagis.aside.right.rotateZoom = new Container({
+  semantic: "nav",
+  className: "rotate-zoom",
+  name: "rotateZoom",
+});
+Imagis.aside.right.addControl(Imagis.aside.right.rotateZoom);
+Imagis.aside.right.rotateZoom.addControl(
   new Rotate({
+    className:'ol-rotate control',
     tipLabel: "Sjever gore",
+    label:Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
   })
 );
-Imagis.aside.right.getControls("rotateZoom").addControl(new Zoom);
+Imagis.aside.right.rotateZoom.addControl(
+  new Zoom({
+    className:'ol-zoom control',
+    zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus" }),
+    zoomInTipLabel: "Približi",
+    zoomOutTipLabel: "Udalji",
+    zoomOutLabel: Object.assign(document.createElement("i"), { className: "far fa-minus" }),
+  })
+);
+Imagis.aside.right.rotateZoom.getControls().map((x) => x.element.classList.remove("ol-control"));
 
 /** UX footer control */
 Imagis.footer = new Container({
@@ -122,3 +146,6 @@ Imagis.footer = new Container({
   className: "map-footer",
 });
 Imagis.map.addControl(Imagis.footer);
+Imagis.footer.addControl(new ScaleLine({
+className: 'ol-scale-line'
+}));

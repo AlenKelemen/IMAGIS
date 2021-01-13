@@ -14,18 +14,20 @@ body {
 /** UX header control */
 .map-header {
   margin: 0.5em;
-  pointer-events: none !important;
+  width: fit-content;
 }
 /** aside: UX left & right side controls contaner */
 .map-aside {
-  flex-grow: 1;
   display: flex;
+  flex-grow: 1;
   pointer-events: none !important;
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
 /** UX left side child of aside */
-
+.map-aside section {
+  display: flex;
+}
 /** UX right side child of aside */
 .map-aside .right-nav {
   margin-left: auto;
@@ -34,9 +36,63 @@ body {
 .map-footer {
   display: flex;
   margin: 0.5em;
-  pointer-events: none !important;
+  width: fit-content;
 }
 .map-footer div:not(:first-child):not(:last-child) {
   margin-left: 4px;
   margin-right: 4px;
+}
+
+.control {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  padding: 2px;
+}
+.control.hidden {
+  display: none;
+}
+.control button {
+  display: block;
+  margin: 1px;
+  padding: 0;
+  font-size: 1.14em;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  height: 1.375em;
+  width: 1.375em;
+  line-height: 0.4em;
+  background-color: #f4f4f4;
+  border: none;
+  border-radius: 2px;
+}
+.control button .active{
+  background-color: green;
+}
+.control button:hover {
+  background-color: #ccc;
+}
+.rotate-zoom {
+  pointer-events: none !important;
+}
+.rotate-zoom div {
+  display: inline-block;
+}
+.rotate-zoom .ol-rotate {
+  vertical-align: top;
+}
+.ol-scale-line {
+  margin-left: auto;
+  position: unset;
+  background-color: #f4f4f4af;
+}
+.ol-scale-line-inner {
+  border: 1px solid #000;
+  border-top: none;
+  color: #000;
+  font-size: 10px;
+  text-align: center;
+  margin: 1px;
+  will-change: contents, width;
+  transition: all 0.25s;
 }

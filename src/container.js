@@ -5,8 +5,8 @@ import Control from "ol/control/Control";
  * @param {Object} options Control options.
  * @param {string[=div]} options.semantic semantic element ['nav','aside','footer','header','section']
  * @param {string[]} options.className clases to add to control
+ * @param {boolean[true]} options.active initally visible
  * @param {string[]} options.name control name
- * @param {boolean[=true]} options.visible initally visible
  */
 
 export default class Container extends Control {
@@ -15,14 +15,15 @@ export default class Container extends Control {
       element: document.createElement(options.semantic || "div"),
     });
     this.element.className = options.className || "container"; // className
+    this.setActive(options.active || true);
     this.set("name", options.name);
     this.controls_ = [];
   }
   setActive(b) {
     // set element visible
     if (this.getActive() == b) return;
-    if (b) this.element.classList.add("active");
-    else this.element.classList.remove("active");
+    if (b) this.element.classList.remove("hidden");
+    else this.element.classList.add("hidden");
     this.dispatchEvent({
       type: "change:active",
       key: "active",
@@ -32,7 +33,7 @@ export default class Container extends Control {
   }
   getActive() {
     // get element visible
-    return this.element.classList.contains("active");
+    return !this.element.classList.contains("hidden");
   }
   addControl(control) {
     // ad control
