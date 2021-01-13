@@ -15,7 +15,7 @@ export default class Container extends Control {
       element: document.createElement(options.semantic || "div"),
     });
     this.element.className = options.className || "container"; // className
-    this.setActive(options.active || true);
+    this.setActive(options.active);
     this.set("name", options.name);
     this.controls_ = [];
   }

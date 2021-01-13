@@ -84,6 +84,7 @@ Imagis.aside = new Container({
 Imagis.map.addControl(Imagis.aside);
 Imagis.aside.addControl(
   new Container({
+    active:false,
     semantic: "section",
     className: "home-section",
     name: "home",

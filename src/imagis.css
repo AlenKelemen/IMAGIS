@@ -28,6 +28,9 @@ body {
 .map-aside section {
   display: flex;
 }
+.map-aside section .hidden {
+  display: none;
+}
 /** UX right side child of aside */
 .map-aside .right-nav {
   margin-left: auto;
@@ -66,8 +69,8 @@ body {
   border: none;
   border-radius: 2px;
 }
-.control button .active{
-  background-color: green;
+.control .active {
+  color: rgb(4, 31, 121);
 }
 .control button:hover {
   background-color: #ccc;
@@ -89,7 +92,7 @@ body {
 .ol-scale-line-inner {
   border: 1px solid #000;
   border-top: none;
-  color: #000;
+  color: black;
   font-size: 10px;
   text-align: center;
   margin: 1px;
