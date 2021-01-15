@@ -96,10 +96,11 @@ Imagis.homeNav = new Container({
 Imagis.homeSection.addControl(Imagis.homeNav);
 Imagis.homeNav.addControl(
   new Legend({
+    cfg:Imagis.cfg,
     html: '<i class="far fa-layer-group"></i>',
     tipLabel: "Legenda & upravljanje kartom",
     target: Imagis.homeSection,
-    contanerClassName: "legend-main control",
+    contanerClassName: "legend control",
   })
 );
 
