@@ -3,9 +3,9 @@ import Control from "ol/control/Control";
  * @constructor
  * @extends {ol_control_Control}
  * @param {Object} options Control options.
- * @param {string[=div]} options.semantic semantic element ['nav','aside','footer','header','section']
- * @param {string[]} options.className clases to add to control
- * @param {boolean[true]} options.active initally visible
+ * @param {string} [=div] options.semantic semantic element ['nav','aside','footer','header','section']
+ * @param {string} options.className clases to add to control
+ * @param {boolean} [=true] options.visible initally visible
  * @param {string[]} options.name control name
  */
 
@@ -15,23 +15,23 @@ export default class Container extends Control {
       element: document.createElement(options.semantic || "div"),
     });
     this.element.className = options.className || "container"; // className
-    this.setActive(options.active);
+    this.setVisible((options.visible === undefined) ? true : options.visible);
     this.set("name", options.name);
     this.controls_ = [];
   }
-  setActive(b) {
+  setVisible(b) {
     // set element visible
-    if (this.getActive() == b) return;
+    if (this.getVisible() == b) return;
     if (b) this.element.classList.remove("hidden");
     else this.element.classList.add("hidden");
     this.dispatchEvent({
-      type: "change:active",
-      key: "active",
+      type: "change:visible",
+      key: "visible",
       oldValue: !b,
-      active: b,
+      visible: b,
     });
   }
-  getActive() {
+  getVisible() {
     // get element visible
     return !this.element.classList.contains("hidden");
   }

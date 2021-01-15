@@ -16,7 +16,7 @@ import Def from "./src/def";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
 import Legend from "./src/legend";
-import { Rotate, Zoom,ScaleLine, Control } from "ol/control";
+import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 window.Imagis = {};
 
@@ -66,48 +66,42 @@ Imagis.header = new Container({
   className: "map-header control",
 });
 Imagis.map.addControl(Imagis.header); /** UX home control */
-Imagis.header.home = new Toggle({
+Imagis.toggleHome = new Toggle({
   html: '<i class="far fa-home"></i>',
   className: "toggle-home",
   tipLabel: "Opći alati",
 });
-Imagis.header.addControl(Imagis.header.home);
-Imagis.header.home.on("change:active", (evt) => Imagis.home.setActive(evt.active));
+Imagis.header.addControl(Imagis.toggleHome);
+Imagis.toggleHome.on("change:active", (evt) => Imagis.homeSection.setVisible(evt.active));
 
 /** aside: UX left & right side controls contaner */
 Imagis.aside = new Container({
   semantic: "aside",
   className: "map-aside",
 });
-
 /** UX left side child of aside */
 Imagis.map.addControl(Imagis.aside);
-Imagis.aside.addControl(
-  new Container({
-    active:false,
-    semantic: "section",
-    className: "home-section",
-    name: "home",
-  })
-);
-Imagis.home = Imagis.aside.getControls("home");
-Imagis.home.addControl(
-  new Container({
-    semantic: "nav",
-    className: "home-nav control",
-    name: "homeNav",
-  })
-);
-Imagis.homeNav = Imagis.home.getControls('homeNav');
+Imagis.homeSection =  new Container({
+  visible: false,
+  semantic: "section",
+  className: "home-section",
+  name: "home",
+})
+Imagis.aside.addControl(Imagis.homeSection);
+Imagis.homeNav = new Container({
+  semantic: "nav",
+  className: "home-nav control",
+  name: "homeNav",
+});
+Imagis.homeSection.addControl(Imagis.homeNav);
 Imagis.homeNav.addControl(
   new Legend({
     html: '<i class="far fa-layer-group"></i>',
     tipLabel: "Legenda & upravljanje kartom",
-    target: Imagis.aside,
-    contanerClassName: "legend control",
+    target: Imagis.homeSection,
+    contanerClassName: "legend-main control",
   })
 );
-
 
 /** UX right side child of aside */
 Imagis.aside.right = new Container({
@@ -125,14 +119,14 @@ Imagis.aside.right.rotateZoom = new Container({
 Imagis.aside.right.addControl(Imagis.aside.right.rotateZoom);
 Imagis.aside.right.rotateZoom.addControl(
   new Rotate({
-    className:'ol-rotate control',
+    className: "ol-rotate control",
     tipLabel: "Sjever gore",
-    label:Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
+    label: Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
   })
 );
 Imagis.aside.right.rotateZoom.addControl(
   new Zoom({
-    className:'ol-zoom control',
+    className: "ol-zoom control",
     zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus" }),
     zoomInTipLabel: "Približi",
     zoomOutTipLabel: "Udalji",
@@ -147,6 +141,8 @@ Imagis.footer = new Container({
   className: "map-footer",
 });
 Imagis.map.addControl(Imagis.footer);
-Imagis.footer.addControl(new ScaleLine({
-className: 'ol-scale-line'
-}));
+Imagis.footer.addControl(
+  new ScaleLine({
+    className: "ol-scale-line",
+  })
+);

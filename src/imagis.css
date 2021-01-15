@@ -28,8 +28,8 @@ body {
 .map-aside section {
   display: flex;
 }
-.map-aside section .hidden {
-  display: none;
+.map-aside section.hidden {
+  display: none 
 }
 /** UX right side child of aside */
 .map-aside .right-nav {
@@ -51,7 +51,7 @@ body {
   border-radius: 4px;
   padding: 2px;
 }
-.control.hidden {
+.control.visible {
   display: none;
 }
 .control button {
@@ -70,7 +70,7 @@ body {
   border-radius: 2px;
 }
 .control .active {
-  color: rgb(4, 31, 121);
+  color: rgb(72, 133, 4);
 }
 .control button:hover {
   background-color: #ccc;
@@ -99,3 +99,18 @@ body {
   will-change: contents, width;
   transition: all 0.25s;
 }
+.legend-main{
+  display:flex;
+  flex-direction: column;
+  position:relative;
+  width:10em;
+}
+.legend-items{
+  position:absolute;
+  top:2em;
+  bottom:2em;
+  width:inherit;
+  overflow: auto;
+  /* word-wrap:break-word; */
+}
+

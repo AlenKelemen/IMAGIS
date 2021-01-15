@@ -22,10 +22,21 @@ export default class Legend extends Toggle {
     this.container = new Container({ semantic: "section", className: options.contanerClassName });
     options.target.addControl(this.container);
     this.container.element.classList.add("hidden");
-    this.on("change:active", (evt) => {
-      if (evt.active) {
-        this.container.element.classList.remove("hidden");
-      } else this.container.element.classList.add("hidden");
-    });
+    this.on("change:active", (evt) => this.container.setVisible(evt.active));
+    this.header = document.createElement('header');
+    this.header.innerHTML = 'Prostorni slojevi';
+    this.header.className ='legend-header';
+    this.container.element.appendChild(this.header);
+    this.items = document.createElement('article');
+    this.items.className ='legend-items';
+    this.items.innerHTML = 'opwrigfhropweqigiroepqwgioerngioreqngoieqrngoirengoirewqngoiergniorengioreqngiorengierngiregnoirengirengiorengoireqngqerwingfwdkfgnir3fnmwdfnrifgnjiwrfgnrigfnrreqngkerqgnreqkgn'
+    this.container.element.appendChild(this.items);
+    this.footer = document.createElement('footer');
+    this.footer.className ='legend-footer';
+    this.container.element.appendChild(this.footer);
+
+
+
   }
+
 }
