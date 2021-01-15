@@ -103,7 +103,7 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 10em;
+  width: 21em;
 }
 .legend-items {
   position: absolute;
@@ -114,6 +114,8 @@ body {
   /* word-wrap:break-word; */
 }
 .legend-item-header-icon {
+  display: inline-block;
+  vertical-align: middle;
   border:1px solid lightblue
 }
  
