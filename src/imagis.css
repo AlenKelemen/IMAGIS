@@ -113,6 +113,11 @@ body {
   overflow: auto;
   /* word-wrap:break-word; */
 }
+.legend-footer{
+  position: absolute;
+  bottom: 0;
+  width: inherit;
+}
 .legend-item-header-icon {
   display: inline-block;
   vertical-align: middle;
