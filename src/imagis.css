@@ -113,13 +113,17 @@ body {
   overflow: auto;
   /* word-wrap:break-word; */
 }
+.map-aside section .legend-items-item-thematic {
+  display:block;
+  padding-left: 15px;
+}
 .legend-footer{
   position: absolute;
   bottom: 0;
   width: inherit;
 }
-.legend-item-header-icon {
-  display: inline-block;
+.legend-item-header-icon,
+.legend-item-thematic-icon {
   vertical-align: middle;
   border:1px solid lightblue
 }

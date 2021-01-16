@@ -38,22 +38,38 @@ export default class Legend extends Toggle {
     this.cfg.layers.map((x) => this.addItem(x));
   }
   /**
+   *Builds item & add to items
    *
-   *
-   * @param {string} cfg.layer.name
+   * @param {Object} prop layer properties in cfg
    * @returns
    *
    * @memberOf Legend
    */
 
   addItem(prop) {
-    const thematic = elt("nav", { className: `${this.className}-items-item-header-thematic` });
-    //const headerIcon = elt('canvas',{className:`${this.className}-item-header-icon`});
-    const header = elt("header", { className: `${this.className}-items-item-header` }, thematic,headerIcon);
-    const article = elt("article", { className: `${this.className}-items-item-article` });
-    const footer = elt("footer", { className: `${this.className}-items-item-footer` });
-    const item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
+    const img = new Image(),
+      thematic = elt("nav", { className: `${this.className}-items-item-header-thematic` }),
+      headerIcon = elt("canvas", { className: `${this.className}-item-header-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
+      ctx = headerIcon.getContext("2d"),
+      vctx = toContext(ctx, {size: this.iconSize}),
+      headerLabel = elt("span", { className: `${this.className}-item-header-label` }, prop.label || prop.name),
+      header = elt("header", { className: `${this.className}-items-item-header` }, headerIcon, headerLabel, thematic),
+      article = elt("article", { className: `${this.className}-items-item-article` }),
+      footer = elt("footer", { className: `${this.className}-items-item-footer` }),
+      item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
     this.items.appendChild(item);
+    if (!prop.style) img.src = images.lc_raster;
+    if (prop.style && prop.style.length > 1) {
+      img.src = images.lc_theme;
+      for(const s of prop.style){
+        const 
+        thematicIcon = elt("canvas", { className: `${this.className}-item-thematic-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
+        thematicLabel = elt("span", { className: `${this.className}-item-thematic-label` }, `${s.filter.property} ${s.filter.operator} ${s.filter.value}`),
+        thematicSection =elt('section',{ className: `${this.className}-items-item-thematic` },thematicIcon,thematicLabel);
+        thematic.appendChild(thematicSection);  
+      }
+    }
+    img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, headerIcon.width, headerIcon.height);
     
   }
 }
