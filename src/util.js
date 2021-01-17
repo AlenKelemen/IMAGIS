@@ -23,16 +23,4 @@ export function elt(type, props, ...children) {
     }
     return dom;
   }
-
-  /**
-   * 
-   * Source of layer in cfg
-   * @export
-   * @param {Object} cfg configuration
-   * @param {string} name layer name
-   * @returns 
-   */
-  export function cfgSource(cfg,name) {
-    const layer = cfg.layers.find(x => x.name === name);
-    return this.cfg.sources.find((x) => layer.source === x.name);
-  }
+ 

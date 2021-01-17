@@ -25,6 +25,7 @@ export default class Def {
    * map properties from cfg, changet only to def
    * events saved to cfg
    */
+
   toMap() {
     const cfg = this.cfg,
       m = this.map;
