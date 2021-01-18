@@ -18,14 +18,28 @@ export default class Def {
     this.localFolder = "/datas";
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
-    this.toMap();
-    this.toLayers();
+    this.methods = [];
+    this.methods.push(this.toMap, this.toLayers);
+    this.setCfg(this.cfg);
   }
   /**
    * map properties from cfg, changet only to def
    * events saved to cfg
    */
-
+  getCfg() {
+    return this.cfg;
+  }
+  setCfg(cfg) {
+    this.cfg = cfg;
+    this.toMap();
+    this.toLayers();
+    for (const c of this.methods) {
+      if (c) c.call(this);
+    }
+  }
+  addMethod(method) {
+    this.methods.push(method);
+  }
   toMap() {
     const cfg = this.cfg,
       m = this.map;
@@ -37,6 +51,10 @@ export default class Def {
   }
   toLayers() {
     //layer's source can't be changed
+    const la = this.map.getLayers().getArray();
+    for (let i = la.length - 1; i > -1; i--) {//remove layers in map but not in cfg
+      if (la[i] && this.cfg.layers.indexOf(la[i].get("name")) === -1) this.map.removeLayer(la[i]);
+    }
     for (const [i, l] of this.cfg.layers.entries()) {
       const layer = this.map
         .getLayers()

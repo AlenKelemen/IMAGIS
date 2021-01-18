@@ -416,7 +416,8 @@
             "label": "Open Street Map",
             "info": "",
             "visible": true,
-            "opacity": 0.7
+            "opacity": 0.7,
+            "zIndex":0
         },
         {
             "source": "Bing",
@@ -424,7 +425,8 @@
             "label": "Bing Aerial With Labels",
             "info": "Bing Aerial With Labels",
             "visible": false,
-            "opacity": 0.9
+            "opacity": 0.9,
+            "zIndex":0
         },
         {
             "source": "DGU_DOF",
@@ -432,7 +434,8 @@
             "label": "DIGITALNA ORTOFOTO KARTA 2011",
             "info": "DIGITALNA ORTOFOTO KARTA U BOJI Skraćeni naziv DOF Godina nastanka 2011.",
             "visible": false,
-            "opacity": 0.6
+            "opacity": 0.6,
+            "zIndex":0
         },
         {
             "source": "DGU_DOF_TOPONIMI",
@@ -440,7 +443,8 @@
             "label": "DIGITALNA ORTOFOTO KARTA 2011, TOPONIMI",
             "info": "DIGITALNA ORTOFOTO KARTA U BOJI Skraćeni naziv DOF Godina nastanka 2011.",
             "visible": false,
-            "opacity": 0.9
+            "opacity": 0.9,
+            "zIndex":0
         },
         {
             "source": "DGU_TK25",
@@ -449,7 +453,8 @@
             "info": "TOPOGRAFSKA KARTA 1:25000 Skraćeni naziv TK25 Godina nastanka 1996.-2010.",
             "minResolution": 20,
             "visible": false,
-            "opacity": 0.9
+            "opacity": 0.9,
+            "zIndex":0
         },
         {
             "source": "DGU_HOK",
@@ -457,7 +462,8 @@
             "label": "HRVATSKA OSNOVNA KARTA",
             "info": "HRVATSKA OSNOVNA KARTA Skraćeni naziv HOK Godina nastanka 1954.-2010.",
             "visible": false,
-            "opacity": 0.9
+            "opacity": 0.9,
+            "zIndex":0
         },
         {
             "source": "DGU_DKP",
@@ -468,7 +474,7 @@
             "visible": false,
             "opacity": 0.9,
             "translucent": true,
-            "zIndex": 999
+            "zIndex": 10
         },
         {
             "source": "VodoopskrbaPodrucjeZgrada",
@@ -477,7 +483,7 @@
             "info": "",
             "maxResolution": 500,
             "visible": true,
-            "zIndex": 1,
+            "zIndex": 100,
             "style": [{
                 "fill": {
                     "color": "rgba(0,0,255,0.25)"
@@ -495,7 +501,7 @@
             "info": "",
             "maxResolution": 100,
             "visible": true,
-            "zIndex": 200,
+            "zIndex": 110,
             "style": [{
                     "filter": {
                         "property": "DN",
@@ -534,28 +540,13 @@
                 }
             ]
         },
-        {
-            "source": "TH",
-            "name": "TH",
-            "label": "Telemetrijski hidrant",
-            "info": "",
-            "maxResolution": 500,
-            "visible": true,
-            "zIndex": 1000,
-            "style": [{
-                "icon": {
-                    "src": "th",
-                    "scale": 0.6,
-                    "anchor": [0.5, 0.5]
-                }
-            }]
-        }, {
+       {
             "source": "VodoopskrbaVodospremnik",
             "name": "vodospremnik",
             "label": "Vodospremnik",
             "info": "",
             "visible": true,
-            "zIndex": 11,
+            "zIndex": 120,
             "style": [{
                 "regularShape": {
                     "radius": 10,
@@ -576,7 +567,7 @@
             "info": "",
             "maxResolution": 25,
             "visible": true,
-            "zIndex": 12,
+            "zIndex": 130,
             "style": [{
                 "regularShape": {
                     "radius": 3,
@@ -584,6 +575,22 @@
                     "fill": {
                         "color": "rgba(255,0,0,1)"
                     }
+                }
+            }]
+        },
+        {
+            "source": "TH",
+            "name": "TH",
+            "label": "Telemetrijski hidrant",
+            "info": "",
+            "maxResolution": 500,
+            "visible": true,
+            "zIndex": 140,
+            "style": [{
+                "icon": {
+                    "src": "th",
+                    "scale": 0.6,
+                    "anchor": [0.5, 0.5]
                 }
             }]
         }

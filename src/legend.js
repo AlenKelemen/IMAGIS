@@ -24,6 +24,7 @@ export default class Legend extends Toggle {
   constructor(options = {}) {
     super(options);
     this.cfg = options.cfg;
+
     this.container = new Container({ semantic: "section", className: options.contanerClassName });
     options.target.addControl(this.container);
     this.className = options.class || "legend";
@@ -36,10 +37,11 @@ export default class Legend extends Toggle {
     this.container.element.appendChild(this.items);
     this.footer = elt("footer", { className: `${this.className}-footer` }, "Footer");
     this.container.element.appendChild(this.footer);
-    
   }
-  getLegend(){
-    this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)); //zIndex as loaded in map by def.js
+  setCfg(cfg) {
+    this.cfg = cfg;
+    this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)).reverse(); //zIndex as loaded in map by def.js
+    this.items.innerHTML = "";
     this.cfg.layers.map((x) => this.addItem(x));
   }
   /**
@@ -52,7 +54,6 @@ export default class Legend extends Toggle {
    */
 
   addItem(prop) {
-    console.log(this)
     const img = new Image(),
       thematic = elt("nav", { className: `${this.className}-items-item-header-thematic` }),
       headerIcon = elt("canvas", { className: `${this.className}-item-header-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
@@ -64,7 +65,7 @@ export default class Legend extends Toggle {
       footer = elt("footer", { className: `${this.className}-items-item-footer` }),
       item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
     this.items.appendChild(item);
-    
+
     if (!prop.style) img.src = images.lc_raster;
     if (prop.style && prop.style.length > 1) {
       img.src = images.lc_theme;
@@ -76,10 +77,10 @@ export default class Legend extends Toggle {
       }
     }
     if (prop.style && prop.style.length === 1) {
-      const itemType = this.cfg.sources.find(x => x.name === prop.source).type;
-      console.log(makeStyle(prop.style[0]).call(this,undefined));
-      vctx.setStyle(makeStyle(prop.style[0]).call(this,undefined,this.getMap().getView().getResolution())[0]);
-      if(['geojson','th'].indexOf(itemType) > -1){
+      const itemType = this.cfg.sources.find((x) => x.name === prop.source).type;
+      //console.log(makeStyle(prop.style[0]).call(this, undefined));
+      vctx.setStyle(makeStyle(prop.style[0]).call(this, undefined, this.getMap().getView().getResolution())[0]);
+      if (["geojson", "th"].indexOf(itemType) > -1) {
         vctx.drawGeometry(
           new Polygon([
             [
