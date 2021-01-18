@@ -17,6 +17,8 @@ import Container from "./src/container";
 import Toggle from "./src/toggle";
 import Legend from "./src/legend";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
+import ImageState from "ol/ImageState";
+import Cfg from "./src/cfg";
 
 window.Imagis = {};
 
@@ -44,7 +46,7 @@ Imagis.def = new Def({
   cfg: Imagis.cfg,
   map: Imagis.map,
 });
-Imagis.def.addMethod(() => console.log("zoom from cfg:" + Imagis.cfg.zoom));
+//Imagis.def.addMethod(() => console.log("zoom from cfg:" + Imagis.cfg.zoom));
 Imagis.def.setCfg(Imagis.cfg);
 /** ol/interaction/Select */
 Imagis.select = new Select({
@@ -106,7 +108,16 @@ Imagis.homeNav.addControl(
   })
 );
 Imagis.legend = Imagis.homeNav.getControls("legend");
-Imagis.def.addMethod(Imagis.legend.setCfg(Imagis.cfg));//redraw legend when Imagis.def.setCfg(cfg) is called
+
+Imagis.homeNav.addControl(
+  new Cfg({
+    html: '<i class="far fa-cog"></i>',
+    handleClick: (evt) => {
+      console.log(Imagis.cfg)
+      Imagis.legend.setCfg(Imagis.cfg);
+    },
+  })
+);
 
 /** UX right side child of aside */
 Imagis.aside.right = new Container({

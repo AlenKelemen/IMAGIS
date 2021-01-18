@@ -31,10 +31,9 @@ export default class Def {
   }
   setCfg(cfg) {
     this.cfg = cfg;
-    this.toMap();
-    this.toLayers();
     for (const c of this.methods) {
-      if (c) c.call(this);
+      
+      if (c) c.call(this,cfg);
     }
   }
   addMethod(method) {

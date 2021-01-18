@@ -39,9 +39,9 @@ export default class Legend extends Toggle {
     this.container.element.appendChild(this.footer);
   }
   setCfg(cfg) {
+    this.items.innerHTML = "";
     this.cfg = cfg;
     this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)).reverse(); //zIndex as loaded in map by def.js
-    this.items.innerHTML = "";
     this.cfg.layers.map((x) => this.addItem(x));
   }
   /**
