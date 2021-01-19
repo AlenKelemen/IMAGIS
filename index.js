@@ -18,7 +18,7 @@ import Toggle from "./src/toggle";
 import Legend from "./src/legend";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 import ImageState from "ol/ImageState";
-import Cfg from "./src/cfg";
+import Button from "./src/button";
 
 window.Imagis = {};
 
@@ -46,8 +46,6 @@ Imagis.def = new Def({
   cfg: Imagis.cfg,
   map: Imagis.map,
 });
-//Imagis.def.addMethod(() => console.log("zoom from cfg:" + Imagis.cfg.zoom));
-Imagis.def.setCfg(Imagis.cfg);
 /** ol/interaction/Select */
 Imagis.select = new Select({
   hitTolerance: 5,
@@ -108,17 +106,16 @@ Imagis.homeNav.addControl(
   })
 );
 Imagis.legend = Imagis.homeNav.getControls("legend");
-
-Imagis.homeNav.addControl(
-  new Cfg({
-    html: '<i class="far fa-cog"></i>',
-    handleClick: (evt) => {
-      console.log(Imagis.cfg)
-      Imagis.legend.setCfg(Imagis.cfg);
-    },
-  })
-);
-
+/***Update map from new cfg */
+Imagis.cfgUpdate= new Button({
+  html: '<i class="far fa-cog"></i>',
+  handleClick: (evt) => {
+    console.log('Updated cfg:',Imagis.cfg)
+    Imagis.legend.setCfg(Imagis.cfg);
+  },
+})
+Imagis.homeNav.addControl(Imagis.cfgUpdate);
+Imagis.cfgUpdate.element.click();
 /** UX right side child of aside */
 Imagis.aside.right = new Container({
   semantic: "nav",

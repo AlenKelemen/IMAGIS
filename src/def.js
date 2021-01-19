@@ -10,6 +10,7 @@ import GeoJSON from "ol/format/GeoJSON";
 
 import VersionControl from "./vcs";
 import { makeStyle } from "./makeStyle";
+import { toStringHDMS } from "ol/coordinate";
 
 export default class Def {
   constructor(options = {}) {
@@ -31,13 +32,8 @@ export default class Def {
   }
   setCfg(cfg) {
     this.cfg = cfg;
-    for (const c of this.methods) {
-      
-      if (c) c.call(this,cfg);
-    }
-  }
-  addMethod(method) {
-    this.methods.push(method);
+    this.toMap();
+    this.toLayers();
   }
   toMap() {
     const cfg = this.cfg,

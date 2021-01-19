@@ -38,11 +38,13 @@ export default class Legend extends Toggle {
     this.footer = elt("footer", { className: `${this.className}-footer` }, "Footer");
     this.container.element.appendChild(this.footer);
   }
+  /** new cfg to legend */
   setCfg(cfg) {
     this.items.innerHTML = "";
     this.cfg = cfg;
     this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)).reverse(); //zIndex as loaded in map by def.js
     this.cfg.layers.map((x) => this.addItem(x));
+
   }
   /**
    *Builds item & add to items
@@ -78,23 +80,33 @@ export default class Legend extends Toggle {
     }
     if (prop.style && prop.style.length === 1) {
       const itemType = this.cfg.sources.find((x) => x.name === prop.source).type;
-      //console.log(makeStyle(prop.style[0]).call(this, undefined));
       vctx.setStyle(makeStyle(prop.style[0]).call(this, undefined, this.getMap().getView().getResolution())[0]);
       if (["geojson", "th"].indexOf(itemType) > -1) {
+        if(prop.style[0].fill)
         vctx.drawGeometry(
           new Polygon([
             [
-              [2, 2],
-              [this.iconSize[0] - 1, 2],
-              [this.iconSize[0] - 1, this.iconSize[1] - 1],
-              [2, this.iconSize[1] - 1],
-              [2, 2],
+              [0, 0],
+              [this.iconSize[0], 0],
+              [this.iconSize[0], this.iconSize[1]],
+              [0, this.iconSize[1]],
+              [0, 0],
             ],
+          ])
+        );
+        else
+        vctx.drawGeometry(
+          new LineString([
+            [0, 0],
+            [this.iconSize[0], this.iconSize[1]],
           ])
         );
       }
     }
 
     img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, headerIcon.width, headerIcon.height);
+  }
+  icon_(prop){
+
   }
 }
