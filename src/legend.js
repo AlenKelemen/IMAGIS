@@ -6,7 +6,9 @@ import Toggle from "./toggle";
 import { toContext } from "ol/render";
 import { LineString, Point, Polygon } from "ol/geom";
 import { makeStyle } from "./makeStyle";
-const images = require("../img/*.gif");
+const images = require("../img/*.png");
+
+import { Fill } from "ol/Style";
 
 /** thematic editor
  * @constructor
@@ -55,6 +57,50 @@ export default class Legend extends Toggle {
    */
 
   addItem(prop) {
+    const style2Image = (style, ctx) => {
+      const olStyle = makeStyle(style).call(this, undefined, this.getMap().getView().getResolution()).pop();
+      const iconSize = this.iconSize;
+      const vctx = toContext(ctx, {
+        size: this.iconSize,
+      });
+      vctx.setStyle(olStyle);
+      if (style.fill) {
+        vctx.drawGeometry(
+          new Polygon([
+            [
+              [2, 2],
+              [iconSize[0] - 1, 2],
+              [iconSize[0] - 1, iconSize[1] - 1],
+              [2, iconSize[1] - 1],
+              [2, 2],
+            ],
+          ])
+        );
+      }
+      if (!style.fill && style.stroke) {
+        vctx.drawGeometry(
+          new LineString([
+            [2, 2],
+            [iconSize[0] - 2, iconSize[1] - 2],
+          ])
+        );
+      }
+      if (style.icon) {
+       
+        img.onload = () => {
+          const newStyle = new Style({
+            image: new Icon({
+              img: image,
+              imgSize: [image.width, image.height],
+              scale: Math.min(iconSize[0] / image.width, iconSize[1] / image.height),
+            }),
+          });
+      }
+      
+      vctx.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
+    }
+    };
+    let ctx;
     const img = new Image(),
       thematic = elt("nav", { className: `${this.className}-items-item-header-thematic` }),
       headerIcon = elt("canvas", { className: `${this.className}-item-header-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
@@ -64,29 +110,24 @@ export default class Legend extends Toggle {
       footer = elt("footer", { className: `${this.className}-items-item-footer` }),
       item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
     this.items.appendChild(item);
-
-    if (!prop.style) img.src = images.lc_raster;
-    else {
+    ctx = headerIcon.getContext("2d");
+    if (!prop.style) {
+      img.src = images.lc_raster;
+    } else {
       for (const [i, s] of prop.style.entries()) {
-        let ctx;
         if (prop.style.length > 1) {
-          if(i === 0) img.src = images.lc_theme;
+          img.src = images.lc_theme;
+          const imgThematic = new Image();
           const thematicIcon = elt("canvas", { className: `${this.className}-item-thematic-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
-          vctx = toContext(ctx, { size: this.iconSize }),  
-          thematicLabel = elt("span", { className: `${this.className}-item-thematic-label` }, `${s.filter.property} ${s.filter.operator} ${s.filter.value}`),
+            ctxThematic = thematicIcon.getContext("2d"),
+            thematicLabel = elt("span", { className: `${this.className}-item-thematic-label` }, `${s.filter.property} ${s.filter.operator} ${s.filter.value}`),
             thematicSection = elt("section", { className: `${this.className}-items-item-thematic` }, thematicIcon, thematicLabel);
           thematic.appendChild(thematicSection);
-          ctx = thematicIcon.getContext("2d");
-          console.log(s,ctx);
+          style2Image(s, ctxThematic); //add thematic for multiple styles
+          imgThematic.onload = () => ctxThematic.drawImage(imgThematic, 0, 0, imgThematic.width, imgThematic.height, 0, 0, headerIcon.width, headerIcon.height);
+        } else {
+          style2Image(s, ctx);
         }
-        else{
-          ctx = headerIcon.getContext("2d");
-        }
-        const vctx = toContext(ctx, { size: this.iconSize });
-        console.log(s,ctx)
-        const itemType = this.cfg.sources.find((x) => x.name === prop.source).type;
-        vctx.setStyle(makeStyle(prop.style[0]).call(this, undefined, this.getMap().getView().getResolution())[0]);
-       
       }
     }
     img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, headerIcon.width, headerIcon.height);
