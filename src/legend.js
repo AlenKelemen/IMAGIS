@@ -44,7 +44,6 @@ export default class Legend extends Toggle {
     this.cfg = cfg;
     this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)).reverse(); //zIndex as loaded in map by def.js
     this.cfg.layers.map((x) => this.addItem(x));
-
   }
   /**
    *Builds item & add to items
@@ -59,8 +58,6 @@ export default class Legend extends Toggle {
     const img = new Image(),
       thematic = elt("nav", { className: `${this.className}-items-item-header-thematic` }),
       headerIcon = elt("canvas", { className: `${this.className}-item-header-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
-      ctx = headerIcon.getContext("2d"),
-      vctx = toContext(ctx, { size: this.iconSize }),
       headerLabel = elt("span", { className: `${this.className}-item-header-label` }, prop.label || prop.name),
       header = elt("header", { className: `${this.className}-items-item-header` }, headerIcon, headerLabel, thematic),
       article = elt("article", { className: `${this.className}-items-item-article` }),
@@ -69,44 +66,29 @@ export default class Legend extends Toggle {
     this.items.appendChild(item);
 
     if (!prop.style) img.src = images.lc_raster;
-    if (prop.style && prop.style.length > 1) {
-      img.src = images.lc_theme;
-      for (const s of prop.style) {
-        const thematicIcon = elt("canvas", { className: `${this.className}-item-thematic-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
+    else {
+      for (const [i, s] of prop.style.entries()) {
+        let ctx;
+        if (prop.style.length > 1) {
+          if(i === 0) img.src = images.lc_theme;
+          const thematicIcon = elt("canvas", { className: `${this.className}-item-thematic-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
+          vctx = toContext(ctx, { size: this.iconSize }),  
           thematicLabel = elt("span", { className: `${this.className}-item-thematic-label` }, `${s.filter.property} ${s.filter.operator} ${s.filter.value}`),
-          thematicSection = elt("section", { className: `${this.className}-items-item-thematic` }, thematicIcon, thematicLabel);
-        thematic.appendChild(thematicSection);
+            thematicSection = elt("section", { className: `${this.className}-items-item-thematic` }, thematicIcon, thematicLabel);
+          thematic.appendChild(thematicSection);
+          ctx = thematicIcon.getContext("2d");
+          console.log(s,ctx);
+        }
+        else{
+          ctx = headerIcon.getContext("2d");
+        }
+        const vctx = toContext(ctx, { size: this.iconSize });
+        console.log(s,ctx)
+        const itemType = this.cfg.sources.find((x) => x.name === prop.source).type;
+        vctx.setStyle(makeStyle(prop.style[0]).call(this, undefined, this.getMap().getView().getResolution())[0]);
+       
       }
     }
-    if (prop.style && prop.style.length === 1) {
-      const itemType = this.cfg.sources.find((x) => x.name === prop.source).type;
-      vctx.setStyle(makeStyle(prop.style[0]).call(this, undefined, this.getMap().getView().getResolution())[0]);
-      if (["geojson", "th"].indexOf(itemType) > -1) {
-        if(prop.style[0].fill)
-        vctx.drawGeometry(
-          new Polygon([
-            [
-              [0, 0],
-              [this.iconSize[0], 0],
-              [this.iconSize[0], this.iconSize[1]],
-              [0, this.iconSize[1]],
-              [0, 0],
-            ],
-          ])
-        );
-        else
-        vctx.drawGeometry(
-          new LineString([
-            [0, 0],
-            [this.iconSize[0], this.iconSize[1]],
-          ])
-        );
-      }
-    }
-
     img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, headerIcon.width, headerIcon.height);
-  }
-  icon_(prop){
-
   }
 }
