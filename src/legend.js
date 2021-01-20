@@ -6,10 +6,8 @@ import Toggle from "./toggle";
 import { toContext } from "ol/render";
 import { LineString, Point, Polygon } from "ol/geom";
 import { makeStyle } from "./makeStyle";
+import { Icon, Style } from "ol/style";
 const images = require("../img/*.png");
-
-import { Fill } from "ol/Style";
-
 /** thematic editor
  * @constructor
  * @extends {ol_control_Control}
@@ -21,12 +19,10 @@ import { Fill } from "ol/Style";
  * @param {string} options.contanerClassName contaner class name
  * @param {Object} options.cfg map definition
  */
-
 export default class Legend extends Toggle {
   constructor(options = {}) {
     super(options);
     this.cfg = options.cfg;
-
     this.container = new Container({ semantic: "section", className: options.contanerClassName });
     options.target.addControl(this.container);
     this.className = options.class || "legend";
@@ -86,8 +82,9 @@ export default class Legend extends Toggle {
         );
       }
       if (style.icon) {
-       
-        img.onload = () => {
+        const image = new Image();
+        image.src = images[style.icon.src];
+        image.onload = function (evt) {
           const newStyle = new Style({
             image: new Icon({
               img: image,
@@ -95,10 +92,16 @@ export default class Legend extends Toggle {
               scale: Math.min(iconSize[0] / image.width, iconSize[1] / image.height),
             }),
           });
+          vctx.setStyle(newStyle);
+          vctx.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
+        };
       }
-      
-      vctx.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
-    }
+      if(style.regularShape){
+        olStyle.getImage().setScale(0.5)
+        console.log(olStyle.getImage())
+        vctx.setStyle(olStyle)
+        vctx.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
+      }
     };
     let ctx;
     const img = new Image(),
