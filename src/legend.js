@@ -96,10 +96,10 @@ export default class Legend extends Toggle {
           vctx.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
         };
       }
-      if(style.regularShape){
-        olStyle.getImage().setScale(0.5)
-        console.log(olStyle.getImage())
-        vctx.setStyle(olStyle)
+      if (style.regularShape) {
+        const size = olStyle.getImage().getSize();
+        olStyle.getImage().setScale(Math.min(iconSize[0] / size[0], iconSize[1] / size[1]));
+        vctx.setStyle(olStyle);
         vctx.drawGeometry(new Point([iconSize[0] / 2, iconSize[1] / 2]));
       }
     };
@@ -109,10 +109,33 @@ export default class Legend extends Toggle {
       headerIcon = elt("canvas", { className: `${this.className}-item-header-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
       headerLabel = elt("span", { className: `${this.className}-item-header-label` }, prop.label || prop.name),
       header = elt("header", { className: `${this.className}-items-item-header` }, headerIcon, headerLabel, thematic),
-      article = elt("article", { className: `${this.className}-items-item-article` }),
+      footerDisplay = elt("i", { className: "far fa-plus fa-fw" }),
+      article = elt("article", { className: `${this.className}-items-item-article` }, footerDisplay),
       footer = elt("footer", { className: `${this.className}-items-item-footer` }),
       item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
     this.items.appendChild(item);
+
+    //
+    footerDisplay.addEventListener("click", (evt) => {
+      console.log(evt.target);
+      footer.classList.toggle('hidden');
+      footerDisplay = footer.classList.contains('hidden') ? footerDisplay : elt("i", { className: "far fa-minus fa-fw" });
+    });
+    // hide/show thematic legend on icon click
+    header.addEventListener("click", (evt) => {
+      thematic.classList.toggle("hidden");
+    });
+    //  resolution/visibility zoom depending
+    const min = prop.minResolution || 0,
+      max = prop.maxResolution || Infinity,
+      view = this.getMap().getView();
+    view.on("change:resolution", () => {
+      const res = view.getResolution();
+      if (res >= min && res <= max) item.classList.remove("hidden");
+      else item.classList.add("hidden");
+    });
+    view.dispatchEvent("change:resolution");
+    //Icons
     ctx = headerIcon.getContext("2d");
     if (!prop.style) {
       img.src = images.lc_raster;

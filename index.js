@@ -107,13 +107,14 @@ Imagis.homeNav.addControl(
 );
 Imagis.legend = Imagis.homeNav.getControls("legend");
 /***Update map from new cfg */
-Imagis.cfgUpdate= new Button({
+Imagis.cfgUpdate = new Button({
   html: '<i class="far fa-cog"></i>',
   handleClick: (evt) => {
-    console.log('Updated cfg:',Imagis.cfg)
+    // console.log('Updated cfg:',Imagis.cfg)
+    Imagis.def.setCfg(Imagis.cfg);
     Imagis.legend.setCfg(Imagis.cfg);
   },
-})
+});
 Imagis.homeNav.addControl(Imagis.cfgUpdate);
 Imagis.cfgUpdate.element.click();
 /** UX right side child of aside */
