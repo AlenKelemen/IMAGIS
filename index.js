@@ -175,6 +175,6 @@ const s = Imagis.map
   .find((x) => x.get("name") === "TH")
   .getStyle()
   .call(this, undefined, null)[0];
-Imagis.imagisStyle(s, { a: 1 }, [1, 2]);
+Imagis.imagisStyle.addStyle(s, { a: 1 }, [1, 2]);
 Imagis.imagisStyle.on("change", (evt) => console.log(evt));
 Imagis.imagisStyle.changed();

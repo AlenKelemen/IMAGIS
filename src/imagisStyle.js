@@ -7,14 +7,26 @@ export default class ImagisStyle extends BaseObject {
     super();
     this.style = [];
   }
-  set(style, filter, resolution) {
+  addStyle(style, filter, resolution) {
     this.style.push({
       style: style,
       filter: filter,
       resolution: resolution,
     });
   }
-  get() {
+  getStyle() {
     return this.style;
+  }
+  olStyle(){
+      return function(feature, resolution){
+        const styles = [];
+        for (const i of this.style) {
+            const style = style.style,
+            filter= style.filter,
+            resolution = style.resolution
+            
+        }
+        return styles;
+      }
   }
 }
