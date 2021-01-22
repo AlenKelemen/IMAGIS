@@ -28,7 +28,10 @@ body {
 .map-aside > section {
   display: flex;
 }
-.map-aside > section.hidden {
+.map-aside-section.hidden{
+display:none
+}
+.map-aside-nav-section.hidden {
   display: none;
 }
 /** UX right side child of aside */
@@ -127,6 +130,9 @@ body {
 .legend-item-thematic-icon {
   vertical-align: middle;
 }
+.legend-item-header-label{
+  padding:0.2em;
+}
 .legend-items-item-header-thematic.hidden {
   display: none;
 }
@@ -136,4 +142,12 @@ body {
 }
 .legend-items-item-footer.hidden{
   display: none;
+}
+.legend-items-item-footer{
+  font-size:0.8em;
+  padding-left:1em;
+}
+.legend-items-item-article{
+  padding-left:1em;
+
 }

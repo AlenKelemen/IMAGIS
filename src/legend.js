@@ -111,16 +111,18 @@ export default class Legend extends Toggle {
       header = elt("header", { className: `${this.className}-items-item-header` }, headerIcon, headerLabel, thematic),
       footerDisplay = elt("i", { className: "far fa-plus fa-fw" }),
       article = elt("article", { className: `${this.className}-items-item-article` }, footerDisplay),
-      footer = elt("footer", { className: `${this.className}-items-item-footer` }),
+      footer = elt("footer", { className: `${this.className}-items-item-footer hidden` }),
       item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
     this.items.appendChild(item);
 
-    //
+    //  expand/shrink footer content
     footerDisplay.addEventListener("click", (evt) => {
-      console.log(evt.target);
-      footer.classList.toggle('hidden');
-      footerDisplay = footer.classList.contains('hidden') ? footerDisplay : elt("i", { className: "far fa-minus fa-fw" });
+      footer.classList.toggle("hidden");
+      evt.target.classList.toggle("fa-plus");
+      evt.target.classList.toggle("fa-minus");
     });
+    // add prop.info to footer
+    footer.innerHTML = prop.info;
     // hide/show thematic legend on icon click
     header.addEventListener("click", (evt) => {
       thematic.classList.toggle("hidden");

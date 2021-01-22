@@ -85,7 +85,7 @@ Imagis.map.addControl(Imagis.aside);
 Imagis.homeSection = new Container({
   visible: false,
   semantic: "section",
-  className: "home-section",
+  className: "map-aside-section home-section",
   name: "home",
 });
 Imagis.aside.addControl(Imagis.homeSection);
@@ -101,7 +101,7 @@ Imagis.homeNav.addControl(
     html: '<i class="far fa-layer-group"></i>',
     tipLabel: "Legenda & upravljanje kartom",
     target: Imagis.homeSection,
-    contanerClassName: "legend control",
+    contanerClassName: "map-aside-nav-section legend control",
     name: "legend",
   })
 );
