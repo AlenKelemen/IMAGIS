@@ -20,6 +20,8 @@ import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 import ImageState from "ol/ImageState";
 import Button from "./src/button";
 
+import ImagisStyle from "./src/imagisStyle";
+
 window.Imagis = {};
 
 /** baseDef or def from localStorage */
@@ -160,3 +162,19 @@ Imagis.footer.addControl(
     className: "ol-scale-line",
   })
 );
+
+Imagis.map
+  .getLayers()
+  .getArray()
+  .find((x) => x.get("name") === "vod");
+
+Imagis.imagisStyle = new ImagisStyle();
+const s = Imagis.map
+  .getLayers()
+  .getArray()
+  .find((x) => x.get("name") === "TH")
+  .getStyle()
+  .call(this, undefined, null)[0];
+Imagis.imagisStyle(s, { a: 1 }, [1, 2]);
+Imagis.imagisStyle.on("change", (evt) => console.log(evt));
+Imagis.imagisStyle.changed();

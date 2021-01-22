@@ -1,3 +1,5 @@
+import { Icon, Fill, Stroke, Circle, Text, RegularShape, Style } from "ol/style";
+const images = require("../img/*.png");
 
 /**
  * <body>
@@ -15,12 +17,11 @@
  * @returns {Object} DOM element
  */
 export function elt(type, props, ...children) {
-    let dom = document.createElement(type);
-    if (props) Object.assign(dom, props);
-    for (let child of children) {
-      if (typeof child != "string") dom.appendChild(child);
-      else dom.appendChild(document.createTextNode(child));
-    }
-    return dom;
+  let dom = document.createElement(type);
+  if (props) Object.assign(dom, props);
+  for (let child of children) {
+    if (typeof child != "string") dom.appendChild(child);
+    else dom.appendChild(document.createTextNode(child));
   }
- 
+  return dom;
+}

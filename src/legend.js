@@ -39,6 +39,7 @@ export default class Legend extends Toggle {
   /** new cfg to legend */
   setCfg(cfg) {
     this.items.innerHTML = "";
+    console.log(this.cfg.layers)
     this.cfg = cfg;
     this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)).reverse(); //zIndex as loaded in map by def.js
     this.cfg.layers.map((x) => this.addItem(x));
@@ -106,14 +107,25 @@ export default class Legend extends Toggle {
     let ctx;
     const img = new Image(),
       thematic = elt("nav", { className: `${this.className}-items-item-header-thematic` }),
+      // item header
       headerIcon = elt("canvas", { className: `${this.className}-item-header-icon`, width: this.iconSize[0], height: this.iconSize[1] }),
       headerLabel = elt("span", { className: `${this.className}-item-header-label` }, prop.label || prop.name),
       header = elt("header", { className: `${this.className}-items-item-header` }, headerIcon, headerLabel, thematic),
-      footerDisplay = elt("i", { className: "far fa-plus fa-fw" }),
+      footerDisplay = elt("i", { className: "far fa-plus fa-fw" }), //show hide footer
       article = elt("article", { className: `${this.className}-items-item-article` }, footerDisplay),
-      footer = elt("footer", { className: `${this.className}-items-item-footer hidden` }),
+      //item footer
+      opacity = elt("input", { type: "range", min:0, max:1, step:0.01, className: `${this.className}-items-item-footer-opacity` }),
+      info = elt("div", { className: `${this.className}-items-item-footer-info` }, `${prop.info}`),
+      footer = elt("footer", { className: `${this.className}-items-item-footer hidden` }, elt("i", { title: "Prozirnost", className: "far fa-fog fa-fw" }), opacity, info),
       item = elt("section", { className: `${this.className}-items-item`, id: prop.name }, header, article, footer);
     this.items.appendChild(item);
+
+    // layer opacity change
+    opacity.value = prop.opacity;
+    opacity.addEventListener("change", (evt) => {
+      prop.opacity = opacity.value;
+      this.setCfg(this.cfg);
+    });
 
     //  expand/shrink footer content
     footerDisplay.addEventListener("click", (evt) => {
@@ -121,8 +133,6 @@ export default class Legend extends Toggle {
       evt.target.classList.toggle("fa-plus");
       evt.target.classList.toggle("fa-minus");
     });
-    // add prop.info to footer
-    footer.innerHTML = prop.info;
     // hide/show thematic legend on icon click
     header.addEventListener("click", (evt) => {
       thematic.classList.toggle("hidden");
