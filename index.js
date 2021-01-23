@@ -2,33 +2,15 @@ import "ol/ol.css";
 import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import "./src/imagis.css";
-
 import Map from "ol/Map";
 import View from "ol/View";
-import Select from "ol/interaction/Select";
-/**
- * baseDef Imagis definition JSON file.
- * @type {Object}
- */
-import cfg from "./cfg.json";
+import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 import epsg3765 from "./src/EPSG3765";
-import Def from "./src/def";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
-import Legend from "./src/legend";
-import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
-import ImageState from "ol/ImageState";
 import Button from "./src/button";
 
-import ImagisStyle from "./src/imagisStyle";
-
 window.Imagis = {};
-
-/** baseDef or def from localStorage */
-if (!localStorage.getItem("cfg")) {
-  Imagis.cfg = cfg;
-  localStorage.setItem("cfg", JSON.stringify(Imagis.cfg));
-} else Imagis.cfg = JSON.parse(localStorage.getItem("cfg"));
 
 /** UX map contaner */
 Imagis.ux = document.createElement("main");
@@ -40,50 +22,33 @@ Imagis.map = new Map({
   target: Imagis.ux,
   view: new View({
     projection: new epsg3765(),
+    zoom: 0,
+    center: [0, 0],
   }),
   controls: [],
 });
-/**Map with layers as defined in cfg */
-Imagis.def = new Def({
-  cfg: Imagis.cfg,
-  map: Imagis.map,
-});
-/** ol/interaction/Select */
-Imagis.select = new Select({
-  hitTolerance: 5,
-  filter: (feature, layer) => {
-    const activeLayer = map
-      .getLayers()
-      .getArray()
-      .find((x) => x.get("active"));
-    if (!activeLayer) return true;
-    else return layer === activeLayer;
-  },
-});
-Imagis.map.addInteraction(Imagis.select);
-Imagis.select.setActive(false);
-
-/** UX header control */
+/** HEADER */
 Imagis.header = new Container({
   semantic: "header",
   className: "map-header control",
 });
-Imagis.map.addControl(Imagis.header); /** UX home control */
+Imagis.map.addControl(Imagis.header);
+/**Toggle for home sidebar */
 Imagis.toggleHome = new Toggle({
   html: '<i class="far fa-home"></i>',
   className: "toggle-home",
   tipLabel: "Opći alati",
+  active:false
 });
 Imagis.header.addControl(Imagis.toggleHome);
 Imagis.toggleHome.on("change:active", (evt) => Imagis.homeSection.setVisible(evt.active));
-
-/** aside: UX left & right side controls contaner */
+/**ASIDE Left and right containers */
 Imagis.aside = new Container({
   semantic: "aside",
   className: "map-aside",
 });
-/** UX left side child of aside */
 Imagis.map.addControl(Imagis.aside);
+/** Left side container consists of nav with toggles or buttons and section for tasks */
 Imagis.homeSection = new Container({
   visible: false,
   semantic: "section",
@@ -97,37 +62,37 @@ Imagis.homeNav = new Container({
   name: "homeNav",
 });
 Imagis.homeSection.addControl(Imagis.homeNav);
-Imagis.homeNav.addControl(
-  new Legend({
-    cfg: Imagis.cfg,
-    html: '<i class="far fa-layer-group"></i>',
-    tipLabel: "Legenda & upravljanje kartom",
-    target: Imagis.homeSection,
-    contanerClassName: "map-aside-nav-section legend control",
-    name: "legend",
-    def:Imagis.def
-  })
-);
-Imagis.legend = Imagis.homeNav.getControls("legend");
-/***Update map from new cfg */
-Imagis.cfgUpdate = new Button({
-  html: '<i class="far fa-cog"></i>',
-  handleClick: (evt) => {
-    // console.log('Updated cfg:',Imagis.cfg)
-    Imagis.def.setCfg(Imagis.cfg);
-    Imagis.legend.setCfg(Imagis.cfg);
-  },
+
+/**Toggle for legend task section */
+Imagis.legend = new Toggle({
+  html: '<i class="far fa-layer-group"></i>',
+  tipLabel: "Legenda & upravljanje kartom",
+  active:false
 });
-Imagis.homeNav.addControl(Imagis.cfgUpdate);
-Imagis.cfgUpdate.element.click();
-/** UX right side child of aside */
+Imagis.homeNav.addControl(Imagis.legend);
+Imagis.homeSection.element.appendChild(Object.assign(document.createElement("div"), { id:'pane',innerText:'TASK PANE'}))
+Imagis.legend.on("change:active", (evt) => {
+  console.log(evt.active)
+  if (evt.active) document.getElementById('pane').style.display='block'
+  else document.getElementById('pane').style.display='none'
+});
+
+
+/**Button for example */
+Imagis.button = new Button({
+  html: '<i class="far fa-asterisk"></i>',
+  tipLabel: "Primjer",
+  handleClick: () => alert(`Zoom: ${Imagis.map.getView().getZoom()}`),
+});
+Imagis.homeNav.addControl(Imagis.button);
+
+/** Right nav of aside for buttons and toggles */
 Imagis.aside.right = new Container({
   semantic: "nav",
   className: "right-nav",
   name: "rightNav",
 });
 Imagis.aside.addControl(Imagis.aside.right);
-
 Imagis.aside.right.rotateZoom = new Container({
   semantic: "nav",
   className: "rotate-zoom",
@@ -151,8 +116,7 @@ Imagis.aside.right.rotateZoom.addControl(
   })
 );
 Imagis.aside.right.rotateZoom.getControls().map((x) => x.element.classList.remove("ol-control"));
-
-/** UX footer control */
+/** FOOTER*/
 Imagis.footer = new Container({
   semantic: "footer",
   className: "map-footer",
@@ -163,5 +127,3 @@ Imagis.footer.addControl(
     className: "ol-scale-line",
   })
 );
-
-

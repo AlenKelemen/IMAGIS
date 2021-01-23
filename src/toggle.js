@@ -14,13 +14,15 @@ export default class Toggle extends Control {
   constructor(options = {}) {
     const e = document.createElement("button");
     super({
-      element: e
+      element: e,
     });
     if (options.className) e.className = options.className;
     e.innerHTML = options.html || "";
     if (options.tipLabel) e.title = options.tipLabel;
     this.set("name", options.name || "toggle");
-    const evtFunction = evt => {
+    if (options.active === undefined) options.active = true;
+    this.setActive(options.active);
+    const evtFunction = (evt) => {
       if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls
       if (evt && evt.preventDefault) {
         evt.preventDefault();
@@ -52,7 +54,6 @@ export default class Toggle extends Control {
         key: "active",
         oldValue: !b,
         active: b,
-        map: this.getMap()
       });
     }
   }
@@ -88,7 +89,7 @@ export default class Toggle extends Control {
       type: "change:disabled",
       key: "disabled",
       oldValue: !b,
-      disabled: b
+      disabled: b,
     });
   }
 }
