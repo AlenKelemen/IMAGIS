@@ -8,6 +8,8 @@ import { LineString, Point, Polygon } from "ol/geom";
 import { makeStyle } from "./makeStyle";
 import { Icon, Style } from "ol/style";
 const images = require("../img/*.png");
+import Def from './def';
+
 /** thematic editor
  * @constructor
  * @extends {ol_control_Control}
@@ -35,11 +37,11 @@ export default class Legend extends Toggle {
     this.container.element.appendChild(this.items);
     this.footer = elt("footer", { className: `${this.className}-footer` }, "Footer");
     this.container.element.appendChild(this.footer);
+    this.def = options.def;
   }
   /** new cfg to legend */
   setCfg(cfg) {
     this.items.innerHTML = "";
-    console.log(this.cfg.layers)
     this.cfg = cfg;
     this.cfg.layers.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1)).reverse(); //zIndex as loaded in map by def.js
     this.cfg.layers.map((x) => this.addItem(x));
@@ -54,6 +56,8 @@ export default class Legend extends Toggle {
    */
 
   addItem(prop) {
+    const def = this.def
+    
     const style2Image = (style, ctx) => {
       const olStyle = makeStyle(style).call(this, undefined, this.getMap().getView().getResolution()).pop();
       const iconSize = this.iconSize;
@@ -121,11 +125,14 @@ export default class Legend extends Toggle {
     this.items.appendChild(item);
 
     // layer opacity change
+    
+const layer = this.getMap().getLayers().getArray().find(x => x.get('name') === prop.name);
     opacity.value = prop.opacity;
-    opacity.addEventListener("change", (evt) => {
+  opacity.addEventListener("change", (evt) => {
       prop.opacity = opacity.value;
-      this.setCfg(this.cfg);
-    });
+      def.setCfg(this.cfg)
+      //layer.setOpacity(Number(opacity.value));
+    }); 
 
     //  expand/shrink footer content
     footerDisplay.addEventListener("click", (evt) => {

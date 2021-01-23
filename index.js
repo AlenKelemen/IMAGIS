@@ -105,6 +105,7 @@ Imagis.homeNav.addControl(
     target: Imagis.homeSection,
     contanerClassName: "map-aside-nav-section legend control",
     name: "legend",
+    def:Imagis.def
   })
 );
 Imagis.legend = Imagis.homeNav.getControls("legend");
@@ -163,18 +164,4 @@ Imagis.footer.addControl(
   })
 );
 
-Imagis.map
-  .getLayers()
-  .getArray()
-  .find((x) => x.get("name") === "vod");
 
-Imagis.imagisStyle = new ImagisStyle();
-const s = Imagis.map
-  .getLayers()
-  .getArray()
-  .find((x) => x.get("name") === "TH")
-  .getStyle()
-  .call(this, undefined, null)[0];
-Imagis.imagisStyle.addStyle(s, { a: 1 }, [1, 2]);
-Imagis.imagisStyle.on("change", (evt) => console.log(evt));
-Imagis.imagisStyle.changed();
