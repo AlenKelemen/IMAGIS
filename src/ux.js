@@ -77,7 +77,7 @@ export default class UX {
   getHide(control) {
     return control.element.style.display === "none";
   }
-  toggleHide(control) {
+  toggleHide(control) {//TODO: option for hide all sibling controls
     this.hide(control, !this.getHide(control));
   }
 

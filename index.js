@@ -31,17 +31,17 @@ ux.addHeaderToggle({
   html: '<i class="far fa-home"></i>',
   className: "toggle-home",
   tipLabel: "Opći alati",
-  active:false,
-  handleClick:evt=>ux.toggleHide(ux.homeBar)
+  active: false,
+  handleClick: (evt) => ux.toggleHide(ux.homeBar),
 });
 ux.homeBar = ux.addTaskBar({
-  className:'taskbar ol-control'
+  className: "taskbar ol-control",
 });
-ux.legend = ux.addTaskToggle({
-  taskbar:ux.homeBar,
-  handleClick:evt=>ux.toggleHide(ux.homePane)
-})
-ux.homePane = ux.addTaskPane({
-  className:'taskpane ol-control'
+/**legend pane*/
+ux.legendToggle = ux.addTaskToggle({
+  taskbar: ux.homeBar,
+  handleClick: (evt) => ux.toggleHide(ux.legendPane),
 });
-
+ux.legendPane = ux.addTaskPane({
+  className: "taskpane ol-control",
+});
