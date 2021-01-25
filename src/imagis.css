@@ -26,7 +26,7 @@ body {
   margin-right: 0.5em;
 }
 /** UX right side child of aside */
-.map-aside .right-nav {
+.toolbar {
   margin-left: auto;
 }
 /** UX footer control */
@@ -42,8 +42,11 @@ body {
 /*ol-control*/
 .ol-control {
   position: unset;
+  background-color: #343a40;
 }
-
+.ol-control:hover {
+  background-color: #343a40; 
+}
 .ol-control.visible {
   display: none;
 }

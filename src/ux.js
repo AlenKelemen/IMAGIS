@@ -1,6 +1,7 @@
 import Container from "./container";
 import Toggle from "./toggle";
 import Button from "./button";
+import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 export default class UX {
   constructor(options = {}) {
@@ -19,7 +20,7 @@ export default class UX {
       className: options.headerClass || "map-header control",
     });
     this.map.addControl(this.header);
-    /**ASIDE Left and right containers */
+    /**ASIDE Left and toolbar containers */
     this.aside = new Container({
       semantic: "aside",
       className: options.asideClass || "map-aside",
@@ -52,23 +53,51 @@ export default class UX {
     this.aside.addControl(taskBar);
     return taskBar;
   }
-  addTaskToggle(options = {}) {
-    const taskbar = options.taskbar;
+
+  addTask(options = {}) {
+    const container = new Container({
+      semantic: "section",
+      className: `${options.className || "task"}-taskpane`,
+    });
+    if (options.taskpane === undefined || options.taskpane === true) this.aside.addControl(container);
     const taskToggle = new Toggle({
       html: options.html || '<i class="far fa-layer-group"></i>',
-      tipLabel: options.html || "Legenda & upravljanje kartom",
-      handleClick: options.handleClick,
+      tipLabel: options.tipLabel || "Task",
+      className: options.className || "task",
     });
-    taskbar.addControl(taskToggle);
-    return taskToggle;
+    options.taskbar.addControl(taskToggle);
+    return { toggle: taskToggle, container: container };
   }
-  addTaskPane(options = {}) {
-    const taskPane = new Container({
-      semantic: "section",
-      className: options.className || "taskpane",
+
+  addToolBar(){
+    const toolbar = new Container({
+      semantic: "nav",
+      className: "toolbar",
     });
-    this.aside.addControl(taskPane);
-    return taskPane;
+    this.aside.addControl(toolbar);
+    const rotateZoom = new Container({
+      semantic: "nav",
+      className: "rotate-zoom",
+    });
+    toolbar.addControl(rotateZoom);
+    rotateZoom.addControl(
+      new Rotate({
+    
+        tipLabel: "Sjever gore",
+        label: Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
+      })
+    );
+    rotateZoom.addControl(
+      new Zoom({
+        className: "zoom",
+        zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus" }),
+        zoomInTipLabel: "Približi",
+        zoomOutTipLabel: "Udalji",
+        zoomOutLabel: Object.assign(document.createElement("i"), { className: "far fa-minus" }),
+      })
+    );
+    //rotateZoom.getControls().map((x) => x.element.classList.remove("ol-control"));
+    return toolbar;
   }
 
   hide(control, b) {
@@ -77,7 +106,8 @@ export default class UX {
   getHide(control) {
     return control.element.style.display === "none";
   }
-  toggleHide(control) {//TODO: option for hide all sibling controls
+  toggleHide(control) {
+    //TODO: option for hide all sibling controls
     this.hide(control, !this.getHide(control));
   }
 

@@ -4,9 +4,10 @@ import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import "./src/imagis.css";
 import Map from "ol/Map";
 import View from "ol/View";
-import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
+
 import epsg3765 from "./src/EPSG3765";
 import UX from "./src/ux";
+import Taskpane from "./src/taskpane";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -32,16 +33,23 @@ ux.addHeaderToggle({
   className: "toggle-home",
   tipLabel: "Opći alati",
   active: false,
-  handleClick: (evt) => ux.toggleHide(ux.homeBar),
+  handleClick: (evt) => {
+    ux.homeBar.deactivateControls();
+    ux.toggleHide(ux.homeBar);
+  },
 });
 ux.homeBar = ux.addTaskBar({
   className: "taskbar ol-control",
 });
-/**legend pane*/
-ux.legendToggle = ux.addTaskToggle({
+/**tasks... */
+const taskpane = new Taskpane({
+  ux:ux,
   taskbar: ux.homeBar,
-  handleClick: (evt) => ux.toggleHide(ux.legendPane),
-});
-ux.legendPane = ux.addTaskPane({
-  className: "taskpane ol-control",
-});
+})
+/**rightbar */
+ux.toolbar = ux.addToolBar();
+/**footer */
+
+
+ 
+
