@@ -12,10 +12,17 @@ body {
   display: flex;
   flex-direction: column;
 }
+/*ol-control*/
+
+.toggle.active {
+  background-color: #008840b3;
+}
+
 /** UX header control */
 .map-header {
   margin: 0.5em;
   width: fit-content;
+  position: unset;
 }
 /** aside: UX left & right side controls contaner */
 .map-aside {
@@ -28,56 +35,32 @@ body {
 /** UX right side child of aside */
 .toolbar {
   margin-left: auto;
+  position: relative;
 }
 /** UX footer control */
 .map-footer {
   display: flex;
   margin: 0.5em;
-  width: fit-content;
 }
 .map-footer div:not(:first-child):not(:last-child) {
   margin-left: 4px;
   margin-right: 4px;
 }
-/*ol-control*/
-.ol-control {
-  position: unset;
-  background-color: #343a40;
+.ol-zoom {
+  top: 0;
+  right: 0;
+  left: unset;
+  bottom: unset;
 }
-.ol-control:hover {
-  background-color: #343a40; 
-}
-.ol-control.visible {
-  display: none;
-}
-
-.ol-control button.active {
-  background-color: rgb(72, 133, 4);
+.ol-rotate {
+  top: 0;
+  right: 2em;
+  left: unset;
+  bottom: unset;
 }
 
-/*ol-rotate*/
-.rotate-zoom {
-  pointer-events: none !important;
-}
-.rotate-zoom div {
-  display: inline-block;
-}
-.rotate-zoom .ol-rotate {
-  vertical-align: top;
-}
-/*ol-scale-line*/
 .ol-scale-line {
   margin-left: auto;
   position: unset;
-  background-color: #f4f4f4af;
-}
-.ol-scale-line-inner {
-  border: 1px solid #000;
-  border-top: none;
-  color: black;
-  font-size: 10px;
-  text-align: center;
-  margin: 1px;
-  will-change: contents, width;
-  transition: all 0.25s;
+  background: rgba(0, 60, 136, 0.4);
 }

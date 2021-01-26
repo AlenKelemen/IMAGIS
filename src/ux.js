@@ -10,29 +10,45 @@ export default class UX {
       console.log("please set options.map");
       return;
     }
+    /**
+     * Map target element
+     */
     this.target = document.createElement("main");
     this.target.className = "map";
     document.body.appendChild(this.target);
     this.map.setTarget(this.target);
-    /** HEADER */
+    /**
+     * HEADER element
+     */
     this.header = new Container({
       semantic: "header",
       className: options.headerClass || "map-header control",
     });
     this.map.addControl(this.header);
-    /**ASIDE Left and toolbar containers */
+    /**
+     * ASIDE element 
+     */
     this.aside = new Container({
       semantic: "aside",
       className: options.asideClass || "map-aside",
     });
     this.map.addControl(this.aside);
-    /** FOOTER*/
+    /**
+     * FOOTER element
+     */
     this.footer = new Container({
       semantic: "footer",
       className: options.footerClass || "map-footer",
     });
     this.map.addControl(this.footer);
   }
+  /**
+   *Add toggle button to HEADER element
+   *
+   * @param {*} [options={}]
+   * @return {*} 
+   * @memberof UX
+   */
   addHeaderToggle(options = {}) {
     const toggle = new Toggle({
       html: options.html || '<i class="far fa-home"></i>',
@@ -44,6 +60,13 @@ export default class UX {
     this.header.addControl(toggle);
     return toggle;
   }
+  /**
+   *TASKBAR (sidebar with buttons)
+   *
+   * @param {*} [options={}]
+   * @return {*} 
+   * @memberof UX
+   */
   addTaskBar(options = {}) {
     const taskBar = new Container({
       semantic: "nav",
@@ -53,8 +76,14 @@ export default class UX {
     this.aside.addControl(taskBar);
     return taskBar;
   }
-
-  addTask(options = {}) {
+/**
+ *Add toggle button to TASKBAR with optional container in ASIDE element
+ *
+ * @param {*} [options={}]
+ * @return {*} 
+ * @memberof UX
+ */
+addTask(options = {}) {
     const container = new Container({
       semantic: "section",
       className: `${options.className || "task"}-taskpane`,
@@ -68,8 +97,13 @@ export default class UX {
     options.taskbar.addControl(taskToggle);
     return { toggle: taskToggle, container: container };
   }
-
-  addToolBar(){
+/**
+ *Add TOOLBAR (sidebar) with buttons, standard zoom and rotate buttons are included
+ *
+ * @return {*} 
+ * @memberof UX
+ */
+addToolBar(){
     const toolbar = new Container({
       semantic: "nav",
       className: "toolbar",
@@ -82,7 +116,6 @@ export default class UX {
     toolbar.addControl(rotateZoom);
     rotateZoom.addControl(
       new Rotate({
-    
         tipLabel: "Sjever gore",
         label: Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
       })
@@ -96,10 +129,21 @@ export default class UX {
         zoomOutLabel: Object.assign(document.createElement("i"), { className: "far fa-minus" }),
       })
     );
-    //rotateZoom.getControls().map((x) => x.element.classList.remove("ol-control"));
     return toolbar;
   }
+  /**
+   *Add control to footer
+   *
+   * @memberof UX
+   */
+  addInfo(){
 
+  }
+/**
+ * Hide control (display:'none')
+ * @param {*} control 
+ * @param {*} b 
+ */
   hide(control, b) {
     control.element.style.display = b ? "none" : "";
   }
@@ -107,7 +151,6 @@ export default class UX {
     return control.element.style.display === "none";
   }
   toggleHide(control) {
-    //TODO: option for hide all sibling controls
     this.hide(control, !this.getHide(control));
   }
 

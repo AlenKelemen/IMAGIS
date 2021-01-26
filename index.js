@@ -7,7 +7,10 @@ import View from "ol/View";
 
 import epsg3765 from "./src/EPSG3765";
 import UX from "./src/ux";
-import Taskpane from "./src/taskpane";
+import Container from "./src/container";
+import Toggle from "./src/toggle";
+import Button from "./src/button";
+import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -21,35 +24,50 @@ window.map = new Map({
 /**UX */
 map.ux = new UX({
   map: map,
-  headerClass: "map-header ol-control",
+  headerClass: "ol-control map-header",
   asideClass: "map-aside",
   footerClass: "map-footer",
 });
 const ux = map.ux;
 map.setTarget(ux.getTarget());
-/**home tasks */
-ux.addHeaderToggle({
+/**toggle in header*/
+ux.header.home = new Toggle({
   html: '<i class="far fa-home"></i>',
-  className: "toggle-home",
-  tipLabel: "Opći alati",
-  active: false,
-  handleClick: (evt) => {
-    ux.homeBar.deactivateControls();
-    ux.toggleHide(ux.homeBar);
-  },
+  className: "toggle",
+  tipLabel: "Tip...",
+  active: true,
 });
-ux.homeBar = ux.addTaskBar({
-  className: "taskbar ol-control",
+ux.header.addControl(ux.header.home);
+ux.header.home.on("change:active", (evt) => {
+  ux.aside.home.element.style.display = evt.active ? "" : "none";
 });
-/**tasks... */
-const taskpane = new Taskpane({
-  ux:ux,
-  taskbar: ux.homeBar,
-})
-/**rightbar */
-ux.toolbar = ux.addToolBar();
-/**footer */
-
-
- 
-
+/**home taskbar -display when ux.header.home is active
+ * in taskbar put app buttons or toggles to invoke apropriate containers (taskpanes) for app dialog
+ */
+ux.aside.home = new Container({
+  semantic: "nav",
+  className: "taskbar",
+});
+ux.aside.addControl(ux.aside.home);
+/**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
+ux.aside.toolbar = new Container({
+  semantic: "nav",
+  className: "toolbar",
+});
+ux.aside.addControl(ux.aside.toolbar);
+ux.aside.toolbar.addControl(
+  new Zoom({
+    zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus" }),
+    zoomInTipLabel: "Približi",
+    zoomOutTipLabel: "Udalji",
+    zoomOutLabel: Object.assign(document.createElement("i"), { className: "far fa-minus" }),
+  })
+);
+ux.aside.toolbar.addControl(
+  new Rotate({
+    tipLabel: "Sjever gore",
+    label: Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
+  })
+);
+/**footer content- informative panes like scaleline */
+ux.footer.addControl(new ScaleLine());
