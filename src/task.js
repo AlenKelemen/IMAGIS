@@ -27,7 +27,7 @@ export default class Task extends Toggle {
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.header = elt("header", { className: `header` }, "Header");
     this.container.element.appendChild(this.header);
-    this.content = elt("main", { className: `main` }, "Content");
+    this.content = elt("main", { className: `main` }, "Content</br>pwrefkfk</br>owefewfn</br>oeifudweoidfhjew</br>iewoufhewu");
     this.container.element.appendChild(this.content);
     this.footer = elt("footer", { className: `footer` }, "Footer");
     this.container.element.appendChild(this.footer);
