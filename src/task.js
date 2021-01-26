@@ -16,7 +16,7 @@ import { elt } from "./util";
 export default class Task extends Toggle {
   constructor(options = {}) {
     if (!options.className) options.className = "toggle";
-    if (!options.html) options.html = '<i class="far fa-layer-group"></i>';
+    if (!options.html) options.html = '<i class="far fa-layer-group fa-fw"></i>';
     super(options);
     this.container = new Container({
       semantic: "section",
@@ -25,11 +25,27 @@ export default class Task extends Toggle {
     options.target.addControl(this.container);
     this.container.setVisible(this.active);
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
-    this.header = elt("header", { className: `header` }, "Header");
+    this.header = elt("header", { className: `header` }, this.header());
     this.container.element.appendChild(this.header);
-    this.content = elt("main", { className: `main` }, "Content</br>pwrefkfk</br>owefewfn</br>oeifudweoidfhjew</br>iewoufhewu");
-    this.container.element.appendChild(this.content);
-    this.footer = elt("footer", { className: `footer` }, "Footer");
+    this.main = elt("main", { className: `main` });
+    this.container.element.appendChild(this.main);
+    this.footer = elt("footer", { className: `footer` }, this.footer());
     this.container.element.appendChild(this.footer);
+    this.content();
+  }
+  header() {
+    return "Header";
+  }
+  footer() {
+    return "Footer";
+  }
+  content() {
+    let i = 0;
+    do {
+      i++;
+      const e = document.createElement("div");
+      e.innerHTML = `${i} item row`;
+      this.main.appendChild(e);
+    } while (i < 11);
   }
 }

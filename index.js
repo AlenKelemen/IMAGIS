@@ -32,7 +32,7 @@ const ux = map.ux;
 map.setTarget(ux.getTarget());
 /**toggle in header*/
 ux.header.home = new Toggle({
-  html: '<i class="far fa-home"></i>',
+  html: '<i class="far fa-home fa-fw"></i> Home',
   className: "toggle",
   tipLabel: "Tip...",
   active: false,
@@ -63,16 +63,16 @@ ux.aside.toolbar = new Container({
 ux.aside.addControl(ux.aside.toolbar);
 ux.aside.toolbar.addControl(
   new Zoom({
-    zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus" }),
+    zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus fa-fw" }),
     zoomInTipLabel: "Približi",
     zoomOutTipLabel: "Udalji",
-    zoomOutLabel: Object.assign(document.createElement("i"), { className: "far fa-minus" }),
+    zoomOutLabel: Object.assign(document.createElement("i"), { className: "far fa-minus fa-fw" }),
   })
 );
 ux.aside.toolbar.addControl(
   new Rotate({
     tipLabel: "Sjever gore",
-    label: Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up" }),
+    label: Object.assign(document.createElement("i"), { className: "far fa-arrow-alt-up fa-fw" }),
   })
 );
 /**footer content- informative panes like scaleline */

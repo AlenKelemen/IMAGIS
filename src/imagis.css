@@ -11,6 +11,9 @@ body {
 .ol-overlaycontainer-stopevent {
   display: flex;
   flex-direction: column;
+  width: calc(100% - 1em) !important;
+  height: calc(100% - 1em) !important;
+  margin: 0.5em;
 }
 /** toggle button active/inactive*/
 .toggle.active {
@@ -30,48 +33,61 @@ body {
 
 /** UX header control */
 .map-header {
-  margin: 0.5em;
   width: fit-content;
   position: unset;
+}
+.map-header button {
+  width: fit-content;
+  padding: 2px;
 }
 /** aside: UX left & right side controls contaner */
 .map-aside {
   display: flex;
   flex-grow: 1;
   pointer-events: none !important;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
 }
 .taskbar {
   position: relative;
-  background-color: rgba(255,255,255,0.4);
-  border-radius: 4px;
-  padding: 2px;
 }
 .taskpane {
+  width: 20em;
   position: relative;
-  background-color: rgba(207, 12, 12, 0.4);
+  background-color: white;
   border-radius: 4px;
   padding: 2px;
 }
 .taskpane .header {
   background: rgba(0, 60, 136, 0.4);
-  color:white;
+  color: white;
+  border-radius: 4px;
+  margin: 1px;
+  padding: 0;
+  font-size: 1.14em;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  height: 1.375em;
 }
 .taskpane .main {
+  width: inherit;
   position: absolute;
   top: 2em;
   bottom: 2em;
   overflow-y: auto;
+  border-radius: 4px;
 }
 .taskpane .footer {
   position: absolute;
   bottom: 0;
-  left:0;
-  right:0;
-  padding-left:2px;
+  left: 0;
+  right: 0;
   background: rgba(0, 60, 136, 0.4);
-  color:white;
+  color: white;
+  border-radius: 4px;
+  height: 1.375em;
+  font-size: 1.14em;
+  text-decoration: none;
+  text-align: center;
 }
 /** UX right side child of aside */
 .toolbar {
@@ -82,7 +98,6 @@ body {
 /** UX footer control */
 .map-footer {
   display: flex;
-  margin: 0.5em;
 }
 .map-footer div:not(:first-child):not(:last-child) {
   margin-left: 4px;
