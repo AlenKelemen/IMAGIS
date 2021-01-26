@@ -12,7 +12,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-/*ol-control*/
 
 .toggle.active {
   background-color: #008840b3;
@@ -46,6 +45,7 @@ body {
   margin-left: 4px;
   margin-right: 4px;
 }
+/** */
 .ol-zoom {
   top: 0;
   right: 0;
