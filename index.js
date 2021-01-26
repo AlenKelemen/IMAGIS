@@ -9,7 +9,7 @@ import epsg3765 from "./src/EPSG3765";
 import UX from "./src/ux";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
-import Button from "./src/button";
+import Task from "./src/task";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 /**  ol/Map*/
@@ -35,7 +35,7 @@ ux.header.home = new Toggle({
   html: '<i class="far fa-home"></i>',
   className: "toggle",
   tipLabel: "Tip...",
-  active: true,
+  active: false,
 });
 ux.header.addControl(ux.header.home);
 ux.header.home.on("change:active", (evt) => {
@@ -49,6 +49,12 @@ ux.aside.home = new Container({
   className: "taskbar",
 });
 ux.aside.addControl(ux.aside.home);
+/**Tasks */
+ux.aside.home.addControl(
+  new Task({
+    target: ux.aside,
+  })
+);
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
 ux.aside.toolbar = new Container({
   semantic: "nav",
@@ -71,5 +77,4 @@ ux.aside.toolbar.addControl(
 );
 /**footer content- informative panes like scaleline */
 ux.footer.addControl(new ScaleLine());
-/**Tasks */
 

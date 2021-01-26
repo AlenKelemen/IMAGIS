@@ -8,6 +8,7 @@ import Control from "ol/control/Control";
  *	@param {string} options.tipLabel html title of the control
  *	@param {boolean=false} options.disabled control disabled, default false
  *	@param {string} options.html html to insert in the control
+ *	@param {boolean=false} options.active toggle control active, default false
  *	@param {function} options.handleClick callback when control is clicked
  */
 export default class Toggle extends Control {
@@ -20,7 +21,7 @@ export default class Toggle extends Control {
     e.innerHTML = options.html || "";
     if (options.tipLabel) e.title = options.tipLabel;
     this.set("name", options.name || "toggle");
-    if (options.active === undefined) options.active = true;
+    if (options.active === undefined) options.active = false;
     this.setActive(options.active);
     const evtFunction = (evt) => {
       if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls

@@ -41,6 +41,7 @@ export default class Container extends Control {
     control.setTarget(this.element);
     control.set("parent", this);
     if (this.getMap()) this.getMap().addControl(control);
+    return this;
   }
   removeControl(control) {
     this.controls_.splice(
