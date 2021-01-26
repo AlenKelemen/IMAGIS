@@ -12,7 +12,7 @@ body {
   display: flex;
   flex-direction: column;
 }
-
+/** toggle button active/inactive*/
 .toggle.active {
   background-color: #008840b3;
 }
@@ -45,7 +45,7 @@ body {
   margin-left: 4px;
   margin-right: 4px;
 }
-/** */
+/**ol native controls */
 .ol-zoom {
   top: 0;
   right: 0;

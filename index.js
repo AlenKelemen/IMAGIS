@@ -71,3 +71,5 @@ ux.aside.toolbar.addControl(
 );
 /**footer content- informative panes like scaleline */
 ux.footer.addControl(new ScaleLine());
+/**Tasks */
+

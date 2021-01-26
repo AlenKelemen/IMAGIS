@@ -26,9 +26,6 @@ export default class Button extends Control {
         };
         this.element.addEventListener("click", evtFunction);
     }
-    
-    getActive(){}
-    setActive(){}
     getDisabled() {
         return this.element.style.pointerEvents === 'none';
     }
