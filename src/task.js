@@ -9,25 +9,27 @@ import { elt } from "./util";
  * @param {Object=} options Control options.
  * @param {string[]} options.className clase to add to control
  * @param {string} options.tipLabel html title of the control
- * @param {string} options.label html to insert in the control
+ * @param {string} options.html html to insert in the control
  * @param {boolean=false} options.active control active, default false
  * @param {Object} options.target contaner target element
  */
 export default class Task extends Toggle {
   constructor(options = {}) {
-    if(!options.className) options.className ='task';
+    if (!options.className) options.className = "toggle";
+    if (!options.html) options.html = '<i class="far fa-layer-group"></i>';
     super(options);
     this.container = new Container({
       semantic: "section",
-      className: `${options.className || 'taskpane'}-container taskpane`,
+      className: `${options.className || "taskpane"}-container taskpane`,
     });
     options.target.addControl(this.container);
     this.container.setVisible(this.active);
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
-    this.header = elt("header", { className: `${options.className || 'taskpane'}-header` }, "Header");
+    this.header = elt("header", { className: `header` }, "Header");
     this.container.element.appendChild(this.header);
-    this.footer = elt("footer", { className: `${options.className || 'taskpane'}-footer` }, "Footer");
+    this.content = elt("main", { className: `main` }, "Content");
+    this.container.element.appendChild(this.content);
+    this.footer = elt("footer", { className: `footer` }, "Footer");
     this.container.element.appendChild(this.footer);
   }
-
 }

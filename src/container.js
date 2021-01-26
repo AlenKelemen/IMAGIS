@@ -23,7 +23,11 @@ export default class Container extends Control {
     // set element visible
     if (this.getVisible() == b) return;
     if (b) this.element.classList.remove("hidden");
-    else this.element.classList.add("hidden");
+    else {
+      for(const c of this.getControls()){
+        c.setActive(false);
+      }
+      this.element.classList.add("hidden");}
     this.dispatchEvent({
       type: "change:visible",
       key: "visible",

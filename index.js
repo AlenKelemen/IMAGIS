@@ -38,17 +38,17 @@ ux.header.home = new Toggle({
   active: false,
 });
 ux.header.addControl(ux.header.home);
-ux.header.home.on("change:active", (evt) => {
-  ux.aside.home.element.style.display = evt.active ? "" : "none";
-});
+ux.header.home.on("change:active", (evt) => ux.aside.home.setVisible(evt.active));
+
 /**home taskbar -display when ux.header.home is active
  * in taskbar put app buttons or toggles to invoke apropriate containers (taskpanes) for app dialog
  */
 ux.aside.home = new Container({
   semantic: "nav",
-  className: "taskbar",
+  className: "taskbar ol-control",
 });
 ux.aside.addControl(ux.aside.home);
+ux.aside.home.setVisible(ux.header.home.getActive())
 /**Tasks */
 ux.aside.home.addControl(
   new Task({

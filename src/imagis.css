@@ -14,7 +14,18 @@ body {
 }
 /** toggle button active/inactive*/
 .toggle.active {
-  background-color: #008840b3;
+  background-color: rgb(54 148 2 / 50%);
+}
+.ol-control .toggle.active:focus,
+.ol-control .toggle.active:hover {
+  background-color: rgb(54 148 2 / 75%);
+}
+.ol-control button {
+  outline: none;
+}
+/**container hidden*/
+.hidden {
+  display: none;
 }
 
 /** UX header control */
@@ -31,11 +42,31 @@ body {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
+.taskbar {
+  position: relative;
+}
+.taskpane{
+  position: relative;
+}
+.taskpane .header{
+  position:absolute;
+}
+.taskpane .main{
+  position:absolute;
+  top:2em;
+  bottom:2em;
+  overflow-y: auto;
+}
+.taskpane .footer{
+  position:absolute;
+  bottom:0
+}
 /** UX right side child of aside */
 .toolbar {
   margin-left: auto;
   position: relative;
 }
+
 /** UX footer control */
 .map-footer {
   display: flex;
