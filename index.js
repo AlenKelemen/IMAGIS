@@ -12,6 +12,9 @@ import Toggle from "./src/toggle";
 import Task from "./src/task";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
+import Proj from "./src/proj";
+import cfg from "./cfg.json";
+
 /**  ol/Map*/
 window.map = new Map({
   view: new View({
@@ -77,4 +80,17 @@ ux.aside.toolbar.addControl(
 );
 /**footer content- informative panes like scaleline */
 ux.footer.addControl(new ScaleLine());
+
+/**
+ * project config json
+ * load raster */
+
+map.proj = new Proj({
+  cfg:cfg,
+  map:map
+})
+map.proj.cfg2View();
+
+map.proj.update();
+
 
