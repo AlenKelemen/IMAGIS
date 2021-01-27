@@ -97,7 +97,7 @@ export default class Proj {
               });
             },
           });
-          source.set('schema',s.schema);
+          source.set("schema", s.schema);
           layer.setSource(source);
           this.map.addLayer(layer);
         }
@@ -137,7 +137,7 @@ export default class Proj {
                 });
             },
           });
-          source.set('schema',s.schema);
+          source.set("schema", s.schema);
           layer.setSource(source);
           this.map.addLayer(layer);
         }
@@ -145,6 +145,12 @@ export default class Proj {
           for (const [key, value] of Object.entries(l)) {
             if (key !== "source" && key != "style") layer.set(key, value);
           }
+        layer.set("cfg", l);
+        layer.on("propertychange", (evt) => {
+          const newValue = evt.target.get(evt.key);
+          l[evt.key] = newValue;
+          console.log(l[evt.key]);
+        });
       }
     }
   }
