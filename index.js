@@ -21,7 +21,7 @@ map.ux = new UX({
 });
 const ux = map.ux;
 map.setTarget(ux.getTarget());
-
+//cfg defined project
 map.proj = new Proj({
   cfg:cfg,
   map:map
