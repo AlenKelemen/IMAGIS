@@ -33,10 +33,6 @@ map.ux = new UX({
 });
 const ux = map.ux;
 map.setTarget(ux.getTarget());
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of c9bdd2c... remove code from ux
 /**toggle in header*/
 ux.header.home = new Toggle({
   html: '<i class="far fa-home fa-fw"></i> Home',
@@ -84,13 +80,6 @@ ux.aside.toolbar.addControl(
 );
 /**footer content- informative panes like scaleline */
 ux.footer.addControl(new ScaleLine());
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of c9bdd2c... remove code from ux
-
-=======
->>>>>>> ec15ac0dabeb989b6a3ddd488e8c495fd5bb19d8
 
 map.proj = new Proj({
   cfg:cfg,
