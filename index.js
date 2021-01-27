@@ -22,16 +22,11 @@ map.ux = new UX({
 const ux = map.ux;
 map.setTarget(ux.getTarget());
 
-/**
- * project config json
- * load raster */
-
 map.proj = new Proj({
   cfg:cfg,
   map:map
 })
 map.proj.cfg2View();
-
 map.proj.update();
 
 
