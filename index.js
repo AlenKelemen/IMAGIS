@@ -81,9 +81,7 @@ ux.aside.toolbar.addControl(
 /**footer content- informative panes like scaleline */
 ux.footer.addControl(new ScaleLine());
 
-/**
- * project config json
- * load raster */
+
 
 map.proj = new Proj({
   cfg:cfg,
