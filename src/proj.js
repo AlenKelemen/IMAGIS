@@ -51,7 +51,10 @@ export default class Proj {
   }
   /**
    * Reads cfg object and creates or updates layers
-   * Source and style can't be updated
+   * Changes in layer properties in ol changes cfg
+   * Source and style can't be updated this way
+   * For source a new layer must be defined
+   * Ol style changes are not saved to cfg
    *
    * @param {boolean} [create=true]
    * @memberof Proj
