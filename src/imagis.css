@@ -55,6 +55,7 @@ body {
   background-color: white;
   border-radius: 4px;
   padding: 2px;
+  align-self: stretch;
 }
 .taskpane .header {
   background: rgba(0, 60, 136, 0.4);
@@ -81,14 +82,27 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 60, 136, 0.4);
   color: white;
   border-radius: 4px;
   height: 1.375em;
   font-size: 1.14em;
   text-decoration: none;
-  text-align: center;
+  text-align: right;
 }
+
+.cfg-edit-container textarea {
+  width: 100%;
+  height: 10em;
+  resize: none;
+}
+.cfg-edit-container button {
+  width: unset;
+  font-size: 0.8em;
+  font-weight: unset;
+  padding:2px;
+  display: inline-block;
+}
+
 /** UX right side child of aside */
 .toolbar {
   margin-left: auto;

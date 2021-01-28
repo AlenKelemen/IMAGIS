@@ -12,8 +12,8 @@ import Toggle from "./src/toggle";
 import Task from "./src/task";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
-import Proj from "./src/proj";
-import cfg from "./cfg.json";
+import Config from "./src/config";
+import CfgEdit from "./src/cfgEdit";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -24,6 +24,12 @@ window.map = new Map({
   }),
   controls: [],
 });
+/**Config map from cfg.json */
+map.config = new Config({
+  map: map,
+});
+map.config.cfg2View();
+map.config.update();
 /**UX */
 map.ux = new UX({
   map: map,
@@ -51,13 +57,23 @@ ux.aside.home = new Container({
   className: "taskbar ol-control",
 });
 ux.aside.addControl(ux.aside.home);
-ux.aside.home.setVisible(ux.header.home.getActive())
-/**Tasks */
+ux.aside.home.setVisible(ux.header.home.getActive());
+
+/**Tasks goes here*/
 ux.aside.home.addControl(
   new Task({
     target: ux.aside,
   })
 );
+ux.aside.home.addControl(
+  new CfgEdit({
+    target: ux.aside,
+    cfg: map.config.getCfg(),
+    map: map,
+    config:map.config
+  })
+);
+
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
 ux.aside.toolbar = new Container({
   semantic: "nav",
@@ -80,12 +96,3 @@ ux.aside.toolbar.addControl(
 );
 /**footer content- informative panes like scaleline */
 ux.footer.addControl(new ScaleLine());
-
-map.proj = new Proj({
-  cfg:cfg,
-  map:map
-})
-map.proj.cfg2View();
-map.proj.update();
-
-
