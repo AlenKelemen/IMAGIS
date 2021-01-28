@@ -2,3 +2,5 @@ node_modules
 dist
 .cache
 _tmp/
+example.html
+example.js

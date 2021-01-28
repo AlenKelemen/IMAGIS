@@ -49,9 +49,16 @@ export default class Proj {
     }
     return r;
   }
+  /**
+   * Reads cfg object and creates or updates layers
+   * Source and style can't be updated
+   *
+   * @param {boolean} [create=true]
+   * @memberof Proj
+   */
   update(create = true) {
     const c = this.check();
-    if (create) {
+    if (create) {// creates only missing layers
       for (const l of c.missing) {
         const s = this.getSrc(l.name);
         let layer;
@@ -152,6 +159,17 @@ export default class Proj {
           console.log(l[evt.key]);
         });
       }
+    } else {//updates existing map layers for properties defined in cfg for layer
+      for (const l of c.exist) {
+        const layer = this.map
+          .getLayers()
+          .getArray()
+          .find((x) => x.get("name") === l.name);
+          for (const [key, value] of Object.entries(l)) {
+            if (key !== "source" && key != "style") layer.set(key, value);
+          }
+      }
+
     }
   }
   cfg2View() {
@@ -163,11 +181,5 @@ export default class Proj {
     v.on("change:center", (evt) => (cfg.center = evt.target.getCenter()));
     v.setZoom(cfg.zoom);
     v.on("change:resolution", (evt) => (cfg.zoom = evt.target.getZoom()));
-  }
-  cfg2Tile() {
-    const m = this.map,
-      c = this.cfg;
-    for (const l of this.filterByType("osm")) {
-    }
   }
 }
