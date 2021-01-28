@@ -169,7 +169,6 @@ export default class Proj {
             if (key !== "source" && key != "style") layer.set(key, value);
           }
       }
-
     }
   }
   cfg2View() {
