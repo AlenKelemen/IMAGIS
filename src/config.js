@@ -172,6 +172,7 @@ export default class Config {
           }
         layer.set("cfg", l);
         layer.on("propertychange", (evt) => {
+          console.log(layer)
           const newValue = evt.target.get(evt.key);
           l[evt.key] = newValue;
           console.log(l[evt.key]);
