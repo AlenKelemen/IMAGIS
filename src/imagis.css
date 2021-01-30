@@ -95,6 +95,14 @@ body {
   height: 10em;
   resize: none;
 }
+.cfg-edit-container select {
+  width: 100%;
+  padding: 6px 0 6px 0;
+  margin: 6px 0 6px 0;
+}
+.cfg-edit-container .layer {
+  height: calc(100% - 13.5em);
+}
 .cfg-edit-container button {
   width: unset;
   font-size: 0.8em;

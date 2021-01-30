@@ -69,11 +69,29 @@ export default class CfgEdit extends Toggle {
     this.map.getView().on("propertychange", (evt) => (this.viewCfg.value = JSON.stringify({ project: this.cfg.project, center: this.cfg.center, zoom: this.cfg.zoom }, null, 2)));
     this.layerSelect = elt("select", { className: "layer-select" });
     for (const l of this.cfg.layers) {
-      this.layerSelect.options[this.layerSelect.options.length] = new Option(l.label,l.name);
+      this.layerSelect.options[this.layerSelect.options.length] = new Option(l.label, l.name);
     }
     this.main.appendChild(this.layerSelect);
     this.layerCfg = elt("textarea", { className: "layer" });
-    this.layerSelect.addEventListener('change',evt => this.layerCfg.value = JSON.stringify(this.cfg.layers.find(x => x.name === this.layerSelect.value), null, 2))
+    this.layerSelect.addEventListener("change", (evt) => {
+      this.layerCfg.value = JSON.stringify(
+        this.cfg.layers.find((x) => x.name === this.layerSelect.value),
+        null,
+        2
+      );
+    });
+    this.layerCfg.value = JSON.stringify(this.cfg.layers[0], null, 2);
     this.main.appendChild(this.layerCfg);
+    this.layerCfg.addEventListener("input", (evt) => {
+      const i = this.cfg.layers.findIndex((x) => x.name === this.layerSelect.value);
+      try{
+      this.cfg.layers[i] = JSON.parse(evt.target.value);
+      console.log(i, this.cfg);
+      this.config.setCfg(this.cfg);
+      this.config.update(false);
+      }catch (error) {
+        console.log(error)
+      }
+    });
   }
 }

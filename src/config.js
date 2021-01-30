@@ -11,8 +11,11 @@ import { Icon, Fill, Stroke, Circle, Text, RegularShape, Style } from "ol/style"
 const images = require("../img/*.png");
 import cfg from "../cfg.json";
 
+
+
 export default class Config {
   constructor(options = {}) {
+    
     if (!localStorage.getItem("cfg")) {
       localStorage.setItem("cfg", JSON.stringify(cfg));
     }
