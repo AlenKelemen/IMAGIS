@@ -74,7 +74,7 @@ export default class Config {
    * @param {boolean} [create=true]
    * @memberof Proj
    */
-  update(create = true) {
+  update(create = true,remove=false) {
     const c = this.check();
     if (create) {
       // creates only missing layers
@@ -193,6 +193,13 @@ export default class Config {
           if (key === "style") {
             if (layer instanceof VectorLayer) layer.setStyle(this.cfg2style(l.style));
           }
+        }
+      }
+    }
+    if(remove){
+      for(const l of this.map.getLayers().getArray()){
+        if(! this.cfg.layers.find(x => x.name === l.get('name'))){
+          this.map.removeLayer(l)
         }
       }
     }
