@@ -29,6 +29,8 @@ window.map = new Map({
 map.config = new Config({
   map: map,
 });
+map.config.write();
+console.log(map.config.read());
 /* map.config.cfg2View();
 map.config.update(); */
 
