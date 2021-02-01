@@ -24,12 +24,14 @@ window.map = new Map({
   }),
   controls: [],
 });
+
 /**Config map from cfg.json */
 map.config = new Config({
   map: map,
 });
-map.config.cfg2View();
-map.config.update();
+/* map.config.cfg2View();
+map.config.update(); */
+
 /**UX */
 map.ux = new UX({
   map: map,
