@@ -13,7 +13,7 @@ import Task from "./src/task";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 import Config from "./src/config";
-import CfgEdit from "./src/cfgEdit";
+import Project from "./src/project";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -25,12 +25,12 @@ window.map = new Map({
   controls: [],
 });
 
-/**Config map from cfg.json or saved cfg */
+/**Config map from cfg.json or cfg saved in localStorage */
 map.config = new Config({
   map: map,
 });
 map.config.write();
-console.log(map.config.read());
+localStorage.setItem("cfg", JSON.stringify(map.config.read()));
 
 /**UX */
 map.ux = new UX({
@@ -67,14 +67,12 @@ ux.aside.home.addControl(
     target: ux.aside,
   })
 );
-/* ux.aside.home.addControl(
-  new CfgEdit({
+ux.aside.home.addControl(
+  new Project({
     target: ux.aside,
-    cfg: map.config.getCfg(),
     map: map,
-    config:map.config
   })
-); */
+);
 
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
 ux.aside.toolbar = new Container({

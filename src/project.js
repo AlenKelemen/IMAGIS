@@ -15,17 +15,15 @@ import { elt } from "./util";
  */
 export default class CfgEdit extends Toggle {
   constructor(options = {}) {
-    if (!options.className) options.className = "cfg-edit";
-    if (!options.html) options.html = '<i class="far fa-layer-group fa-fw"></i>';
+    if (!options.className) options.className = "project";
+    if (!options.html) options.html = '<i class="far fa-cog fa-fw"></i>';
     super(options);
     this.map = options.map;
-    this.config = options.config;
     this.container = new Container({
       semantic: "section",
-      className: `${options.className || "cfg-edit"}-container taskpane`,
+      className: `${options.className || "project"}-container taskpane`,
     });
     options.target.addControl(this.container);
-    this.cfg = options.cfg;
     this.container.setVisible(this.active);
     this.headerHtml = options.header || "Projekt";
     this.contentHtml = options.content || "Content";
@@ -40,21 +38,15 @@ export default class CfgEdit extends Toggle {
     this.default = elt("button", { className: "default" }, "Pretpostavljeno");
     this.footer = elt("footer", { className: `ol-control  footer` }, this.default, this.save);
     this.container.element.appendChild(this.footer);
-    this.setContent();
+   
 
     this.default.addEventListener("click", (evt) => {
       
-      this.config.setCfg(this.config.getDefault());
-      this.cfg=this.config.getDefault();
-      this.config.updateView();
-      this.config.update(false);
+      console.log(evt)
       
     });
     this.save.addEventListener("click", (evt) => {
-      this.cfg.project = JSON.parse(this.viewCfg.value).project;
-      this.cfg.center = JSON.parse(this.viewCfg.value).center;
-      this.cfg.zoom = JSON.parse(this.viewCfg.value).zoom;
-      localStorage.setItem("cfg", JSON.stringify(this.cfg));
+      console.log(evt)
     });
   }
 
