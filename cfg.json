@@ -1,12 +1,11 @@
 {
     "project": "Vodovod Omiš",
     "gitPath": "https://github.com/AlenKelemen/IMAGIS-data.git",
-    "path": "vodovodOmis",
     "center": [535420.4693824024, 4814471.358589062],
     "zoom": 5.7,
     "sources": [{
             "name": "VodoopskrbaVod",
-            "path": "Vodoopskrba/Vod",
+            "path": "vodovodOmis",
             "type": "geojson",
             "schema": {
                 "geometry": "linestring",
@@ -96,7 +95,7 @@
         },
         {
             "name": "VodoopskrbaHidrant",
-            "path": "Vodoopskrba/Hidrant",
+            "path": "vodovodOmis",
             "type": "geojson",
             "schema": {
                 "geometry": "point",
@@ -179,7 +178,7 @@
         },
         {
             "name": "VodoopskrbaVodospremnik",
-            "path": "Vodoopskrba/Vodospremnik",
+            "path": "vodovodOmis",
             "type": "geojson",
             "schema": {
                 "geometry": "point",
@@ -241,7 +240,7 @@
         },
         {
             "name": "VodoopskrbaPodrucjeZgrada",
-            "path": "Vodoopskrba/PodrucjeZgrada",
+            "path": "vodovodOmis",
             "type": "geojson",
             "schema": {
                 "geometry": "polygon",

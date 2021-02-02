@@ -10,13 +10,10 @@ import Layer from "ol/layer/Layer";
 import { Icon, Fill, Stroke, Circle, Text, RegularShape, Style } from "ol/style";
 const images = require("../img/*.png");
 import def from "../cfg.json";
-import { isGeneratorFunction } from "regenerator-runtime";
 
 export default class Config {
   constructor(options = {}) {
-    if (!localStorage.getItem("cfg")) {
-      localStorage.setItem("cfg", JSON.stringify(def));
-    }
+    if (!localStorage.getItem("cfg")) localStorage.setItem("cfg", JSON.stringify(def));
     this.cfg = JSON.parse(localStorage.getItem("cfg"));
     this.map = options.map;
     this.localFolder = "/datas";
@@ -28,19 +25,20 @@ export default class Config {
       m = this.map,
       v = m.getView();
     cfg.project = m.get("project");
+    cfg.gitPath = m.get("gitPath");
     cfg.center = v.getCenter();
     cfg.zoom = v.getZoom();
     for (const layer of m.getLayers().getArray()) {
       const i = { name: layer.get("name") };
       if (layer instanceof VectorLayer) i.style = layer.get("imagis-style");
-      cfg.layers.push(i);
       const st = layer.getSource();
-      if (st instanceof OSM && cfg.sources.find((x) => x.type === "osm" && x.name === layer.get("name")) === undefined) {
-        cfg.sources.push({ 
-          name: layer.getSource().get("name"), 
-          type: "osm" });
+      if (st instanceof OSM && cfg.sources.find((x) => x.type === "osm") === undefined) {
+        cfg.sources.push({
+          name: layer.getSource().get("name"),
+          type: "osm",
+        });
       }
-      if (st instanceof BingMaps && cfg.sources.find((x) => x.type === "bing" && x.name === layer.get("name")) === undefined) {
+      if (st instanceof BingMaps && cfg.sources.find((x) => x.type === "bing") === undefined) {
         cfg.sources.push({
           name: layer.getSource().get("name"),
           type: "bing",
@@ -48,7 +46,7 @@ export default class Config {
           imagerySet: layer.getSource().getImagerySet(),
         });
       }
-      if (st instanceof TileWMS && cfg.sources.find((x) => x.type === "wms" && x.name === layer.get("name")) === undefined) {
+      if (st instanceof TileWMS && cfg.sources.find((x) => x.type === "wms" && x.name === layer.get("source")) === undefined) {
         cfg.sources.push({
           name: layer.getSource().get("name"),
           type: "wms",
@@ -56,7 +54,7 @@ export default class Config {
           params: layer.getSource().getParams(),
         });
       }
-      if (st instanceof VectorSource && cfg.sources.find((x) => ["th", "geojson"].indexOf(x.type) !== -1 && x.name === layer.get("name")) === undefined) {
+      if (st instanceof VectorSource && cfg.sources.find((x) => ["th", "geojson"].indexOf(x.type) !== -1 && x.name === layer.get("source")) === undefined) {
         cfg.sources.push({
           name: layer.getSource().get("name"),
           type: layer.getSource().get("type"),
@@ -64,12 +62,15 @@ export default class Config {
         });
       }
       for (const [key, value] of Object.entries(layer.getProperties())) {
-        if(key !== 'source')
-        i[key] =  value;
+        if (key !== "source" && key != "style") {
+          if (![Infinity, -Infinity, null, undefined].includes(value)) {
+            i[key] = value;
+          }
+        }
       }
+      i.source = layer.getSource().get("name");
+      cfg.layers.push(i);
     }
-    //localStorage.setItem("cfg", JSON.stringify(cfg));
-    
     return cfg;
   }
   write() {
@@ -77,11 +78,12 @@ export default class Config {
       m = this.map,
       v = m.getView();
     m.set("project", cfg.project);
+    m.set("gitPath", cfg.gitPath);
     v.setCenter(cfg.center);
     v.setZoom(cfg.zoom);
-    for (const l of this.cfg.layers) {
-      const s = this.cfg.sources.find((x) => x.name === l.source);
-      console.log(l,s)
+    //add layers
+    for (const l of cfg.layers) {
+      const s = cfg.sources.find((x) => x.name === l.source);
       let layer, source;
       switch (s.type) {
         case "osm":
@@ -115,7 +117,7 @@ export default class Config {
           source = new VectorSource({
             loader: (extent, resolution, projection) => {
               this.result.then((r) => {
-                this.vc.readFile(this.localFolder + "/" + this.cfg.path + "/" + l.name + ".json").then((r) => {
+                this.vc.readFile(this.localFolder + "/" + s.path + "/" + l.name + ".json").then((r) => {
                   const features = new GeoJSON({
                     dataProjection: "EPSG:4326",
                     featureProjection: "EPSG:3765",
@@ -129,7 +131,7 @@ export default class Config {
           source.set("name", s.name);
           source.set("type", s.type);
           source.set("schema", s.schema);
-          source.set("path", this.cfg.path);
+          source.set("path", s.path);
           layer.setSource(source);
           break;
         case "th":
@@ -174,20 +176,21 @@ export default class Config {
           source.set("schema", s.schema);
           layer.setSource(source);
           break;
-        default:
-          console.log(`Type ${s.type} not implemeted.`);
-          return false;
       }
-      for (const [key, value] of Object.entries(l)) {
-        if (key !== "source" && key != "style") layer.set(key, value);
-        if (key === "style") {
-          if (layer instanceof VectorLayer) {
-            layer.setStyle(this.imagisSyle(l.style));
-            layer.set("imagis-style", l.style);
+      if (layer) {
+        for (const [key, value] of Object.entries(l)) {
+          if (key !== "source" && key != "style") layer.set(key, value);
+          if (key === "style") {
+            if (layer instanceof VectorLayer) {
+              layer.setStyle(this.imagisSyle(l.style));
+              layer.set("imagis-style", l.style);
+            }
           }
+          if (key === "maxResolution" && value === null) layer.set(key, Infinity);
+          if (key === "minResolution" && value === null) layer.set(key, 0);
         }
-      }
-      m.addLayer(layer);
+        m.addLayer(layer);
+      } else console.log("Layer not written to map (no converter defined):", l);
     }
   }
   imagisSyle(styleSpec) {
@@ -368,95 +371,5 @@ export default class Config {
       }
       return styles;
     };
-  }
-
-  /**
-   *return hardcoded cfg
-   *
-   * @return {*}
-   * @memberof Config
-   */
-  getDefault() {
-    return def;
-  }
-  setCfg(cfg) {
-    if (typeof cfg === "object") {
-      this.cfg.gitPath = cfg.gitPath || def.gitPath;
-      this.cfg.path = cfg.path || def.path;
-      this.cfg.zoom = cfg.zoom || def.zoom;
-      if (Array.isArray(cfg.center) && cfg.center.length === 2) this.cfg.center = cfg.center;
-      else this.cfg.center = def.center;
-      if (!cfg.layers) this.cfg.layers = [];
-      if (!cfg.sources) this.cfg.sources = def.sources;
-    } else {
-      this.cfg = def;
-    }
-  }
-  getCfg() {
-    return this.cfg;
-  }
-  toCfg(olLayer) {}
-  /**
-   *Create new cfg layer
-   *
-   * @param {string} [options={ source: "OSM", name: "osm-1" }] layer options
-   * @param {string} options.name layer name
-   * @param {string} options.source layer source
-   * @param {string} [options.label=options.name] layer label
-   * @param {string} [options.info=''] layer info
-   * @param {float} [options.minResolution=-Infinity] layer min resolution
-   * @param {float} [options.maxResolution=Infinity] layer max resolution
-   * @param {boolean} [options.visible=true] layer visiblity
-   * @param {float} [options.opacity=1] layer opacity [0-1]
-   * @param {integer} [options.zIndex=0] layer z index >= 0
-   * @return {boolean} succesfull
-   * @memberof Config
-   */
-  layerCreate(options = { source: "OSM", name: "osm-1" }) {
-    if (this.cfg.layers.find((x) => x.name === options.name)) {
-      console.log(`Name ${options.name} exists, change name.`);
-      return false;
-    }
-    if (!this.cfg.sources.find((x) => x.name === options.source)) {
-      console.log(`Source ${options.source} do not exists, change source.`);
-      return false;
-    }
-    this.cfg.layers.push(options);
-    return true;
-  }
-  /**
-   *Update cfg layer
-   *
-   * @param {string} [options={ source: "OSM", name: "osm-1" }] layer options
-   * @param {string} options.name layer name
-   * @param {string} options.source layer source
-   * @param {string} [options.label=options.name] layer label
-   * @param {string} [options.info=''] layer info
-   * @param {float} [options.minResolution=-Infinity] layer min resolution
-   * @param {float} [options.maxResolution=Infinity] layer max resolution
-   * @param {boolean} [options.visible=true] layer visiblity
-   * @param {float} [options.opacity=1] layer opacity [0-1]
-   * @param {integer} [options.zIndex=0] layer z index >= 0
-   * @return {boolean} succesfull
-   * @memberof Config
-   */
-  layerUpdate(options = { name: "OSM" }) {
-    if (!this.cfg.layers.find((x) => x.name === options.name)) {
-      console.log(`Name ${options.name} must exists in cfg.`);
-      return false;
-    }
-    if (options.source && !this.cfg.sources.find((x) => x.name === options.source)) {
-      console.log(`Source ${options.source} do not exists, change source.`);
-      return false;
-    }
-    const i = this.cfg.layers.findIndex((x) => x.name === options.name);
-    const layer = this.cfg.layers[i];
-    for (const key of Object.keys(layer)) {
-      if (options[key]) {
-        layer[key] = options[key];
-        console.log(options, this.cfg.layers[i]);
-      }
-    }
-    return true;
   }
 }

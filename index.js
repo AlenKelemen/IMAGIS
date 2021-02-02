@@ -25,14 +25,12 @@ window.map = new Map({
   controls: [],
 });
 
-/**Config map from cfg.json */
+/**Config map from cfg.json or saved cfg */
 map.config = new Config({
   map: map,
 });
 map.config.write();
 console.log(map.config.read());
-/* map.config.cfg2View();
-map.config.update(); */
 
 /**UX */
 map.ux = new UX({
@@ -69,14 +67,14 @@ ux.aside.home.addControl(
     target: ux.aside,
   })
 );
-ux.aside.home.addControl(
+/* ux.aside.home.addControl(
   new CfgEdit({
     target: ux.aside,
     cfg: map.config.getCfg(),
     map: map,
     config:map.config
   })
-);
+); */
 
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
 ux.aside.toolbar = new Container({
