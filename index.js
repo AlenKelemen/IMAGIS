@@ -9,7 +9,7 @@ import epsg3765 from "./src/EPSG3765";
 import UX from "./src/ux";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
-import Task from "./src/task";
+import Legend from "./src/legend";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 import Config from "./src/config";
@@ -63,7 +63,7 @@ ux.aside.home.setVisible(ux.header.home.getActive());
 
 /**Tasks goes here*/
 ux.aside.home.addControl(
-  new Task({
+  new Legend({
     target: ux.aside,
   })
 );

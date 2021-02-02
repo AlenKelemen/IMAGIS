@@ -37,12 +37,9 @@ export default class CfgEdit extends Toggle {
     this.default = elt("button", { className: "default" }, "Pretpostavljeno");
     this.footer = elt("footer", { className: `ol-control footer` }, this.default, this.save);
     this.container.element.appendChild(this.footer);
-   
-
+    this.setContent();
     this.default.addEventListener("click", (evt) => {
-      
       console.log(evt)
-      
     });
     this.save.addEventListener("click", (evt) => {
       console.log(evt)
@@ -51,6 +48,12 @@ export default class CfgEdit extends Toggle {
 
   setContent() {
     this.main.innerHTML = "";
-   
+    let i = 0;
+    do {
+      i++;
+      const e = document.createElement("div");
+      e.innerHTML = `${i} item row`;
+      this.main.appendChild(e);
+    } while (i < 11);
   }
 }
