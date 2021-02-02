@@ -11,7 +11,7 @@ import { Icon, Fill, Stroke, Circle, Text, RegularShape, Style } from "ol/style"
 const images = require("../img/*.png");
 import def from "../cfg.json";
 /**
- * Imagis maps config as Object
+ * Imagis maps config as Object sutable to stringify to json
  * ol/Map and ol/Layer - cfg reader/writer
  * Uses GitHub loader for vector sources
  * Layer style must be defined from styleSpec
