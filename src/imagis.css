@@ -3,9 +3,10 @@ html {
 }
 body {
   margin: 0;
-  font-family: Verdana, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   line-height: 1.5;
+  color: #333;
 }
 /*ol map controls parent element*/
 .ol-overlaycontainer-stopevent {
@@ -25,6 +26,8 @@ body {
 }
 .ol-control button {
   outline: none;
+  font-weight: normal;
+
 }
 /**container hidden*/
 .hidden {
@@ -84,32 +87,16 @@ body {
   right: 0;
   color: white;
   border-radius: 4px;
-  height: 1.375em;
-  font-size: 1.14em;
   text-decoration: none;
   text-align: right;
+  padding:2px
 }
-
-.cfg-edit-container textarea {
-  width: 100%;
-  height: 10em;
-  resize: none;
-}
-.cfg-edit-container select {
-  width: 100%;
-  padding: 6px 0 6px 0;
-  margin: 6px 0 6px 0;
-}
-.cfg-edit-container .layer {
-  height: calc(100% - 13.5em);
-}
-.cfg-edit-container button {
-  width: unset;
-  font-size: 0.8em;
-  font-weight: unset;
-  padding:2px;
-  display: inline-block;
-}
+.taskpane .ol-control button{
+  width:unset;
+  display:inline-block;
+  font-size: 1em;
+  padding:4px;
+  }
 
 /** UX right side child of aside */
 .toolbar {

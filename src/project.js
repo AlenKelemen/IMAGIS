@@ -21,22 +21,21 @@ export default class CfgEdit extends Toggle {
     this.map = options.map;
     this.container = new Container({
       semantic: "section",
-      className: `${options.className || "project"}-container taskpane`,
+      className: `taskpane`,
     });
     options.target.addControl(this.container);
     this.container.setVisible(this.active);
-    this.headerHtml = options.header || "Projekt";
+    this.headerHtml = options.header || "Header";
     this.contentHtml = options.content || "Content";
-    this.footerHtml = options.footer || "Konfiguracija projekta";
+    this.footerHtml = options.footer || "Footer";
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.header = elt("header", { className: `header` }, this.headerHtml);
     this.container.element.appendChild(this.header);
     this.main = elt("main", { className: `main` }, this.contentHtml);
     this.container.element.appendChild(this.main);
-    this.update = elt("button", { className: "update" }, "Primijeni");
     this.save = elt("button", { className: "save" }, "Spremi");
     this.default = elt("button", { className: "default" }, "Pretpostavljeno");
-    this.footer = elt("footer", { className: `ol-control  footer` }, this.default, this.save);
+    this.footer = elt("footer", { className: `ol-control footer` }, this.default, this.save);
     this.container.element.appendChild(this.footer);
    
 
@@ -52,56 +51,6 @@ export default class CfgEdit extends Toggle {
 
   setContent() {
     this.main.innerHTML = "";
-    this.viewCfg = elt("textarea", { className: "view" }, JSON.stringify({ project: this.cfg.project, center: this.cfg.center, zoom: this.cfg.zoom }, null, 2));
-    this.main.appendChild(this.viewCfg);
-    this.map.getView().on("propertychange", (evt) => (this.viewCfg.value = JSON.stringify({ project: this.cfg.project, center: this.cfg.center, zoom: this.cfg.zoom }, null, 2)));
-    this.viewCfg.addEventListener("input", (evt) => {
-      try {
-        this.cfg.project = JSON.parse(this.viewCfg.value).project;
-        this.cfg.center = JSON.parse(this.viewCfg.value).center;
-        this.cfg.zoom = JSON.parse(this.viewCfg.value).zoom;
-        this.config.setCfg(this.cfg);
-        this.config.updateView();
-      } catch (error) {
-        console.log(error);
-      }
-    });
-    this.layerSelect = elt("select", { className: "layer-select" });
-    for (const l of this.cfg.layers) {
-      this.layerSelect.options[this.layerSelect.options.length] = new Option(l.label, l.name);
-    }
-    this.main.appendChild(this.layerSelect);
-    this.layerCfg = elt("textarea", { className: "layer" });
-    this.layerSelect.addEventListener("change", (evt) => {
-      this.layerCfg.value = JSON.stringify(
-        this.cfg.layers.find((x) => x.name === this.layerSelect.value),
-        null,
-        2
-      );
-    });
-    this.layerCfg.value = JSON.stringify(this.cfg.layers[0], null, 2);
-    this.main.appendChild(this.layerCfg);
-    this.layerCfg.addEventListener("input", (evt) => {
-      const i = this.cfg.layers.findIndex((x) => x.name === this.layerSelect.value);
-      if (evt.target.value === "") {
-        this.cfg.layers.splice(i, 1);
-        this.layerSelect.remove(i);
-        this.layerCfg.value = JSON.stringify(
-          this.cfg.layers.find((x) => x.name === this.layerSelect.value),
-          null,
-          2
-        );
-      }
-      else
-        try {
-          this.cfg.layers[i] = JSON.parse(evt.target.value);
-          
-        } catch (error) {
-          console.log(error);
-        }
-      this.config.setCfg(this.cfg);
-      this.config.update(false,true);
-      console.log(i, this.cfg);
-    });
+   
   }
 }

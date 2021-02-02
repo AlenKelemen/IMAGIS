@@ -20,30 +20,28 @@ export default class Task extends Toggle {
     super(options);
     this.container = new Container({
       semantic: "section",
-      className: `${options.className || "taskpane"}-container taskpane`,
+      className: `taskpane`,
     });
     options.target.addControl(this.container);
     this.container.setVisible(this.active);
-    this.headerHtml = options.header || 'Header';
-    this.contentHtml = options.content || 'Content';
-    this.footerHtml = options.footer || 'Footer';
+    this.headerHtml = options.header || "Header";
+    this.contentHtml = options.content || "Content";
+    this.footerHtml = options.footer || "Footer";
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.header = elt("header", { className: `header` }, this.headerHtml);
     this.container.element.appendChild(this.header);
-    this.main = elt("main", { className: `main` },this.contentHtml);
+    this.main = elt("main", { className: `main` }, this.contentHtml);
     this.container.element.appendChild(this.main);
-    this.footer = elt("footer", { className: `footer` }, this.footerHtml);
+    this.footer = elt("footer", { className: `footer ol-control`}, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
     this.setContent();
   }
-  setHeader(html="Header") {
+  setHeader(html = "Header") {
     this.header = html;
   }
-  setFooter(html="Footer") {
-    this.footer = html;
-  }
+
   setContent() {
-    this.main.innerHTML='';
+    this.main.innerHTML = "";
     let i = 0;
     do {
       i++;
