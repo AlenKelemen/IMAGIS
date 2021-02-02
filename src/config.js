@@ -13,6 +13,7 @@ import def from "../cfg.json";
 /**
  * Imagis maps config as Object
  * ol/Map and ol/Layer - cfg reader/writer
+ * Uses GitHub loader for vector sources
  * Layer style must be defined from styleSpec
  *
  * @export
