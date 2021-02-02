@@ -10,7 +10,13 @@ import Layer from "ol/layer/Layer";
 import { Icon, Fill, Stroke, Circle, Text, RegularShape, Style } from "ol/style";
 const images = require("../img/*.png");
 import def from "../cfg.json";
-
+/**
+ * ol/Map and ol/Layer - cfg reader/writer
+ * Layer style must be defined from styleSpec
+ *
+ * @export
+ * @class Config
+ */
 export default class Config {
   constructor(options = {}) {
     if (!localStorage.getItem("cfg")) localStorage.setItem("cfg", JSON.stringify(def));
@@ -20,6 +26,12 @@ export default class Config {
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
   }
+  /**
+   *From ol/map to cfg object
+   *
+   * @return {Object} cfg Object, defines: View, Sources, Layers, Style
+   * @memberof Config
+   */
   read() {
     const cfg = { sources: [], layers: [] },
       m = this.map,
@@ -73,6 +85,11 @@ export default class Config {
     }
     return cfg;
   }
+  /**
+   *From cfg object to ol/map
+   *
+   * @memberof Config
+   */
   write() {
     const cfg = this.cfg,
       m = this.map,
@@ -193,6 +210,13 @@ export default class Config {
       } else console.log("Layer not written to map (no converter defined):", l);
     }
   }
+  /**
+   *Cfg styleSpec to ol/Style function
+   *
+   * @param {Array} styleSpec from cfg 
+   * @return {Function} ol/style function
+   * @memberof Config
+   */
   imagisSyle(styleSpec) {
     if (!styleSpec) return; //default style
     const sp = Array.isArray(styleSpec) ? styleSpec : [styleSpec]; //allways as array
