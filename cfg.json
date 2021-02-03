@@ -548,13 +548,13 @@
             "zIndex": 120,
             "style": [{
                 "regularShape": {
-                    "radius": 10,
-                    "points": 6,
+                    "radius": 6,
+                    "points": 4,
                     "fill": {
                         "color": "rgba(214,20,20,1)"
                     },
                     "stroke": {
-                        "color": "rgba(255,125,0,1)"
+                        "color": "black"
                     }
                 }
             }]
@@ -584,7 +584,7 @@
             "info": "",
             "maxResolution": 500,
             "visible": true,
-            "zIndex": 140,
+            "zIndex": 0,
             "style": [{
                 "icon": {
                     "src": "th",

@@ -65,6 +65,7 @@ ux.aside.home.setVisible(ux.header.home.getActive());
 ux.aside.home.addControl(
   new Legend({
     target: ux.aside,
+    map:map
   })
 );
 ux.aside.home.addControl(
