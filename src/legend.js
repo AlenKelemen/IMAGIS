@@ -41,26 +41,45 @@ export default class Legend extends Toggle {
     this.footer = elt("footer", { className: `footer ol-control` }, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
     this.setContent();
+    //this.map.getView().on("change:resolution", evt => this.setContent())
   }
-
 
   setContent() {
     this.main.innerHTML = "";
-    for (const l of this.map.getLayers().getArray()) {
-      const style = l instanceof VectorLayer ? l.getStyle() : undefined;
-      for (const e of this.styleIcon(style)) {
-          this.main.appendChild(e);
-      }
+    const ls = this.map
+      .getLayers()
+      .getArray()
+      .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
+      .reverse(); //sort layers by index
+    for (const [i, l] of ls.entries()) {
+      if (!l.get("name")) l.set("name", i);
+      if (!l.get("label")) l.set("label", l.get("name"));
+      const thematic = elt("div", { className: "thematic" });
+      const icons = this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
+      //thematic labels- from imagis style .filter
+      const imagisStyle = l.get("imagis-style");
+      if (imagisStyle && imagisStyle.length > 1)
+        for (const [i, v] of imagisStyle.entries()) {
+          let label = "";
+          if (v.filter) label = v.filter.property + " " + v.filter.operator + " " + v.filter.value;
+          const icon = icons[i+1];//icons[0] is for header item,thematic icons are starting from icon[1]
+          const item = elt("div", { className: "item" }, icon, label);
+          thematic.appendChild(item);
+        }
+      //
+      const label = l.get("label");
+      const item = elt("div", { className: "item", id: l.get("name") }, icons[0], label, thematic);
+      this.main.appendChild(item);
     }
-
-    let i = 0;
-    do {
-      i++;
-      const e = document.createElement("div");
-      e.innerHTML = `${i} item row`;
-      //this.main.appendChild(e);
-    } while (i < 11);
   }
+  /**
+   * Layer style icons
+   *
+   * @param {Object} style ol/style
+   * @param {Array} [iconSize=[16, 16]] canvas size
+   * @return {Array} canvas icons
+   * @memberof Legend
+   */
   styleIcon(style, iconSize = [16, 16]) {
     const r = [];
     if (typeof style === "function") style = style.call(this, undefined, this.map.getView().getResolution());

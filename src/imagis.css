@@ -97,6 +97,16 @@ body {
   font-size: 1em;
   padding:4px;
   }
+.taskpane .main .item canvas{
+  vertical-align: middle;
+  padding:2px;
+}
+.taskpane .main{
+  font-size: 0.85em;
+}
+.taskpane .thematic{
+  padding-left:18px;
+}
 
 /** UX right side child of aside */
 .toolbar {
