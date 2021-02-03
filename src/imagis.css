@@ -61,16 +61,7 @@ body {
   align-self: stretch;
 }
 .taskpane .header {
-  background: rgba(0, 60, 136, 0.4);
-  color: white;
-  border-radius: 4px;
-  margin: 1px;
-  padding: 0;
-  font-size: 1.14em;
-  font-weight: bold;
-  text-decoration: none;
   text-align: center;
-  height: 1.375em;
 }
 .taskpane .main {
   width: inherit;
@@ -79,6 +70,9 @@ body {
   bottom: 2em;
   overflow-y: auto;
   border-radius: 4px;
+}
+.taskpane.no-header .main{
+  top:0;
 }
 .taskpane .footer {
   position: absolute;
