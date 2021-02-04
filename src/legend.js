@@ -49,7 +49,9 @@ export default class Legend extends Toggle {
       .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
       .reverse(); //sort layers by index
     for (const [i, l] of ls.entries()) {
-      if (!l.get("name")) l.set("name", i);
+      console.log(l instanceof VectorLayer ? l.getStyle() : undefined)
+     // this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
+      /* if (!l.get("name")) l.set("name", i);
       if (!l.get("label")) l.set("label", l.get("name"));
       const thematic = elt("div", { className: "thematic" });
       const icons = this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
@@ -59,15 +61,36 @@ export default class Legend extends Toggle {
         for (const [i, v] of imagisStyle.entries()) {
           let label = "";
           if (v.filter) label = v.filter.property + " " + v.filter.operator + " " + v.filter.value;
-          const icon = icons[i+1];//icons[0] is for header item,thematic icons are starting from icon[1]
+          const icon = icons[i + 1]; //icons[0] is for header item,thematic icons are starting from icon[1]
           const item = elt("div", { className: "item" }, icon, label);
           thematic.appendChild(item);
         }
       //
       const label = l.get("label");
-      const item = elt("div", { className: "item", id: l.get("name") }, icons[0], label, thematic);
-      this.main.appendChild(item);
+     const item = elt("div", { className: "item", id: l.get("name") }, icons[0], label, thematic);
+      this.main.appendChild(item); */
     }
+  }
+
+  getImage(size = [100, 100]) {
+    const m = new Image();
+    const c = elt("canvas", { width: size[0], height: size[1] });
+    const ctx = c.getContext("2d");
+    const ls = this.map
+      .getLayers()
+      .getArray()
+      .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
+      .reverse(); //sort layers by index
+    for (const [i, l] of ls.entries()) {
+      if (!l.get("name")) l.set("name", i);
+      if (!l.get("label")) l.set("label", l.get("name"));
+      const icons = this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
+      for (const i of icons) {
+        ctx.drawImage(i, 0, 0);
+        console.log(i.toDataURL());
+      }
+    }
+    //return c.toDataURL();
   }
   /**
    * Layer style icons
@@ -77,20 +100,12 @@ export default class Legend extends Toggle {
    * @return {Array} canvas icons
    * @memberof Legend
    */
+
   styleIcon(style, iconSize = [16, 16]) {
     const r = [];
     if (typeof style === "function") style = style.call(this, undefined, this.map.getView().getResolution());
-    else if (typeof style === "object") style = [style];
-    const ce = function () {
-      const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
-      const ctx = icon.getContext("2d");
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
-      const vctx = toContext(ctx, {
-        size: iconSize,
-      });
-      return { img: img, icon: icon, ctx: ctx, vctx: vctx };
-    };
+    else if (typeof style === "object" && Array.isArray(style) === false) style = [style];
+    console.log(style)
     const polygon = new Polygon([
       [
         [0, 0],
@@ -105,33 +120,26 @@ export default class Legend extends Toggle {
       [iconSize[0], iconSize[1]],
     ]);
     const point = new Point([iconSize[0] / 2, iconSize[1] / 2]);
-    if (style == undefined) {
-      style = [];
-      const el = ce();
-      el.img.src = images.lc_raster;
-      r.push(el.icon);
-    }
-    if (style.length > 1) {
-      const el = ce();
-      el.img.src = images.lc_theme;
-      r.push(el.icon);
-    }
-    for (const [i, s] of Object.entries(style)) {
-      const el = ce();
-      el.ctx.fillStyle = "#F2F2F2";
-      el.ctx.fillRect(0, 0, el.icon.width, el.icon.height);
-      if (s instanceof Style) {
-        el.vctx.setStyle(s);
-        if (s.getFill()) el.vctx.drawGeometry(polygon);
-        if (!s.getFill() && s.getStroke()) el.vctx.drawGeometry(linestring);
-        const imageStyle = s.getImage();
-        if (imageStyle) {
-          el.vctx.drawGeometry(point);
-          if (imageStyle instanceof Icon) el.img.src = imageStyle.getSrc();
-        }
+    const loadImage = (url) =>
+      new Promise((resolve, reject) => {
+        const img = new Image();
+        img.addEventListener("load", () => resolve(img));
+        img.addEventListener("error", (err) => reject(err));
+        img.src = url;
+      });
+    if (style !== undefined) {
+      for (const [i, s] of Object.entries(style)) {
+        r.push(loadImage(images.lc_raster));
       }
-      r.push(el.icon);
     }
-    return r;
+
+    Promise.all(r).then((imgs) => {
+      for (const img of imgs) {
+        const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
+        const ctx = icon.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
+        console.log(icon, img);
+      }
+    });
   }
 }

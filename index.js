@@ -62,12 +62,15 @@ ux.aside.addControl(ux.aside.home);
 ux.aside.home.setVisible(ux.header.home.getActive());
 
 /**Tasks goes here*/
+
+map.legend =  new Legend({
+  target: ux.aside,
+  map:map
+});
 ux.aside.home.addControl(
-  new Legend({
-    target: ux.aside,
-    map:map
-  })
+  map.legend
 );
+console.log(map.legend.getImage([16,16]))
 ux.aside.home.addControl(
   new Project({
     target: ux.aside,
