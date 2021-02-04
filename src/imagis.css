@@ -18,7 +18,7 @@ body {
 }
 /** toggle button active/inactive*/
 .toggle.active {
-  background-color: rgb(54 148 2 / 50%);
+  background-color: rgba(0, 136, 105, 0.6);
 }
 .ol-control .toggle.active:focus,
 .ol-control .toggle.active:hover {
@@ -55,7 +55,7 @@ body {
 .taskpane {
   width: 20em;
   position: relative;
-  background-color: white;
+  background-color:rgba(0, 60, 136, 0.95);;
   border-radius: 4px;
   padding: 2px;
   align-self: stretch;

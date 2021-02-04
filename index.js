@@ -70,7 +70,6 @@ map.legend =  new Legend({
 ux.aside.home.addControl(
   map.legend
 );
-console.log(map.legend.getImage([16,16]))
 ux.aside.home.addControl(
   new Project({
     target: ux.aside,

@@ -29,47 +29,58 @@ export default class Legend extends Toggle {
       className: `taskpane no-header`,
     });
     options.target.addControl(this.container);
+    this.map = this.container.getMap();
     this.container.setVisible(this.active);
-    this.contentHtml = options.content || "Content";
-    this.footerHtml = options.footer || "Footer";
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
-    this.main = elt("main", { className: `main` }, this.contentHtml);
+    this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
     this.footer = elt("footer", { className: `footer ol-control` }, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
     this.setContent();
+    this.legendCanvas = elt("canvas", { width: 100, height: 300 });
+
     //this.map.getView().on("change:resolution", evt => this.setContent())
   }
 
-  setContent() {
+  setContent(iconSize = [16, 16]) {
+    const loadImage = (url) =>
+      new Promise((resolve, reject) => {
+        const img = new Image();
+        img.addEventListener("load", () => resolve(img));
+        img.addEventListener("error", (err) => reject(err));
+        img.src = url;
+      });
     this.main.innerHTML = "";
+    const r = [];
     const ls = this.map
       .getLayers()
       .getArray()
       .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
       .reverse(); //sort layers by index
     for (const [i, l] of ls.entries()) {
-      console.log(l instanceof VectorLayer ? l.getStyle() : undefined)
-     // this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
-      /* if (!l.get("name")) l.set("name", i);
-      if (!l.get("label")) l.set("label", l.get("name"));
-      const thematic = elt("div", { className: "thematic" });
-      const icons = this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
-      //thematic labels- from imagis style .filter
-      const imagisStyle = l.get("imagis-style");
-      if (imagisStyle && imagisStyle.length > 1)
-        for (const [i, v] of imagisStyle.entries()) {
-          let label = "";
-          if (v.filter) label = v.filter.property + " " + v.filter.operator + " " + v.filter.value;
-          const icon = icons[i + 1]; //icons[0] is for header item,thematic icons are starting from icon[1]
-          const item = elt("div", { className: "item" }, icon, label);
-          thematic.appendChild(item);
+      if (l instanceof VectorLayer) {
+        if (l.getStyle()) {
+          const style = l.getStyle().call(this, undefined, this.map.getView().getResolution());
+          if (Array.isArray(style) || style.length > 1) {
+            
+          }
         }
-      //
-      const label = l.get("label");
-     const item = elt("div", { className: "item", id: l.get("name") }, icons[0], label, thematic);
-      this.main.appendChild(item); */
+        r.push(loadImage(images.lc_theme));
+      } else {
+        r.push(loadImage(images.lc_raster));
+      }
     }
+    Promise.all(r).then((imgs) => {
+      for (const [i, img] of imgs.entries()) {
+        const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
+        const ctx = icon.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
+        this.main.appendChild(icon);
+        const lCtx = this.legendCanvas.getContext("2d");
+        lCtx.drawImage(icon, 0, 0, 16, 16, 2, 2 + i * 18, 16, 16);
+      }
+      console.log(this.legendCanvas.toDataURL());
+    });
   }
 
   getImage(size = [100, 100]) {
@@ -105,7 +116,7 @@ export default class Legend extends Toggle {
     const r = [];
     if (typeof style === "function") style = style.call(this, undefined, this.map.getView().getResolution());
     else if (typeof style === "object" && Array.isArray(style) === false) style = [style];
-    console.log(style)
+    console.log(style);
     const polygon = new Polygon([
       [
         [0, 0],
