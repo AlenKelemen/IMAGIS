@@ -69,12 +69,12 @@ export default class Legend extends Toggle {
       const thematic = elt("div", { className: `thematic` });
       const item = elt("div", { className: "item", dataName: `${l.get("name")}` }, icon, label, thematic);
       this.main.appendChild(item);
-      if (l instanceof TileLayer) this.loadImage(icon, images.lc_raster);
+      if (l instanceof TileLayer) this.loadImage(icon, images.lc_raster,this.getLegendImage);
       if (l instanceof VectorLayer && typeof l.getStyle() === "function") {
         let style = l.getStyle().call(this, undefined, this.map.getView().getResolution());
-        style = Array.isArray(style) ? style : [style]; 
+        style = Array.isArray(style) ? style : [style];
         if (style.length > 1) {
-          this.loadImage(icon, images.lc_theme);
+          this.loadImage(icon, images.lc_theme, this.getLegendImage);
           for (const s of style) {
             const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
             thematic.appendChild(icon);
@@ -87,10 +87,11 @@ export default class Legend extends Toggle {
             if (!s.getFill() && s.getStroke()) vctx.drawGeometry(linestring);
             const imageStyle = s.getImage();
             if (imageStyle instanceof Icon) {
-              this.loadImage(icon, imageStyle.getSrc());
+              this.loadImage(icon, imageStyle.getSrc(),this.getLegendImage);
             } else {
               vctx.drawGeometry(point);
             }
+            this.getLegendImage(icon)
           }
         }
         if (style.length === 1) {
@@ -104,25 +105,29 @@ export default class Legend extends Toggle {
           if (!style.getFill() && style.getStroke()) vctx.drawGeometry(linestring);
           const imageStyle = style.getImage();
           if (imageStyle instanceof Icon) {
-            this.loadImage(icon, imageStyle.getSrc());
+            this.loadImage(icon, imageStyle.getSrc(), this.getLegendImage);
           } else {
             vctx.drawGeometry(point);
+            
           }
+          this.getLegendImage(icon)
         }
       }
     }
   }
-  loadImage(icon, src) {
+  loadImage(icon, src, callback) {
     const img = new Image();
     const ctx = icon.getContext("2d");
-    img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
+      if (callback) callback.call(this,icon);
+    };
     img.src = src;
   }
-  getLegendImage(){
-    for(const item of this.main.children){
-      const icon = item.firstChild.toDataURL();
+  getLegendImage(icon) {
+    if(icon) console.log(icon.toDataURL());
+    for (const item of this.main.children) {
       const label = item.childNodes[1].innerText;
-      console.log(icon,label)
     }
   }
 }
