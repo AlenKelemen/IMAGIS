@@ -65,11 +65,12 @@ ux.aside.home.setVisible(ux.header.home.getActive());
 
 map.legend =  new Legend({
   target: ux.aside,
-  map:map
 });
 ux.aside.home.addControl(
   map.legend
 );
+map.legend.getLegendImage()
+
 ux.aside.home.addControl(
   new Project({
     target: ux.aside,

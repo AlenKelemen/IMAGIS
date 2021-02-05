@@ -7,6 +7,7 @@ import { toContext } from "ol/render";
 import { Icon, Style } from "ol/style";
 import { LineString, Point, Polygon } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
+import TileLayer from "ol/layer/Tile";
 const images = require("../img/*.png");
 /** Legend
  * @constructor
@@ -37,86 +38,17 @@ export default class Legend extends Toggle {
     this.footer = elt("footer", { className: `footer ol-control` }, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
     this.setContent();
+
+    this.map.getView().on("change:resolution", (evt) => this.setContent());
     this.legendCanvas = elt("canvas", { width: 100, height: 300 });
-
-    //this.map.getView().on("change:resolution", evt => this.setContent())
   }
-
   setContent(iconSize = [16, 16]) {
-    const loadImage = (url) =>
-      new Promise((resolve, reject) => {
-        const img = new Image();
-        img.addEventListener("load", () => resolve(img));
-        img.addEventListener("error", (err) => reject(err));
-        img.src = url;
-      });
     this.main.innerHTML = "";
-    const r = [];
     const ls = this.map
       .getLayers()
       .getArray()
       .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
       .reverse(); //sort layers by index
-    for (const [i, l] of ls.entries()) {
-      if (l instanceof VectorLayer) {
-        if (l.getStyle()) {
-          const style = l.getStyle().call(this, undefined, this.map.getView().getResolution());
-          if (Array.isArray(style) || style.length > 1) {
-            
-          }
-        }
-        r.push(loadImage(images.lc_theme));
-      } else {
-        r.push(loadImage(images.lc_raster));
-      }
-    }
-    Promise.all(r).then((imgs) => {
-      for (const [i, img] of imgs.entries()) {
-        const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
-        const ctx = icon.getContext("2d");
-        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
-        this.main.appendChild(icon);
-        const lCtx = this.legendCanvas.getContext("2d");
-        lCtx.drawImage(icon, 0, 0, 16, 16, 2, 2 + i * 18, 16, 16);
-      }
-      console.log(this.legendCanvas.toDataURL());
-    });
-  }
-
-  getImage(size = [100, 100]) {
-    const m = new Image();
-    const c = elt("canvas", { width: size[0], height: size[1] });
-    const ctx = c.getContext("2d");
-    const ls = this.map
-      .getLayers()
-      .getArray()
-      .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
-      .reverse(); //sort layers by index
-    for (const [i, l] of ls.entries()) {
-      if (!l.get("name")) l.set("name", i);
-      if (!l.get("label")) l.set("label", l.get("name"));
-      const icons = this.styleIcon(l instanceof VectorLayer ? l.getStyle() : undefined);
-      for (const i of icons) {
-        ctx.drawImage(i, 0, 0);
-        console.log(i.toDataURL());
-      }
-    }
-    //return c.toDataURL();
-  }
-  /**
-   * Layer style icons
-   *
-   * @param {Object} style ol/style
-   * @param {Array} [iconSize=[16, 16]] canvas size
-   * @return {Array} canvas icons
-   * @memberof Legend
-   */
-
-  styleIcon(style, iconSize = [16, 16]) {
-    const r = [];
-    if (typeof style === "function") style = style.call(this, undefined, this.map.getView().getResolution());
-    else if (typeof style === "object" && Array.isArray(style) === false) style = [style];
-    console.log(style);
     const polygon = new Polygon([
       [
         [0, 0],
@@ -131,26 +63,66 @@ export default class Legend extends Toggle {
       [iconSize[0], iconSize[1]],
     ]);
     const point = new Point([iconSize[0] / 2, iconSize[1] / 2]);
-    const loadImage = (url) =>
-      new Promise((resolve, reject) => {
-        const img = new Image();
-        img.addEventListener("load", () => resolve(img));
-        img.addEventListener("error", (err) => reject(err));
-        img.src = url;
-      });
-    if (style !== undefined) {
-      for (const [i, s] of Object.entries(style)) {
-        r.push(loadImage(images.lc_raster));
+    for (const l of ls) {
+      const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
+      const label = elt("label", {}, l.get("label") || l.get("name"));
+      const thematic = elt("div", { className: `thematic` });
+      const item = elt("div", { className: "item", dataName: `${l.get("name")}` }, icon, label, thematic);
+      this.main.appendChild(item);
+      if (l instanceof TileLayer) this.loadImage(icon, images.lc_raster);
+      if (l instanceof VectorLayer && typeof l.getStyle() === "function") {
+        let style = l.getStyle().call(this, undefined, this.map.getView().getResolution());
+        style = Array.isArray(style) ? style : [style]; 
+        if (style.length > 1) {
+          this.loadImage(icon, images.lc_theme);
+          for (const s of style) {
+            const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
+            thematic.appendChild(icon);
+            const ctx = icon.getContext("2d");
+            const vctx = toContext(ctx, {
+              size: iconSize,
+            });
+            vctx.setStyle(s);
+            if (s.getFill()) vctx.drawGeometry(polygon);
+            if (!s.getFill() && s.getStroke()) vctx.drawGeometry(linestring);
+            const imageStyle = s.getImage();
+            if (imageStyle instanceof Icon) {
+              this.loadImage(icon, imageStyle.getSrc());
+            } else {
+              vctx.drawGeometry(point);
+            }
+          }
+        }
+        if (style.length === 1) {
+          style = style[0];
+          const ctx = icon.getContext("2d");
+          const vctx = toContext(ctx, {
+            size: iconSize,
+          });
+          vctx.setStyle(style);
+          if (style.getFill()) vctx.drawGeometry(polygon);
+          if (!style.getFill() && style.getStroke()) vctx.drawGeometry(linestring);
+          const imageStyle = style.getImage();
+          if (imageStyle instanceof Icon) {
+            this.loadImage(icon, imageStyle.getSrc());
+          } else {
+            vctx.drawGeometry(point);
+          }
+        }
       }
     }
-
-    Promise.all(r).then((imgs) => {
-      for (const img of imgs) {
-        const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
-        const ctx = icon.getContext("2d");
-        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
-        console.log(icon, img);
-      }
-    });
+  }
+  loadImage(icon, src) {
+    const img = new Image();
+    const ctx = icon.getContext("2d");
+    img.onload = () => ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
+    img.src = src;
+  }
+  getLegendImage(){
+    for(const item of this.main.children){
+      const icon = item.firstChild.toDataURL();
+      const label = item.childNodes[1].innerText;
+      console.log(icon,label)
+    }
   }
 }

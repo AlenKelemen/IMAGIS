@@ -1,3 +1,4 @@
 {
-    "prettier.printWidth": 512
+    "prettier.printWidth": 512,
+    "terminal.integrated.fontSize":12,
 }
