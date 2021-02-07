@@ -66,6 +66,7 @@ export default class Legend extends Toggle {
     const legendImage = elt("canvas", { className: `icon`, width: legendSize[0], height: legendSize[1] });
     const lictx = legendImage.getContext("2d");
     lictx.font = "12px Verdana";
+    lictx.textBaseline = "middle";
     const loadImage = (url, i) =>
       new Promise((resolve, reject) => {
         const img = new Image();
@@ -84,8 +85,7 @@ export default class Legend extends Toggle {
         style = Array.isArray(style) ? style : [style];
         if (style.length > 1) {
           r.push(loadImage(images.lc_theme, i));
-
-         /*  for (const [k,s] of style.entries()) {
+          for (const [k,s] of style.entries()) {
             i++;
             const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
             const ctx = icon.getContext("2d");
@@ -105,9 +105,11 @@ export default class Legend extends Toggle {
             const imagStyle = l.get('imagis-style')[k];
             if(imagStyle && imagStyle.filter){
               const text = `${imagStyle.filter.property} ${imagStyle.filter.operator} ${imagStyle.filter.value}`;
-              lictx.fillText(text, 24, i * 16);
+              lictx.fillText(text, 48, 8+i * 16);
             }
-          } */
+          }
+          const labelText = l.get("label") || l.get("name");
+          lictx.fillText(labelText, 32, 8+i * 16);
         }
         if (style.length === 1) {
           style = style[0];
@@ -125,11 +127,11 @@ export default class Legend extends Toggle {
             vctx.drawGeometry(point);
           }
           lictx.drawImage(icon, 0, i * 16);
+          const labelText = l.get("label") || l.get("name");
+      lictx.fillText(labelText, 32, 8+i * 16);
         }
       }
-      const labelText = l.get("label") || l.get("name");
-      lictx.fillText(labelText, 24, i * 16);
-      console.log(labelText, 24, i * 16)
+      
       i++;
     }
     Promise.all(r).then((imgs) => {
