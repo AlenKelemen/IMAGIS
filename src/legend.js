@@ -35,13 +35,15 @@ export default class Legend extends Toggle {
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
-    this.footer = elt("footer", { className: `footer ol-control` }, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
+    this.image = elt("a", { className: "download-image"}, elt('i',{className:'far fa-arrow-to-bottom fa-fw'}));
+    this.footer = elt("footer", { className: `footer ol-control` }, this.image, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
+
     this.setContent();
 
     this.map.getView().on("change:resolution", (evt) => this.setContent());
   }
-  getLegendImage(legendSize = [100, 300], iconSize = [16, 16]) {
+  getLegendImage(linkElement, legendSize = [400, 400], iconSize = [16, 16]) {
     const ls = this.map
       .getLayers()
       .getArray()
@@ -63,6 +65,7 @@ export default class Legend extends Toggle {
     const point = new Point([iconSize[0] / 2, iconSize[1] / 2]);
     const legendImage = elt("canvas", { className: `icon`, width: legendSize[0], height: legendSize[1] });
     const lictx = legendImage.getContext("2d");
+    lictx.font = "12px Verdana";
     const loadImage = (url, i) =>
       new Promise((resolve, reject) => {
         const img = new Image();
@@ -72,7 +75,7 @@ export default class Legend extends Toggle {
       });
     let icon;
     const r = [];
-    let i=0;
+    let i = 0;
     for (const [j, l] of ls.entries()) {
       if (l instanceof TileLayer) r.push(loadImage(images.lc_raster, i));
       if (l instanceof VectorLayer && typeof l.getStyle() === "function") {
@@ -81,7 +84,8 @@ export default class Legend extends Toggle {
         style = Array.isArray(style) ? style : [style];
         if (style.length > 1) {
           r.push(loadImage(images.lc_theme, i));
-          for (const s of style) {
+
+         /*  for (const [k,s] of style.entries()) {
             i++;
             const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
             const ctx = icon.getContext("2d");
@@ -98,7 +102,12 @@ export default class Legend extends Toggle {
               vctx.drawGeometry(point);
             }
             lictx.drawImage(icon, 16, i * 16);
-          }
+            const imagStyle = l.get('imagis-style')[k];
+            if(imagStyle && imagStyle.filter){
+              const text = `${imagStyle.filter.property} ${imagStyle.filter.operator} ${imagStyle.filter.value}`;
+              lictx.fillText(text, 24, i * 16);
+            }
+          } */
         }
         if (style.length === 1) {
           style = style[0];
@@ -118,8 +127,10 @@ export default class Legend extends Toggle {
           lictx.drawImage(icon, 0, i * 16);
         }
       }
-      lictx.fillText(l.get("label") || l.get("name"),16,i*16)
-      i++
+      const labelText = l.get("label") || l.get("name");
+      lictx.fillText(labelText, 24, i * 16);
+      console.log(labelText, 24, i * 16)
+      i++;
     }
     Promise.all(r).then((imgs) => {
       for (const img of imgs) {
@@ -128,7 +139,12 @@ export default class Legend extends Toggle {
         ctx.drawImage(img[0], 0, 0, img[0].width, img[0].height, 0, 0, icon.width, icon.height);
         lictx.drawImage(icon, 0, img[1] * 16);
       }
-      console.log(legendImage.toDataURL());
+      const ex = elt("canvas", { className: `icon`, width: legendImage.width, height: legendImage.height });
+      const exCtx = ex.getContext("2d");
+      exCtx.drawImage(legendImage,0,0)
+      
+      this.image.href=ex.toDataURL();
+      this.image.download='legend.png'
     });
   }
   setContent(iconSize = [16, 16]) {
@@ -164,9 +180,15 @@ export default class Legend extends Toggle {
         style = Array.isArray(style) ? style : [style];
         if (style.length > 1) {
           this.loadImage(icon, images.lc_theme);
-          for (const s of style) {
-            const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
-            thematic.appendChild(icon);
+          for (const [i,s] of style.entries()) {
+            const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] }); 
+            const label = elt("label",{}, ``);
+            const item = elt("div", { className: "item", dataName: `${l.get("name")}` }, icon, label);
+            thematic.appendChild(item);
+            const imagStyle = l.get('imagis-style')[i];
+            if(imagStyle && imagStyle.filter){
+              label.innerHTML= `${imagStyle.filter.property} ${imagStyle.filter.operator} ${imagStyle.filter.value}`;
+            }
             const ctx = icon.getContext("2d");
             const vctx = toContext(ctx, {
               size: iconSize,
