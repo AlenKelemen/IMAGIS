@@ -91,18 +91,8 @@ body {
   font-size: 1em;
   padding:4px;
   }
-.taskpane a{
+.taskpane .download-image{
   float: left;
-  margin: 1px;
-  color: white;
-  text-align: center;
-  height: 1.375em;
-  width: 1.375em;
-  line-height: .4em;
-  background-color: rgba(0,60,136,0.5);
-  border: none;
-  border-radius: 2px;
-
 }
 .taskpane .main .item canvas{
   vertical-align: middle;

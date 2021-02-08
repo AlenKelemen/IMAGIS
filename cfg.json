@@ -480,7 +480,7 @@
             "name": "podrucjeZgrada",
             "label": "Područje, parcela, zgrada (poligoni)",
             "info": "",
-            "maxResolution": 500,
+            "maxResolution": 10,
             "visible": true,
             "zIndex": 100,
             "style": [{

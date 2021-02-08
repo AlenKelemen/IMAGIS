@@ -226,7 +226,6 @@ export default class Config {
       const styles = [];
       for (const s of sp) {
         let style = new Style();
-
         let filterFlag = true,
           resFlag = true;
         if (s.filter && feature) {

@@ -69,7 +69,7 @@ map.legend =  new Legend({
 ux.aside.home.addControl(
   map.legend
 );
-map.legend.getLegendImage()
+
 
 ux.aside.home.addControl(
   new Project({
