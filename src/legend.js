@@ -76,8 +76,8 @@ export default class Legend extends Toggle {
       });
   }
 
-  getLegendImage(legendSize = [400, 400], font = "12px Verdana") {
-    const legendImage = elt("canvas", { width: legendSize[0], height: legendSize[1] });
+  getLegendImage(background='white',size = [200, 200], font = "12px Verdana") {
+    const legendImage = elt("canvas", { width: size[0], height: size[1] });
     const lictx = legendImage.getContext("2d");
     const icons = [];
     const res = this.map.getView().getResolution();
@@ -88,8 +88,8 @@ export default class Legend extends Toggle {
         if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false, layer.get("label") || layer.get("name")));
         if (layer instanceof VectorLayer) {
           const style = layer.getStyle().call(this, undefined, res);
-          const item = (style, thematic = false, text ='') => {
-            if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc(),thematic,layer.get("label") || layer.get("name")));
+          const item = (style, thematic = false, text = "") => {
+            if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc(), thematic, layer.get("label") || layer.get("name")));
             else
               icons.push(
                 new Promise((resolve, reject) => {
@@ -107,20 +107,21 @@ export default class Legend extends Toggle {
                   if (thematic) {
                     eCtx.drawImage(icon, 16, 0);
                   }
-                  thematic ? eCtx.drawImage(icon, 16, 0): eCtx.drawImage(icon, 0, 0);
+                  thematic ? eCtx.drawImage(icon, 16, 0) : eCtx.drawImage(icon, 0, 0);
                   ctx.textBaseline = "middle";
                   thematic ? eCtx.fillText(text, 40, 8) : eCtx.fillText(text, 24, 8);
                   resolve({ icon: ex });
                 })
               );
           };
-          if (style.length === 1) item(style[0],false,layer.get("legend") || layer.get("name"));
+          if (style.length === 1) item(style[0], false, layer.get("legend") || layer.get("name"));
           if (style.length > 1) {
-            icons.push(this.loadImage(images.lc_theme,false,layer.get("label") || layer.get("name")));
-            for (const [i,s] of style.entries()) {
-              const f = layer.get('imagis-style')[i].filter
+            icons.push(this.loadImage(images.lc_theme, false, layer.get("label") || layer.get("name")));
+            for (const [i, s] of style.entries()) {
+              const f = layer.get("imagis-style")[i].filter;
               const text = `${f.property} ${f.operator}  ${f.value} `;
-              item(s, true,text);}
+              item(s, true, text);
+            }
           }
         }
       }
@@ -133,6 +134,9 @@ export default class Legend extends Toggle {
       .map((x) => make(x));
 
     Promise.all(icons).then((res) => {
+      legendImage.height = res.length *16;
+      lictx.fillStyle = background;
+      lictx.fillRect(0, 0, legendImage.width, legendImage.height);
       for (const [i, v] of res.entries()) {
         lictx.drawImage(v.icon, 16, i * 16);
       }
