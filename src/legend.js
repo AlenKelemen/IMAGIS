@@ -38,31 +38,28 @@ export default class Legend extends Toggle {
     this.image = elt("button", { className: "download-image" }, elt("i", { className: "far fa-arrow-to-bottom fa-fw" }));
     this.footer = elt("footer", { className: `footer ol-control` }, this.image, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
-    this.setContent();
-    this.map.getView().on("change:resolution", (evt) => this.setContent());
-
-    this.iconSize = options.iconSize || [16, 16]; //legend icons size
     this.symbols = {
       polygon: new Polygon([
         [
           [0, 0],
-          [this.iconSize[0], 0],
-          [this.iconSize[0], this.iconSize[1]],
-          [0, this.iconSize[1]],
+          [16, 0],
+          [16, 16],
+          [0, 16],
           [0, 0],
         ],
       ]),
       linestring: new LineString([
         [0, 0],
-        [this.iconSize[0], this.iconSize[1]],
+        [16, 16],
       ]),
-      point: new Point([this.iconSize[0] / 2, this.iconSize[1] / 2]),
+      point: new Point([16 / 2, 16 / 2]),
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage());
-
-    this.loadImage = (url, thematic = false, text) =>
+    //thematic = true moves icon 16px to right, text right of icon (label text)
+    this.loadImage = (url, thematic = false, text = "") =>
       new Promise((resolve, reject) => {
-        const icon = elt("canvas", { width: 400, height: 16 });
+        const icon = elt("canvas", { width: 200, height: 16 });
+        text ? (icon.width = 200) : (icon.width = 16); //text ='' > no need for wide icon
         const ctx = icon.getContext("2d");
         const img = new Image();
         img.addEventListener("load", () => {
@@ -74,9 +71,30 @@ export default class Legend extends Toggle {
         img.addEventListener("error", (err) => reject(err));
         img.src = url;
       });
+    this.setContent();
+    this.map.getView().on("change:resolution", (evt) => this.setContent());
   }
 
-  getLegendImage(background='white',size = [200, 200], font = "12px Verdana") {
+  setContent() {
+    const icons = [];
+    const layer = this.map.getLayers().item(0);
+
+    if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false));
+
+    Promise.all(icons).then((res) => {
+      this.main.innerHTML = "";
+      for (const [i, v] of res.entries()) {
+        const item = elt("div", { className: "item" }, v.icon, elt("span", {}, layer.get("label") || layer.get("name")));
+        this.main.appendChild(item);
+        const res = this.map.getView().getResolution();
+        const inRes = res <= layer.getMaxResolution() && res >= layer.getMinResolution();
+        if (layer.getVisible() && inRes) item.style.opacity = "1";
+        else item.style.opacity = "0.4";
+      }
+    });
+  }
+
+  getLegendImage(background = "white", size = [200, 200], font = "12px Verdana") {
     const legendImage = elt("canvas", { width: size[0], height: size[1] });
     const lictx = legendImage.getContext("2d");
     const icons = [];
@@ -98,7 +116,7 @@ export default class Legend extends Toggle {
                   const icon = elt("canvas", { width: 16, height: 16 });
                   const ctx = icon.getContext("2d");
                   const vctx = toContext(ctx, {
-                    size: [16, 16], //this.iconSize,
+                    size: [16, 16], //iconSize,
                   });
                   vctx.setStyle(style);
                   if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
@@ -132,9 +150,8 @@ export default class Legend extends Toggle {
       .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
       .reverse()
       .map((x) => make(x));
-
     Promise.all(icons).then((res) => {
-      legendImage.height = res.length *16;
+      legendImage.height = res.length * 16;
       lictx.fillStyle = background;
       lictx.fillRect(0, 0, legendImage.width, legendImage.height);
       for (const [i, v] of res.entries()) {
@@ -144,18 +161,5 @@ export default class Legend extends Toggle {
       a.click();
       a.remove();
     });
-  }
-
-  setContent() {
-    this.main.innerHTML = "";
-  }
-  loadImage_(icon, src, callback) {
-    const img = new Image();
-    const ctx = icon.getContext("2d");
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, icon.width, icon.height);
-      if (callback) callback.call(this, icon);
-    };
-    img.src = src;
   }
 }

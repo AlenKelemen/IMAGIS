@@ -416,7 +416,8 @@
             "info": "",
             "visible": true,
             "opacity": 0.7,
-            "zIndex":0
+            "zIndex":0,
+            "maxResolution": 10
         },
         {
             "source": "Bing",
