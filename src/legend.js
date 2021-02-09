@@ -59,15 +59,16 @@ export default class Legend extends Toggle {
       point: new Point([this.iconSize[0] / 2, this.iconSize[1] / 2]),
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage());
-    this.loadImage = (url, thematic = false, thematicText) =>
+
+    this.loadImage = (url, thematic = false, text) =>
       new Promise((resolve, reject) => {
-        const icon = elt("canvas", { className: `icon`, width: 100, height: 16});
+        const icon = elt("canvas", { width: 400, height: 16 });
         const ctx = icon.getContext("2d");
         const img = new Image();
         img.addEventListener("load", () => {
-          thematic ? ctx.drawImage(img, 0, 0, img.width, img.height, 16, 0, 16,16) :ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16,16); 
-          ctx.textBaseline = 'middle';
-          thematic ? ctx.fillText(thematicText, 40, 8):ctx.fillText(thematicText, 24, 8);
+          thematic ? ctx.drawImage(img, 0, 0, img.width, img.height, 16, 0, 16, 16) : ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
+          ctx.textBaseline = "middle";
+          thematic ? ctx.fillText(text, 40, 8) : ctx.fillText(text, 24, 8);
           resolve({ icon: icon });
         });
         img.addEventListener("error", (err) => reject(err));
@@ -76,7 +77,7 @@ export default class Legend extends Toggle {
   }
 
   getLegendImage(legendSize = [400, 400], font = "12px Verdana") {
-    const legendImage = elt("canvas", { className: `icon`, width: legendSize[0], height: legendSize[1] });
+    const legendImage = elt("canvas", { width: legendSize[0], height: legendSize[1] });
     const lictx = legendImage.getContext("2d");
     const icons = [];
     const res = this.map.getView().getResolution();
@@ -84,31 +85,42 @@ export default class Legend extends Toggle {
     const make = (layer) => {
       const inRes = res <= layer.getMaxResolution() && res >= layer.getMinResolution();
       if (layer.getVisible() && inRes) {
-        if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster));
+        if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false, layer.get("label") || layer.get("name")));
         if (layer instanceof VectorLayer) {
           const style = layer.getStyle().call(this, undefined, res);
-          const item = (style, thematic = false,thematicText) => {
-            if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc()));
+          const item = (style, thematic = false, text ='') => {
+            if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc(),thematic,layer.get("label") || layer.get("name")));
             else
               icons.push(
                 new Promise((resolve, reject) => {
-                  const icon = elt("canvas", { className: `icon`, width: 100, height: 16 });
+                  const ex = elt("canvas", { width: 400, height: 16 });
+                  const eCtx = ex.getContext("2d");
+                  const icon = elt("canvas", { width: 16, height: 16 });
                   const ctx = icon.getContext("2d");
                   const vctx = toContext(ctx, {
-                    size: [16,16]//this.iconSize,
+                    size: [16, 16], //this.iconSize,
                   });
                   vctx.setStyle(style);
                   if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
                   if (!style.getFill() && style.getStroke()) vctx.drawGeometry(this.symbols.linestring);
                   vctx.drawGeometry(this.symbols.point);
-                  resolve({ icon: icon });
+                  if (thematic) {
+                    eCtx.drawImage(icon, 16, 0);
+                  }
+                  thematic ? eCtx.drawImage(icon, 16, 0): eCtx.drawImage(icon, 0, 0);
+                  ctx.textBaseline = "middle";
+                  thematic ? eCtx.fillText(text, 40, 8) : eCtx.fillText(text, 24, 8);
+                  resolve({ icon: ex });
                 })
               );
           };
-          if (style.length === 1) item(style[0]);
+          if (style.length === 1) item(style[0],false,layer.get("legend") || layer.get("name"));
           if (style.length > 1) {
-            icons.push(this.loadImage(images.lc_theme));
-            for (const s of style) item(s, true);
+            icons.push(this.loadImage(images.lc_theme,false,layer.get("label") || layer.get("name")));
+            for (const [i,s] of style.entries()) {
+              const f = layer.get('imagis-style')[i].filter
+              const text = `${f.property} ${f.operator}  ${f.value} `;
+              item(s, true,text);}
           }
         }
       }
