@@ -56,7 +56,7 @@ export default class Legend extends Toggle {
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage());
     //thematic = true moves icon 16px to right, text right of icon (label text)
-    this.loadImage = (url, thematic = false, text = "") =>
+    this.loadImage = (url, thematic = false, text = "", layer) =>
       new Promise((resolve, reject) => {
         const icon = elt("canvas", { width: 200, height: 16 });
         text ? (icon.width = 200) : (icon.width = 16); //text ='' > no need for wide icon
@@ -66,7 +66,7 @@ export default class Legend extends Toggle {
           thematic ? ctx.drawImage(img, 0, 0, img.width, img.height, 16, 0, 16, 16) : ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
           ctx.textBaseline = "middle";
           thematic ? ctx.fillText(text, 40, 8) : ctx.fillText(text, 24, 8);
-          resolve({ icon: icon });
+          resolve({ icon: icon, layer: layer });
         });
         img.addEventListener("error", (err) => reject(err));
         img.src = url;
@@ -77,18 +77,51 @@ export default class Legend extends Toggle {
 
   setContent() {
     const icons = [];
-    const layer = this.map.getLayers().item(0);
+    const res = this.map.getView().getResolution();
+    const make = (layer) => {
+      if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false, "", layer));
+      if (layer instanceof VectorLayer) {
+        console.log(layer.get('name'))
+        const style = layer.getStyle().call(this, undefined, res);
+        const item = (style, thematic = false, text = "", layer) => {
+          if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc(), thematic));
+          else
+            icons.push(
+              new Promise((resolve, reject) => {
+                const ex = elt("canvas", { width: 32, height: 16 });
+                const eCtx = ex.getContext("2d");
+                const icon = elt("canvas", { width: 16, height: 16 });
+                const ctx = icon.getContext("2d");
+                const vctx = toContext(ctx, {
+                  size: [16, 16], //iconSize,
+                });
+                vctx.setStyle(style);
+                if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
+                if (!style.getFill() && style.getStroke()) vctx.drawGeometry(this.symbols.linestring);
+                vctx.drawGeometry(this.symbols.point);
+                thematic ? eCtx.drawImage(icon, 16, 0) : eCtx.drawImage(icon, 0, 0);
+                resolve({ icon: ex, layer: layer });
+              })
+            );
+        };
+        if (style.length === 1) item(style[0], false, '',layer);
+      }
+    };
 
-    if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false));
-
-    Promise.all(icons).then((res) => {
+    this.map
+      .getLayers()
+      .getArray()
+      .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
+      .reverse()
+      .map((x) => make(x));
+    Promise.all(icons).then((r) => {
       this.main.innerHTML = "";
-      for (const [i, v] of res.entries()) {
-        const item = elt("div", { className: "item" }, v.icon, elt("span", {}, layer.get("label") || layer.get("name")));
+      for (const [i, v] of r.entries()) {
+        console.log(v.layer);
+        const item = elt("div", { className: "item" }, v.icon, elt("span", {}));
         this.main.appendChild(item);
-        const res = this.map.getView().getResolution();
-        const inRes = res <= layer.getMaxResolution() && res >= layer.getMinResolution();
-        if (layer.getVisible() && inRes) item.style.opacity = "1";
+        const inRes = res <= v.layer.getMaxResolution() && res >= v.layer.getMinResolution();
+        if (v.layer.getVisible() && inRes) item.style.opacity = "1";
         else item.style.opacity = "0.4";
       }
     });
@@ -128,7 +161,7 @@ export default class Legend extends Toggle {
                   thematic ? eCtx.drawImage(icon, 16, 0) : eCtx.drawImage(icon, 0, 0);
                   ctx.textBaseline = "middle";
                   thematic ? eCtx.fillText(text, 40, 8) : eCtx.fillText(text, 24, 8);
-                  resolve({ icon: ex });
+                  resolve({ icon: ex, layer: layer });
                 })
               );
           };
