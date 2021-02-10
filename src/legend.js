@@ -66,7 +66,7 @@ export default class Legend extends Toggle {
    * @return {Promise}
    */
 
-  drawIcon(style, label, thematic) {
+  drawIcon(style, label, thematic, visible) {
     if (!style || style.length) return;
     return new Promise((resolve, reject) => {
       const icon = elt("canvas", { width: 16, height: 16 });
@@ -81,21 +81,21 @@ export default class Legend extends Toggle {
         const img = new Image();
         img.addEventListener("load", () => {
           ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-          resolve({ icon: icon, label: label, thematic: thematic });
+          resolve({ icon: icon, label: label, thematic: thematic,visible:visible });
         });
       }
       vctx.drawGeometry(this.symbols.point);
-      resolve({ icon: icon, label: label, thematic: thematic });
+      resolve({ icon: icon, label: label, thematic: thematic,visible:visible });
     });
   }
-  loadImage(url, label, thematic) {
+  loadImage(url, label, thematic, visible) {
     return new Promise((resolve, reject) => {
       const icon = elt("canvas", { width: 16, height: 16 });
       const ctx = icon.getContext("2d");
       const img = new Image();
       img.addEventListener("load", () => {
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-        resolve({ icon: icon, label: label, thematic: thematic });
+        resolve({ icon: icon, label: label, thematic: thematic,visible:visible });
       });
       img.src = url;
     });
@@ -130,11 +130,12 @@ export default class Legend extends Toggle {
       const labelsInfo = this.getLabels(l, this.getStyles(l, resolution));
       const stylesInfo = this.getStyles(l, resolution);
       const label = labelsInfo.label;
-      if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false));
-      if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false));
+      const visible = l.getVisible() && resolution <= l.getMaxResolution() && resolution >= l.getMinResolution();
+      if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false, visible));
+      if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false, visible));
       for (const [i, style] of stylesInfo.styles.entries()) {
         if (labelsInfo.thematic[i]) label = labelsInfo.thematic[i];
-        promises.push(this.drawIcon(style, label, labelsInfo.thematic.length !== 0));
+        promises.push(this.drawIcon(style, label, labelsInfo.thematic.length !== 0, visible));
       }
     }
     return promises;
@@ -150,29 +151,28 @@ export default class Legend extends Toggle {
   getLegendImage() {
     const promises = this.getItemsContent();
     const legendImage = (items) => {
-      const canvas = elt("canvas", { width: 400, height: 16 * items });
+      const canvas = elt("canvas", { width: 400, height: 18 * items });
       const ctx = canvas.getContext("2d");
-     ctx.fillStyle = "white";
+      ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "black";
-      ctx.textBaseline = "middle"; 
+      ctx.textBaseline = "middle";
       return canvas;
     };
     Promise.all(promises).then((r) => {
-      console.log(r.icon);
       const canvas = legendImage(r.length);
       const ctx = canvas.getContext("2d");
+      r=r.filter(x => x.visible)
       for (const [i, v] of r.entries()) {
-        console.log(i, v);
-        if (v.thematic) {
-          ctx.drawImage(v.icon, 16, i * 16);
-          ctx.fillText(v.label, 40, i * 16 + 8);
-        } else {
-          ctx.drawImage(v.icon, 0, i * 16);
-          ctx.fillText(v.label, 24, i * 16 + 8);
-        }
+          console.log(i, v);
+          if (v.thematic) {
+            ctx.drawImage(v.icon, 16, i * 18);
+            ctx.fillText(v.label, 40, i * 18 + 8);
+          } else {
+            ctx.drawImage(v.icon, 0, i * 18);
+            ctx.fillText(v.label, 24, i * 18 + 8);
+          }
       }
-      console.log(canvas);
       const a = elt("a", { href: canvas.toDataURL(), download: "legend.png" });
       a.click();
       a.remove();
