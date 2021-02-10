@@ -55,142 +55,125 @@ export default class Legend extends Toggle {
       point: new Point([16 / 2, 16 / 2]),
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage());
-    //thematic = true moves icon 16px to right, text right of icon (label text)
-    this.loadImage = (url, thematic = false, text = "", layer) =>
-      new Promise((resolve, reject) => {
-        const icon = elt("canvas", { width: 200, height: 16 });
-        text ? (icon.width = 200) : (icon.width = 16); //text ='' > no need for wide icon
-        const ctx = icon.getContext("2d");
-        const img = new Image();
-        img.addEventListener("load", () => {
-          thematic ? ctx.drawImage(img, 0, 0, img.width, img.height, 16, 0, 16, 16) : ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-          ctx.textBaseline = "middle";
-          thematic ? ctx.fillText(text, 40, 8) : ctx.fillText(text, 24, 8);
-          resolve({ icon: icon, layer: layer });
-        });
-        img.addEventListener("error", (err) => reject(err));
-        img.src = url;
-      });
     this.setContent();
     this.map.getView().on("change:resolution", (evt) => this.setContent());
   }
+  /**
+   *Style icon
+   *
+   * @param {Array} style
+   * @memberof Legend
+   * @return {Promise}
+   */
 
-  setContent() {
-    const icons = [];
-    const res = this.map.getView().getResolution();
-    const make = (layer) => {
-      if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false, "", layer));
-      if (layer instanceof VectorLayer) {
-        console.log(layer.get('name'))
-        const style = layer.getStyle().call(this, undefined, res);
-        const item = (style, thematic = false, text = "", layer) => {
-          if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc(), thematic));
-          else
-            icons.push(
-              new Promise((resolve, reject) => {
-                const ex = elt("canvas", { width: 32, height: 16 });
-                const eCtx = ex.getContext("2d");
-                const icon = elt("canvas", { width: 16, height: 16 });
-                const ctx = icon.getContext("2d");
-                const vctx = toContext(ctx, {
-                  size: [16, 16], //iconSize,
-                });
-                vctx.setStyle(style);
-                if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
-                if (!style.getFill() && style.getStroke()) vctx.drawGeometry(this.symbols.linestring);
-                vctx.drawGeometry(this.symbols.point);
-                thematic ? eCtx.drawImage(icon, 16, 0) : eCtx.drawImage(icon, 0, 0);
-                resolve({ icon: ex, layer: layer });
-              })
-            );
-        };
-        if (style.length === 1) item(style[0], false, '',layer);
+  drawIcon(style, label, thematic) {
+    if (!style || style.length) return;
+    return new Promise((resolve, reject) => {
+      const icon = elt("canvas", { width: 16, height: 16 });
+      const ctx = icon.getContext("2d");
+      const vctx = toContext(ctx, {
+        size: [16, 16],
+      });
+      vctx.setStyle(style);
+      if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
+      if (!style.getFill() && style.getStroke()) vctx.drawGeometry(this.symbols.linestring);
+      if (style.getImage() && style.getImage() instanceof Icon) {
+        const img = new Image();
+        img.addEventListener("load", () => {
+          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
+          resolve({ icon: icon, label: label, thematic: thematic });
+        });
       }
-    };
-
-    this.map
+      vctx.drawGeometry(this.symbols.point);
+      resolve({ icon: icon, label: label, thematic: thematic });
+    });
+  }
+  loadImage(url, label, thematic) {
+    return new Promise((resolve, reject) => {
+      const icon = elt("canvas", { width: 16, height: 16 });
+      const ctx = icon.getContext("2d");
+      const img = new Image();
+      img.addEventListener("load", () => {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
+        resolve({ icon: icon, label: label, thematic: thematic });
+      });
+      img.src = url;
+    });
+  }
+  getStyles(layer, resolution) {
+    if (layer instanceof VectorLayer) {
+      if (!(layer.getStyle() && typeof layer.getStyle() === "function")) return;
+      const styles = layer.getStyle().call(this, undefined, resolution);
+      if (!Array.isArray(styles)) return;
+      else return { thematic: styles.length > 1, styles: styles };
+    } else return { thematic: false, styles: [] };
+  }
+  getLabels(layer) {
+    const label = layer.get("label") || layer.get("name") || "";
+    const imagisStyle = layer.get("imagis-style");
+    const thematic = [];
+    if (imagisStyle)
+      for (const is of imagisStyle) {
+        if (is.filter) thematic.push(`${is.filter.property} ${is.filter.operator}  ${is.filter.value} `);
+      }
+    return { label: label, thematic: thematic };
+  }
+  getItemsContent() {
+    const promises = [];
+    const resolution = this.map.getView().getResolution();
+    const layers = this.map
       .getLayers()
       .getArray()
       .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
-      .reverse()
-      .map((x) => make(x));
-    Promise.all(icons).then((r) => {
-      this.main.innerHTML = "";
-      for (const [i, v] of r.entries()) {
-        console.log(v.layer);
-        const item = elt("div", { className: "item" }, v.icon, elt("span", {}));
-        this.main.appendChild(item);
-        const inRes = res <= v.layer.getMaxResolution() && res >= v.layer.getMinResolution();
-        if (v.layer.getVisible() && inRes) item.style.opacity = "1";
-        else item.style.opacity = "0.4";
+      .reverse();
+    for (const l of layers) {
+      const labelsInfo = this.getLabels(l, this.getStyles(l, resolution));
+      const stylesInfo = this.getStyles(l, resolution);
+      const label = labelsInfo.label;
+      if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false));
+      if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false));
+      for (const [i, style] of stylesInfo.styles.entries()) {
+        if (labelsInfo.thematic[i]) label = labelsInfo.thematic[i];
+        promises.push(this.drawIcon(style, label, labelsInfo.thematic.length !== 0));
+      }
+    }
+    return promises;
+  }
+  setContent() {
+    const promises = this.getItemsContent();
+    Promise.all(promises).then((r) => {
+      for (const row of r) {
+        console.log(row);
       }
     });
   }
-
-  getLegendImage(background = "white", size = [200, 200], font = "12px Verdana") {
-    const legendImage = elt("canvas", { width: size[0], height: size[1] });
-    const lictx = legendImage.getContext("2d");
-    const icons = [];
-    const res = this.map.getView().getResolution();
-    lictx.textBaseline = "middle";
-    const make = (layer) => {
-      const inRes = res <= layer.getMaxResolution() && res >= layer.getMinResolution();
-      if (layer.getVisible() && inRes) {
-        if (layer instanceof TileLayer) icons.push(this.loadImage(images.lc_raster, false, layer.get("label") || layer.get("name")));
-        if (layer instanceof VectorLayer) {
-          const style = layer.getStyle().call(this, undefined, res);
-          const item = (style, thematic = false, text = "") => {
-            if (style.getImage() && style.getImage() instanceof Icon) icons.push(this.loadImage(style.getImage().getSrc(), thematic, layer.get("label") || layer.get("name")));
-            else
-              icons.push(
-                new Promise((resolve, reject) => {
-                  const ex = elt("canvas", { width: 400, height: 16 });
-                  const eCtx = ex.getContext("2d");
-                  const icon = elt("canvas", { width: 16, height: 16 });
-                  const ctx = icon.getContext("2d");
-                  const vctx = toContext(ctx, {
-                    size: [16, 16], //iconSize,
-                  });
-                  vctx.setStyle(style);
-                  if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
-                  if (!style.getFill() && style.getStroke()) vctx.drawGeometry(this.symbols.linestring);
-                  vctx.drawGeometry(this.symbols.point);
-                  if (thematic) {
-                    eCtx.drawImage(icon, 16, 0);
-                  }
-                  thematic ? eCtx.drawImage(icon, 16, 0) : eCtx.drawImage(icon, 0, 0);
-                  ctx.textBaseline = "middle";
-                  thematic ? eCtx.fillText(text, 40, 8) : eCtx.fillText(text, 24, 8);
-                  resolve({ icon: ex, layer: layer });
-                })
-              );
-          };
-          if (style.length === 1) item(style[0], false, layer.get("legend") || layer.get("name"));
-          if (style.length > 1) {
-            icons.push(this.loadImage(images.lc_theme, false, layer.get("label") || layer.get("name")));
-            for (const [i, s] of style.entries()) {
-              const f = layer.get("imagis-style")[i].filter;
-              const text = `${f.property} ${f.operator}  ${f.value} `;
-              item(s, true, text);
-            }
-          }
+  getLegendImage() {
+    const promises = this.getItemsContent();
+    const legendImage = (items) => {
+      const canvas = elt("canvas", { width: 400, height: 16 * items });
+      const ctx = canvas.getContext("2d");
+     ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "black";
+      ctx.textBaseline = "middle"; 
+      return canvas;
+    };
+    Promise.all(promises).then((r) => {
+      console.log(r.icon);
+      const canvas = legendImage(r.length);
+      const ctx = canvas.getContext("2d");
+      for (const [i, v] of r.entries()) {
+        console.log(i, v);
+        if (v.thematic) {
+          ctx.drawImage(v.icon, 16, i * 16);
+          ctx.fillText(v.label, 40, i * 16 + 8);
+        } else {
+          ctx.drawImage(v.icon, 0, i * 16);
+          ctx.fillText(v.label, 24, i * 16 + 8);
         }
       }
-    };
-    this.map
-      .getLayers()
-      .getArray()
-      .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
-      .reverse()
-      .map((x) => make(x));
-    Promise.all(icons).then((res) => {
-      legendImage.height = res.length * 16;
-      lictx.fillStyle = background;
-      lictx.fillRect(0, 0, legendImage.width, legendImage.height);
-      for (const [i, v] of res.entries()) {
-        lictx.drawImage(v.icon, 16, i * 16);
-      }
-      const a = elt("a", { href: legendImage.toDataURL(), download: "legend.png" });
+      console.log(canvas);
+      const a = elt("a", { href: canvas.toDataURL(), download: "legend.png" });
       a.click();
       a.remove();
     });
