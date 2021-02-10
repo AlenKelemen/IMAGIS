@@ -54,9 +54,9 @@ export default class Legend extends Toggle {
       ]),
       point: new Point([16 / 2, 16 / 2]),
     };
-    this.image.addEventListener("click", (evt) => this.getLegendImage());
-    this.setContent();
-    this.map.getView().on("change:resolution", (evt) => this.setContent());
+    this.image.addEventListener("click", (evt) => this.getLegendImage(this.map.getView().getResolution()));
+    this.setContent(this.map.getView().getResolution());
+    this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
   }
   /**
    *Style icon
@@ -81,11 +81,12 @@ export default class Legend extends Toggle {
         const img = new Image();
         img.addEventListener("load", () => {
           ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-          resolve({ icon: icon, label: label, thematic: thematic,visible:visible });
+          resolve({ icon: icon, label: label, thematic: thematic, visible: visible });
         });
+        img.src=style.getImage().getSrc()
       }
       vctx.drawGeometry(this.symbols.point);
-      resolve({ icon: icon, label: label, thematic: thematic,visible:visible });
+      resolve({ icon: icon, label: label, thematic: thematic, visible: visible });
     });
   }
   loadImage(url, label, thematic, visible) {
@@ -95,7 +96,7 @@ export default class Legend extends Toggle {
       const img = new Image();
       img.addEventListener("load", () => {
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-        resolve({ icon: icon, label: label, thematic: thematic,visible:visible });
+        resolve({ icon: icon, label: label, thematic: thematic, visible: visible });
       });
       img.src = url;
     });
@@ -118,9 +119,8 @@ export default class Legend extends Toggle {
       }
     return { label: label, thematic: thematic };
   }
-  getItemsContent() {
+  getItemsContent(resolution) {
     const promises = [];
-    const resolution = this.map.getView().getResolution();
     const layers = this.map
       .getLayers()
       .getArray()
@@ -130,7 +130,7 @@ export default class Legend extends Toggle {
       const labelsInfo = this.getLabels(l, this.getStyles(l, resolution));
       const stylesInfo = this.getStyles(l, resolution);
       const label = labelsInfo.label;
-      const visible = l.getVisible() && resolution <= l.getMaxResolution() && resolution >= l.getMinResolution();
+      const visible = l.getVisible() && resolution < l.getMaxResolution() && resolution > l.getMinResolution();
       if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false, visible));
       if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false, visible));
       for (const [i, style] of stylesInfo.styles.entries()) {
@@ -140,16 +140,22 @@ export default class Legend extends Toggle {
     }
     return promises;
   }
-  setContent() {
-    const promises = this.getItemsContent();
+  setContent(resolution) {
+    const promises = this.getItemsContent(resolution);
     Promise.all(promises).then((r) => {
-      for (const row of r) {
-        console.log(row);
+      this.main.innerHTML ='';
+      for (const [i,row] of r.entries()) {
+        console.log(i)
+        const item = elt("div", { className: "item" }, row.icon, elt("span", {}));
+        this.main.appendChild(item);
+        if (row.visible) item.style.opacity = "1";
+        else item.style.opacity = "0.4";
+      
       }
     });
   }
-  getLegendImage() {
-    const promises = this.getItemsContent();
+  getLegendImage(resolution) {
+    const promises = this.getItemsContent(resolution);
     const legendImage = (items) => {
       const canvas = elt("canvas", { width: 400, height: 18 * items });
       const ctx = canvas.getContext("2d");
@@ -162,16 +168,16 @@ export default class Legend extends Toggle {
     Promise.all(promises).then((r) => {
       const canvas = legendImage(r.length);
       const ctx = canvas.getContext("2d");
-      r=r.filter(x => x.visible)
-      for (const [i, v] of r.entries()) {
-          console.log(i, v);
-          if (v.thematic) {
-            ctx.drawImage(v.icon, 16, i * 18);
-            ctx.fillText(v.label, 40, i * 18 + 8);
-          } else {
-            ctx.drawImage(v.icon, 0, i * 18);
-            ctx.fillText(v.label, 24, i * 18 + 8);
-          }
+      const vr = r.filter((x) => x.visible);
+      for (const [i, v] of vr.entries()) {
+        if (v.visible) console.log(i, v);
+        if (v.thematic) {
+          ctx.drawImage(v.icon, 16, i * 18);
+          ctx.fillText(v.label, 40, i * 18 + 8);
+        } else {
+          ctx.drawImage(v.icon, 0, i * 18);
+          ctx.fillText(v.label, 24, i * 18 + 8);
+        }
       }
       const a = elt("a", { href: canvas.toDataURL(), download: "legend.png" });
       a.click();
