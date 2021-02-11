@@ -66,7 +66,7 @@ export default class Legend extends Toggle {
    * @return {Promise}
    */
 
-  drawIcon(style, label, thematic, visible) {
+  drawIcon(style, label, thematic, layer) {
     if (!style || style.length) return;
     return new Promise((resolve, reject) => {
       const icon = elt("canvas", { width: 16, height: 16 });
@@ -81,22 +81,22 @@ export default class Legend extends Toggle {
         const img = new Image();
         img.addEventListener("load", () => {
           ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-          resolve({ icon: icon, label: label, thematic: thematic, visible: visible });
+          resolve({ icon: icon, label: label, thematic: thematic, layer:layer });
         });
         img.src=style.getImage().getSrc()
       }
       vctx.drawGeometry(this.symbols.point);
-      resolve({ icon: icon, label: label, thematic: thematic, visible: visible });
+      resolve({ icon: icon, label: label, thematic: thematic, layer:layer });
     });
   }
-  loadImage(url, label, thematic, visible) {
+  loadImage(url, label, thematic, layer) {
     return new Promise((resolve, reject) => {
       const icon = elt("canvas", { width: 16, height: 16 });
       const ctx = icon.getContext("2d");
       const img = new Image();
       img.addEventListener("load", () => {
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-        resolve({ icon: icon, label: label, thematic: thematic, visible: visible });
+        resolve({ icon: icon, label: label, thematic: thematic, layer:layer });
       });
       img.src = url;
     });
@@ -130,12 +130,12 @@ export default class Legend extends Toggle {
       const labelsInfo = this.getLabels(l, this.getStyles(l, resolution));
       const stylesInfo = this.getStyles(l, resolution);
       const label = labelsInfo.label;
-      const visible = l.getVisible() && resolution < l.getMaxResolution() && resolution > l.getMinResolution();
-      if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false, visible));
-      if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false, visible));
+      //const visible = l.getVisible() && resolution < l.getMaxResolution() && resolution > l.getMinResolution();
+      if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false, l));
+      if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false, l));
       for (const [i, style] of stylesInfo.styles.entries()) {
         if (labelsInfo.thematic[i]) label = labelsInfo.thematic[i];
-        promises.push(this.drawIcon(style, label, labelsInfo.thematic.length !== 0, visible));
+        promises.push(this.drawIcon(style, label, labelsInfo.thematic.length !== 0, l));
       }
     }
     return promises;
@@ -145,14 +145,19 @@ export default class Legend extends Toggle {
     Promise.all(promises).then((r) => {
       this.main.innerHTML ='';
       for (const [i,row] of r.entries()) {
-        console.log(i)
-        const item = elt("div", { className: "item" }, row.icon, elt("span", {}));
+        const item = elt("div", { className: "item"}, row.icon, elt("span", {}, row.label));
+        item.setAttribute('data-name',row.label)
         this.main.appendChild(item);
-        if (row.visible) item.style.opacity = "1";
+        const visible = this.getVisible(row.layer);
+        if (visible) item.style.opacity = "1";
         else item.style.opacity = "0.4";
-      
+        console.log(item.dataset.name)
       }
     });
+  }
+  getVisible(layer){
+    const resolution = this.map.getView().getResolution();
+    return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution()
   }
   getLegendImage(resolution) {
     const promises = this.getItemsContent(resolution);
@@ -168,9 +173,8 @@ export default class Legend extends Toggle {
     Promise.all(promises).then((r) => {
       const canvas = legendImage(r.length);
       const ctx = canvas.getContext("2d");
-      const vr = r.filter((x) => x.visible);
+      const vr = r.filter((x) => this.getVisible(x.layer));
       for (const [i, v] of vr.entries()) {
-        if (v.visible) console.log(i, v);
         if (v.thematic) {
           ctx.drawImage(v.icon, 16, i * 18);
           ctx.fillText(v.label, 40, i * 18 + 8);
