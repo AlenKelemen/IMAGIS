@@ -149,6 +149,10 @@ export default class Legend extends Toggle {
     }
     return promises;
   }
+  getVisible(layer) {
+    const resolution = this.map.getView().getResolution();
+    return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
+  }
   setContent(resolution, hide = false) {
     const promises = this.getItemsContent(resolution);
     Promise.all(promises).then((r) => {
@@ -168,10 +172,12 @@ export default class Legend extends Toggle {
       }
     });
   }
-  getVisible(layer) {
-    const resolution = this.map.getView().getResolution();
-    return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
+  tools(target) {
+    const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
+    const e = elt("div", { className: "tools" }, visibility);
+    target.appendChild(visibility)
   }
+
   getLegendImage(resolution) {
     const promises = this.getItemsContent(resolution);
     const legendImage = (items) => {
