@@ -155,18 +155,17 @@ export default class Legend extends Toggle {
       this.main.innerHTML = "";
       const items = r.filter((x) => x.thematic === false);
       const thematicItems = r.filter((x) => x.thematic === true);
-      for(const i of items){
-        const thematicItem = elt("div", { className: "thematic" });
-        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematicItem);
-        this.main.appendChild(item)
+      for (const i of items) {
+        const thematic = elt("div", { className: "thematic" });
+        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematic);
+        this.main.appendChild(item);
+        const t = thematicItems.filter((x) => x.layer === i.layer);
+        for (const [i, ti] of t.entries()) {
+          const itemThematic = elt("div", {}, ti.icon, elt("span", {}, ti.label));
+          thematic.appendChild(itemThematic);
+        }
+        item.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
       }
-      for(const i of thematicItems){
-        const thematicItem = elt("div", { className: "thematic" },i.icon,i.label);
-        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematicItem);
-        this.main.appendChild(item)
-      }
-      
-      
     });
   }
   getVisible(layer) {
