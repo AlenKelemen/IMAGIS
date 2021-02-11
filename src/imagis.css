@@ -55,7 +55,7 @@ body {
 .taskpane {
   width: 20em;
   position: relative;
-  background-color:white;
+  
   border-radius: 4px;
   padding: 2px;
   align-self: stretch;
@@ -70,9 +70,11 @@ body {
   bottom: 2em;
   overflow-y: auto;
   border-radius: 4px;
+  color:white;
+  background-color: #8ba4be;;
 }
 .taskpane.no-header .main{
-  top:0;
+  top:2px;
 }
 .taskpane .footer {
   position: absolute;

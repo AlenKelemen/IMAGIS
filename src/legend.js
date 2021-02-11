@@ -74,19 +74,28 @@ export default class Legend extends Toggle {
       const vctx = toContext(ctx, {
         size: [16, 16],
       });
-      vctx.setStyle(style);
-      if (style.getFill()) vctx.drawGeometry(this.symbols.polygon);
-      if (!style.getFill() && style.getStroke()) vctx.drawGeometry(this.symbols.linestring);
-      if (style.getImage() && style.getImage() instanceof Icon) {
-        const img = new Image();
-        img.addEventListener("load", () => {
-          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-          resolve({ icon: icon, label: label, thematic: thematic, layer:layer });
-        });
-        img.src=style.getImage().getSrc()
+      if (style.getFill()) {
+        vctx.setStyle(style);
+        vctx.drawGeometry(this.symbols.polygon);
       }
-      vctx.drawGeometry(this.symbols.point);
-      resolve({ icon: icon, label: label, thematic: thematic, layer:layer });
+      if (!style.getFill() && style.getStroke()) {
+        vctx.setStyle(style);
+        vctx.drawGeometry(this.symbols.linestring);
+      }
+      if (style.getImage()) {
+        if (style.getImage() instanceof Icon) {
+          const img = new Image();
+          img.addEventListener("load", () => {
+            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
+            resolve({ icon: icon, label: label, thematic: thematic, layer: layer });
+          });
+          img.src = style.getImage().getSrc();
+        } else {
+          vctx.setStyle(style);
+          vctx.drawGeometry(this.symbols.point);
+        }
+      }
+      resolve({ icon: icon, label: label, thematic: thematic, layer: layer });
     });
   }
   loadImage(url, label, thematic, layer) {
@@ -96,7 +105,7 @@ export default class Legend extends Toggle {
       const img = new Image();
       img.addEventListener("load", () => {
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 16, 16);
-        resolve({ icon: icon, label: label, thematic: thematic, layer:layer });
+        resolve({ icon: icon, label: label, thematic: thematic, layer: layer });
       });
       img.src = url;
     });
@@ -130,7 +139,6 @@ export default class Legend extends Toggle {
       const labelsInfo = this.getLabels(l, this.getStyles(l, resolution));
       const stylesInfo = this.getStyles(l, resolution);
       const label = labelsInfo.label;
-      //const visible = l.getVisible() && resolution < l.getMaxResolution() && resolution > l.getMinResolution();
       if (!stylesInfo.styles.length) promises.push(this.loadImage(images.lc_raster, label, false, l));
       if (stylesInfo.styles.length > 1) promises.push(this.loadImage(images.lc_theme, label, false, l));
       for (const [i, style] of stylesInfo.styles.entries()) {
@@ -143,21 +151,21 @@ export default class Legend extends Toggle {
   setContent(resolution) {
     const promises = this.getItemsContent(resolution);
     Promise.all(promises).then((r) => {
-      this.main.innerHTML ='';
-      for (const [i,row] of r.entries()) {
-        const item = elt("div", { className: "item"}, row.icon, elt("span", {}, row.label));
-        item.setAttribute('data-name',row.label)
+      this.main.innerHTML = "";
+      for (const [i, row] of r.entries()) {
+        const item = elt("div", { className: "item" }, row.icon, elt("span", {}, row.label));
+        item.setAttribute("data-name", row.layer.get("name"));
         this.main.appendChild(item);
         const visible = this.getVisible(row.layer);
         if (visible) item.style.opacity = "1";
         else item.style.opacity = "0.4";
-        console.log(item.dataset.name)
+        console.log(item.dataset.name);
       }
     });
   }
-  getVisible(layer){
+  getVisible(layer) {
     const resolution = this.map.getView().getResolution();
-    return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution()
+    return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
   }
   getLegendImage(resolution) {
     const promises = this.getItemsContent(resolution);
