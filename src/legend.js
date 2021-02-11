@@ -8,6 +8,7 @@ import { Icon, Style } from "ol/style";
 import { LineString, Point, Polygon } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
 import TileLayer from "ol/layer/Tile";
+import { keys } from "regenerator-runtime";
 const images = require("../img/*.png");
 /** Legend
  * @constructor
@@ -148,19 +149,24 @@ export default class Legend extends Toggle {
     }
     return promises;
   }
-  setContent(resolution) {
+  setContent(resolution, hide = false) {
     const promises = this.getItemsContent(resolution);
     Promise.all(promises).then((r) => {
       this.main.innerHTML = "";
-      for (const [i, row] of r.entries()) {
-        const item = elt("div", { className: "item" }, row.icon, elt("span", {}, row.label));
-        item.setAttribute("data-name", row.layer.get("name"));
-        this.main.appendChild(item);
-        const visible = this.getVisible(row.layer);
-        if (visible) item.style.opacity = "1";
-        else item.style.opacity = "0.4";
-        console.log(item.dataset.name);
+      const items = r.filter((x) => x.thematic === false);
+      const thematicItems = r.filter((x) => x.thematic === true);
+      for(const i of items){
+        const thematicItem = elt("div", { className: "thematic" });
+        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematicItem);
+        this.main.appendChild(item)
       }
+      for(const i of thematicItems){
+        const thematicItem = elt("div", { className: "thematic" },i.icon,i.label);
+        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematicItem);
+        this.main.appendChild(item)
+      }
+      
+      
     });
   }
   getVisible(layer) {

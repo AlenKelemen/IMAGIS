@@ -71,7 +71,7 @@ body {
   overflow-y: auto;
   border-radius: 4px;
   color:white;
-  background-color: #8ba4be;;
+  background-color: rgba(0, 60, 136, 0.5);
 }
 .taskpane.no-header .main{
   top:2px;
