@@ -37,7 +37,8 @@ export default class Legend extends Toggle {
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
     this.image = elt("button", { className: "download-image" }, elt("i", { className: "far fa-arrow-to-bottom fa-fw" }));
-    this.footer = elt("footer", { className: `footer ol-control` }, this.image, elt("button", { className: "button" }, "Button1"), elt("button", { className: "button" }, "Button2"));
+    this.hide = elt("button", { className: "hide" }, elt("i", { className: "far fa-eclipse fa-fw" }));
+    this.footer = elt("footer", { className: `footer ol-control` }, this.image, this.hide, elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
     this.symbols = {
       polygon: new Polygon([
@@ -56,6 +57,7 @@ export default class Legend extends Toggle {
       point: new Point([16 / 2, 16 / 2]),
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage(this.map.getView().getResolution()));
+    this.hide.addEventListener("click", (evt) => console.log(this.setHide()));
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
   }
@@ -153,29 +155,39 @@ export default class Legend extends Toggle {
     const resolution = this.map.getView().getResolution();
     return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
   }
-  setContent(resolution, hide = false) {
+  setHide(b) {
+    for (const e of this.main.children) {
+      const i = this.items.find(x => x.layer.get('name') === e.dataset.name);
+      console.log(i.layer)
+      if (b) e.style.display = this.getVisible(i.layer) ? "block" : "none";
+      else e.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
+    }
+  }
+  setContent(resolution) {
     const promises = this.getItemsContent(resolution);
     Promise.all(promises).then((r) => {
       this.main.innerHTML = "";
-      const items = r.filter((x) => x.thematic === false);
+      this.items = r.filter((x) => x.thematic === false);
       const thematicItems = r.filter((x) => x.thematic === true);
-      for (const i of items) {
+      for (const i of this.items) {
         const thematic = elt("div", { className: "thematic" });
         const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematic);
+        item.setAttribute("data-name", i.layer.get("name"));
         this.main.appendChild(item);
         const t = thematicItems.filter((x) => x.layer === i.layer);
         for (const [i, ti] of t.entries()) {
           const itemThematic = elt("div", {}, ti.icon, elt("span", {}, ti.label));
           thematic.appendChild(itemThematic);
         }
-        item.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
+        if (this.hide) item.style.display = this.getVisible(i.layer) ? "block" : "none";
+        else item.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
       }
     });
   }
   tools(target) {
     const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
     const e = elt("div", { className: "tools" }, visibility);
-    target.appendChild(visibility)
+    target.appendChild(visibility);
   }
 
   getLegendImage(resolution) {

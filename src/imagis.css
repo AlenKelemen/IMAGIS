@@ -93,7 +93,8 @@ body {
   font-size: 1em;
   padding:4px;
   }
-.taskpane .download-image{
+.taskpane .download-image,
+.taskpane .hide{
   float: left;
 }
 .taskpane .main .item canvas{
