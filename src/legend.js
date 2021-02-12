@@ -168,7 +168,7 @@ export default class Legend extends Toggle {
   }
   getVisible(layer) {
     const resolution = this.map.getView().getResolution();
-    return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
+    return resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
   }
 
   setContent(resolution) {
@@ -181,6 +181,8 @@ export default class Legend extends Toggle {
       for (const i of this.items) {
         const thematic = elt("div", { className: "thematic" });
         const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
+        if (i.layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
+          else visibility.firstChild.className = "far fa-eye-slash fa-fw";
         const tools = elt("div", { className: "tools" }, visibility);
         const head = elt("div", { className: "head" }, i.icon, elt("span", {}, i.label));
         const item = elt("div", { className: "item" }, head, thematic, tools);
@@ -194,6 +196,12 @@ export default class Legend extends Toggle {
         }
         if (this.hide) item.style.display = this.getVisible(i.layer) ? "block" : "none";
         else item.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
+        visibility.addEventListener('click',evt => {
+          if(! this.getVisible(i.layer))return;
+          i.layer.setVisible(!i.layer.getVisible());
+          if (i.layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
+          else visibility.firstChild.className = "far fa-eye-slash fa-fw";
+        });
       }
     });
   }
