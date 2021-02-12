@@ -64,7 +64,7 @@ export default class Legend extends Toggle {
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
     console.log(this.itemElements);
   }
-  
+
   togglelHide() {
     this.hide = !this.hide;
     if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
@@ -170,7 +170,7 @@ export default class Legend extends Toggle {
     const resolution = this.map.getView().getResolution();
     return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
   }
- 
+
   setContent(resolution) {
     const promises = this.getItemsContent(resolution);
     this.itemElements = [];
@@ -181,8 +181,9 @@ export default class Legend extends Toggle {
       for (const i of this.items) {
         const thematic = elt("div", { className: "thematic" });
         const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
-        const tools = elt("div", { className: "tools" },visibility);
-        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematic, tools);
+        const tools = elt("div", { className: "tools" }, visibility);
+        const head = elt("div", { className: "head" }, i.icon, elt("span", {}, i.label));
+        const item = elt("div", { className: "item" }, head, thematic, tools);
         this.itemElements.push(item);
         item.setAttribute("data-name", i.layer.get("name"));
         this.main.appendChild(item);
@@ -199,7 +200,7 @@ export default class Legend extends Toggle {
   getLegendImage(resolution) {
     const promises = this.getItemsContent(resolution);
     const legendImage = (items) => {
-      const canvas = elt("canvas", { width: 400, height: 18 * items });
+      const canvas = elt("canvas", { width: 300, height: 18 * items });
       const ctx = canvas.getContext("2d");
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
