@@ -63,14 +63,11 @@ ux.aside.home.setVisible(ux.header.home.getActive());
 
 /**Tasks goes here*/
 
-map.legend =  new Legend({
+map.legend = new Legend({
   target: ux.aside,
   hide:true
 });
-ux.aside.home.addControl(
-  map.legend
-);
-
+ux.aside.home.addControl(map.legend);
 
 ux.aside.home.addControl(
   new Project({

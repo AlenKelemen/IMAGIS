@@ -37,8 +37,8 @@ export default class Legend extends Toggle {
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
     this.image = elt("button", { className: "download-image" }, elt("i", { className: "far fa-arrow-to-bottom fa-fw" }));
-    this.hide = elt("button", { className: "hide" }, elt("i", { className: "far fa-eclipse fa-fw" }));
-    this.footer = elt("footer", { className: `footer ol-control` }, this.image, this.hide, elt("button", { className: "button" }, "Button2"));
+    this.hideButton = elt("button", { className: "hide" }, elt("i", { className: "far fa-lightbulb-on fa-fw" }));
+    this.footer = elt("footer", { className: `footer ol-control` }, this.image, this.hideButton, elt("button", { className: "button" }, "Button2"));
     this.container.element.appendChild(this.footer);
     this.symbols = {
       polygon: new Polygon([
@@ -57,18 +57,33 @@ export default class Legend extends Toggle {
       point: new Point([16 / 2, 16 / 2]),
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage(this.map.getView().getResolution()));
-    this.hide.addEventListener("click", (evt) => console.log(this.setHide()));
+    this.hideButton.addEventListener("click", (evt) => this.togglelHide());
+    this.hide = false;
+    if (options.hide) this.togglelHide();
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
+    console.log(this.itemElements);
   }
-  /**
-   *Style icon
-   *
-   * @param {Array} style
-   * @memberof Legend
-   * @return {Promise}
-   */
-
+  
+  togglelHide() {
+    this.hide = !this.hide;
+    if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
+    else this.hideButton.firstChild.className = "far fa-lightbulb-on fa-fw";
+    const elements = Array.from(this.main.children);
+    for (const l of this.map.getLayers().getArray()) {
+      const visible = this.getVisible(l);
+      const e = elements.find((x) => x.dataset.name === l.get("name"));
+      if (e) {
+        e.style.opacity = 1;
+        e.style.display = "block";
+        if (this.hide) {
+          e.style.display = visible ? "block" : "none";
+        } else {
+          e.style.opacity = visible ? "1" : "0.4";
+        }
+      }
+    }
+  }
   drawIcon(style, label, thematic, layer) {
     if (!style || style.length) return;
     return new Promise((resolve, reject) => {
@@ -155,23 +170,20 @@ export default class Legend extends Toggle {
     const resolution = this.map.getView().getResolution();
     return layer.getVisible() && resolution < layer.getMaxResolution() && resolution > layer.getMinResolution();
   }
-  setHide(b) {
-    for (const e of this.main.children) {
-      const i = this.items.find(x => x.layer.get('name') === e.dataset.name);
-      console.log(i.layer)
-      if (b) e.style.display = this.getVisible(i.layer) ? "block" : "none";
-      else e.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
-    }
-  }
+ 
   setContent(resolution) {
     const promises = this.getItemsContent(resolution);
+    this.itemElements = [];
     Promise.all(promises).then((r) => {
       this.main.innerHTML = "";
       this.items = r.filter((x) => x.thematic === false);
       const thematicItems = r.filter((x) => x.thematic === true);
       for (const i of this.items) {
         const thematic = elt("div", { className: "thematic" });
-        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematic);
+        const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
+        const tools = elt("div", { className: "tools" },visibility);
+        const item = elt("div", { className: "item" }, i.icon, elt("span", {}, i.label), thematic, tools);
+        this.itemElements.push(item);
         item.setAttribute("data-name", i.layer.get("name"));
         this.main.appendChild(item);
         const t = thematicItems.filter((x) => x.layer === i.layer);
@@ -184,12 +196,6 @@ export default class Legend extends Toggle {
       }
     });
   }
-  tools(target) {
-    const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
-    const e = elt("div", { className: "tools" }, visibility);
-    target.appendChild(visibility);
-  }
-
   getLegendImage(resolution) {
     const promises = this.getItemsContent(resolution);
     const legendImage = (items) => {

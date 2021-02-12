@@ -75,6 +75,7 @@ body {
 }
 .taskpane.no-header .main{
   top:2px;
+  padding:3px;
 }
 .taskpane .footer {
   position: absolute;
@@ -100,6 +101,9 @@ body {
 .taskpane .main .item canvas{
   vertical-align: middle;
   padding:2px;
+}
+.taskpane .main .tools{
+  padding:3px
 }
 .taskpane .main{
   font-size: 0.85em;
