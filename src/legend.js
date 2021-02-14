@@ -189,7 +189,13 @@ export default class Legend extends Toggle {
           if (i.layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
           else visibility.firstChild.className = "far fa-eye-slash fa-fw";
         });
-        const tools = elt("div", { className: "tools" }, visibility);
+        const opacity = elt("input", { type: "range", min: "0", max: "1", step: "0.01" });
+        opacity.value = i.layer.getOpacity();
+        opacity.addEventListener("change", (evt) => {
+          i.layer.setOpacity(Number(opacity.value));
+        });
+        const tools = elt("div", { className: "tools" }, visibility, 
+        elt("div", { className: "opacitiy" }, elt("i", { className: "far fa-fog fa-fw" }),opacity));
         const head = elt("div", { className: "head" }, i.icon, elt("span", {}, i.label));
         const item = elt("div", { className: "item" }, head, thematic, tools);
         this.itemElements.push(item);
@@ -219,7 +225,7 @@ export default class Legend extends Toggle {
     Promise.all(promises).then((r) => {
       const canvas = legendImage(r.length);
       const ctx = canvas.getContext("2d");
-      const vr = r.filter((x) => this.getVisible(x.layer));
+      const vr = r.filter((x) => this.getVisible(x.layer) && x.layer.getVisible());
       for (const [i, v] of vr.entries()) {
         if (v.thematic) {
           ctx.drawImage(v.icon, 16, i * 18);
