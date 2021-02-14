@@ -67,7 +67,7 @@ body {
   width: inherit;
   position: absolute;
   top: 2em;
-  bottom: 2em;
+  bottom: 2.5em;
   overflow-y: auto;
   border-radius: 4px;
   color:white;
@@ -91,13 +91,13 @@ body {
 .taskpane .ol-control button{
   width:unset;
   display:inline-block;
-  font-size: 1em;
   padding:4px;
   }
-.taskpane .download-image,
-.taskpane .hide{
+/* .taskpane .download-image,
+.taskpane .hide,
+.taskpane .edit{
   float: left;
-}
+} */
 .taskpane .main .item canvas{
   vertical-align: middle;
   padding:2px;

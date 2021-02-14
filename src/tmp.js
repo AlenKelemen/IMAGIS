@@ -1,79 +1,36 @@
 
-
-
-setContent(iconSize = [16, 16]) {
-  this.main.innerHTML = "";
-  const ls = this.map
-    .getLayers()
-    .getArray()
-    .sort((a, b) => (a.getZIndex() > b.getZIndex() ? 1 : -1))
-    .reverse(); //sort layers by index
-  const polygon = new Polygon([
-    [
-      [0, 0],
-      [iconSize[0], 0],
-      [iconSize[0], iconSize[1]],
-      [0, iconSize[1]],
-      [0, 0],
-    ],
-  ]);
-  const linestring = new LineString([
-    [0, 0],
-    [iconSize[0], iconSize[1]],
-  ]);
-  const point = new Point([iconSize[0] / 2, iconSize[1] / 2]);
-  for (const [i, l] of ls.entries()) {
-    const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
-    const label = elt("label", {}, l.get("label") || l.get("name"));
-    const thematic = elt("div", { className: `thematic` });
-    const item = elt("div", { className: "item", dataName: `${l.get("name")}` }, icon, label, thematic);
+  for (const i of this.items) {
+    const thematic = elt("div", { className: "thematic" });
+    const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
+    if (i.layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
+    else visibility.firstChild.className = "far fa-eye-slash fa-fw";
+    visibility.addEventListener("click", (evt) => {
+      if (!this.getVisible(i.layer)) return;
+      i.layer.setVisible(!i.layer.getVisible());
+      if (i.layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
+      else visibility.firstChild.className = "far fa-eye-slash fa-fw";
+    });
+    const opacity = elt("input", { type: "range", min: "0", max: "1", step: "0.01" });
+    opacity.value = i.layer.getOpacity();
+    opacity.addEventListener("change", (evt) => {
+      i.layer.setOpacity(Number(opacity.value));
+    });
+    const tools = elt("div", { className: "tools" }, visibility, 
+    elt("div", { className: "opacitiy" }, elt("i", { className: "far fa-fog fa-fw" }),opacity));
+    const head = elt("div", { className: "head" }, i.icon, elt("span", {}, i.label));
+    const item = elt("div", { className: "item" }, head, thematic, tools);
+    this.itemElements.push(item);
+    item.setAttribute("data-name", i.layer.get("name"));
     this.main.appendChild(item);
-    if (l instanceof TileLayer) this.loadImage(icon, images.lc_raster);
-    if (l instanceof VectorLayer && typeof l.getStyle() === "function") {
-      let style = l.getStyle().call(this, undefined, this.map.getView().getResolution());
-      style = Array.isArray(style) ? style : [style];
-      if (style.length > 1) {
-        this.loadImage(icon, images.lc_theme);
-        for (const [i, s] of style.entries()) {
-          const icon = elt("canvas", { className: `icon`, width: iconSize[0], height: iconSize[1] });
-          const label = elt("label", {}, ``);
-          const item = elt("div", { className: "item", dataName: `${l.get("name")}` }, icon, label);
-          thematic.appendChild(item);
-          const imagStyle = l.get("imagis-style")[i];
-          if (imagStyle && imagStyle.filter) {
-            label.innerHTML = `${imagStyle.filter.property} ${imagStyle.filter.operator} ${imagStyle.filter.value}`;
-          }
-          const ctx = icon.getContext("2d");
-          const vctx = toContext(ctx, {
-            size: iconSize,
-          });
-          vctx.setStyle(s);
-          if (s.getFill()) vctx.drawGeometry(polygon);
-          if (!s.getFill() && s.getStroke()) vctx.drawGeometry(linestring);
-          const imageStyle = s.getImage();
-          if (imageStyle instanceof Icon) {
-            this.loadImage(icon, imageStyle.getSrc());
-          } else {
-            vctx.drawGeometry(point);
-          }
-        }
-      }
-      if (style.length === 1) {
-        style = style[0];
-        const ctx = icon.getContext("2d");
-        const vctx = toContext(ctx, {
-          size: iconSize,
-        });
-        vctx.setStyle(style);
-        if (style.getFill()) vctx.drawGeometry(polygon);
-        if (!style.getFill() && style.getStroke()) vctx.drawGeometry(linestring);
-        const imageStyle = style.getImage();
-        if (imageStyle instanceof Icon) {
-          this.loadImage(icon, imageStyle.getSrc());
-        } else {
-          vctx.drawGeometry(point);
-        }
-      }
+    const t = thematicItems.filter((x) => x.layer === i.layer);
+    for (const [i, ti] of t.entries()) {
+      const itemThematic = elt("div", {}, ti.icon, elt("span", {}, ti.label));
+      thematic.appendChild(itemThematic);
+    }
+    if (this.hide) item.style.display = this.getVisible(i.layer) ? "block" : "none";
+    else {
+      item.style.opacity = this.getVisible(i.layer) ? "1" : "0.4";
+      thematic.style.display='none';
+      tools.style.display='none';
     }
   }
-}
