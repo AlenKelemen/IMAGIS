@@ -15,6 +15,8 @@ import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 import Config from "./src/config";
 import Project from "./src/project";
 
+import Select from "./src/select.js";
+
 /**  ol/Map*/
 window.map = new Map({
   view: new View({
@@ -69,7 +71,7 @@ map.legend = new Legend({
 });
 ux.aside.home.addControl(map.legend);
 map.legend.activeLayerInfo({
-  targetControl:ux.footer
+  targetControl: ux.footer,
 });
 
 ux.aside.home.addControl(
@@ -85,6 +87,16 @@ ux.aside.toolbar = new Container({
   className: "toolbar",
 });
 ux.aside.addControl(ux.aside.toolbar);
+/**select */
+const select = new Select({
+  target: ux.aside.toolbar,
+  clear: true,
+});
+select.selectInfo({
+  targetControl: ux.footer,
+});
+
+/**ol/controls */
 ux.aside.toolbar.addControl(
   new Zoom({
     zoomInLabel: Object.assign(document.createElement("i"), { className: "far fa-plus fa-fw" }),

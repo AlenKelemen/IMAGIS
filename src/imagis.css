@@ -3,7 +3,7 @@ html {
 }
 body {
   margin: 0;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.5;
   color: #333;
@@ -27,7 +27,6 @@ body {
 .ol-control button {
   outline: none;
   font-weight: normal;
-
 }
 /**container hidden*/
 .hidden {
@@ -55,7 +54,7 @@ body {
 .taskpane {
   width: 20em;
   position: relative;
-  
+
   border-radius: 4px;
   padding: 2px;
   align-self: stretch;
@@ -70,12 +69,12 @@ body {
   bottom: 2.5em;
   overflow-y: auto;
   border-radius: 4px;
-  color:white;
+  color: white;
   background-color: rgba(0, 60, 136, 0.5);
 }
-.taskpane.no-header .main{
-  top:2px;
-  padding:3px;
+.taskpane.no-header .main {
+  top: 2px;
+  padding: 3px;
 }
 .taskpane .footer {
   position: absolute;
@@ -86,39 +85,35 @@ body {
   border-radius: 4px;
   text-decoration: none;
   text-align: right;
-  padding:2px
+  padding: 2px;
 }
-.taskpane .ol-control button{
-  width:unset;
-  display:inline-block;
-  padding:4px;
-  }
-/* .taskpane .download-image,
-.taskpane .hide,
-.taskpane .edit{
-  float: left;
-} */
-.taskpane .main .item canvas{
-  vertical-align: middle;
-  padding:2px;
+.taskpane .ol-control button {
+  width: unset;
+  display: inline-block;
+  padding: 4px;
 }
 
-.taskpane .main{
+.taskpane .main .item canvas {
+  vertical-align: middle;
+  padding: 2px;
+}
+
+.taskpane .main {
   font-size: 0.85em;
 }
-.taskpane .main .thematic{
-  padding-left:18px;
+.taskpane .main .thematic {
+  padding-left: 18px;
 }
-.taskpane .main .tools{
-  padding-left:16px;
+.taskpane .main .tools {
+  padding-left: 16px;
 }
-.taskpane .main .tools span{
-  padding-right:8px;
+.taskpane .main .tools span {
+  padding-right: 8px;
 }
-.taskpane .main .detail{
-  padding-left:16px;
+.taskpane .main .detail {
+  padding-left: 16px;
 }
-.taskpane .main .detail input{
+.taskpane .main .detail input {
   vertical-align: middle;
 }
 
@@ -126,6 +121,16 @@ body {
 .toolbar {
   margin-left: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.toolbar > div {
+  position: static;
+}
+.ol-dragbox{
+  border-color:#09f;
+  background-color: rgba(0, 153, 255, 0.376)
 }
 
 /** UX footer control */
@@ -136,7 +141,8 @@ body {
   margin-left: 4px;
   margin-right: 4px;
 }
-.map-footer .active-layer-info {
+.map-footer .active-layer-info,
+.map-footer .select-info {
   background: rgba(0, 60, 136, 0.4);
   border-radius: 4px;
   color: #eee;
@@ -162,5 +168,3 @@ body {
   position: unset;
   background: rgba(0, 60, 136, 0.4);
 }
-
-
