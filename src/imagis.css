@@ -4,7 +4,7 @@ html {
 body {
   margin: 0;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
   color: #333;
 }
@@ -102,14 +102,24 @@ body {
   vertical-align: middle;
   padding:2px;
 }
-.taskpane .main .tools{
-  padding:3px
-}
+
 .taskpane .main{
   font-size: 0.85em;
 }
-.taskpane .thematic{
+.taskpane .main .thematic{
   padding-left:18px;
+}
+.taskpane .main .tools{
+  padding-left:16px;
+}
+.taskpane .main .tools span{
+  padding-right:8px;
+}
+.taskpane .main .detail{
+  padding-left:16px;
+}
+.taskpane .main .detail input{
+  vertical-align: middle;
 }
 
 /** UX right side child of aside */
@@ -125,6 +135,13 @@ body {
 .map-footer div:not(:first-child):not(:last-child) {
   margin-left: 4px;
   margin-right: 4px;
+}
+.map-footer .active-layer-info {
+  background: rgba(0, 60, 136, 0.4);
+  border-radius: 4px;
+  color: #eee;
+  font-size: 12px;
+  padding: 2px;
 }
 /**ol native controls */
 .ol-zoom {
@@ -145,3 +162,5 @@ body {
   position: unset;
   background: rgba(0, 60, 136, 0.4);
 }
+
+

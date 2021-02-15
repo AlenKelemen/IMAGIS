@@ -1,6 +1,7 @@
 import "@fortawesome/fontawesome-pro/css/fontawesome.css";
 import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import Container from "./container";
+import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import { toContext } from "ol/render";
@@ -9,6 +10,7 @@ import { LineString, Point, Polygon } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
 import TileLayer from "ol/layer/Tile";
 import { keys } from "regenerator-runtime";
+import Sortable from "sortablejs";
 const images = require("../img/*.png");
 /** Legend
  * @constructor
@@ -38,8 +40,8 @@ export default class Legend extends Toggle {
     this.container.element.appendChild(this.main);
     this.image = elt("button", { className: "download-image" }, elt("i", { className: "far fa-arrow-to-bottom fa-fw" }));
     this.hideButton = elt("button", { className: "hide" }, elt("i", { className: "far fa-lightbulb-on fa-fw" }));
-    this.editButton = elt("button", { className: "edit" }, elt("i", { className: "far fa-cog fa-fw" }));
-    this.footer = elt("footer", { className: `footer ol-control` }, this.image, this.hideButton, this.editButton,elt("button", { className: "button" }, "Button2"));
+    this.saveButton = elt("button", { className: "edit" }, elt("i", { className: "far fa-save fa-fw" }));
+    this.footer = elt("footer", { className: `footer ol-control` }, this.image, this.hideButton, this.saveButton);
     this.container.element.appendChild(this.footer);
     this.symbols = {
       polygon: new Polygon([
@@ -59,10 +61,38 @@ export default class Legend extends Toggle {
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage(this.map.getView().getResolution()));
     this.hideButton.addEventListener("click", (evt) => this.togglelHide());
+    this.saveButton.addEventListener("click", (evt) => this.save());
     this.hide = false;
     if (options.hide) this.togglelHide();
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
+  }
+  //save to cfg.json
+  save() {
+    if(map.config) localStorage.setItem("cfg", JSON.stringify(map.config.read()));
+  }
+  activeLayerInfo(options) {
+    const activeInfo = new Control({
+      element: elt("div", { className: "active-layer-info" }),
+    });
+    if (options.targetControl) options.targetControl.addControl(activeInfo);
+    else this.map.addControl(activeInfo);
+    const active = this.map
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active"));
+    if (active) activeInfo.element.innerHTML = "aktivni sloj: " + active.get("label") || active.get("name");
+    else activeInfo.element.style.display = "none";
+    //active layer property of layers collection (null if no layer active)
+    this.map.getLayers().on("propertychange", (evt) => {
+      const active = evt.target.get("active");
+      if (active) {
+        activeInfo.element.style.display = "inline-block";
+        activeInfo.element.innerHTML = "aktivni sloj: " + active.get("label") || active.get("name");
+      } else {
+        activeInfo.element.style.display = "none";
+      }
+    });
   }
   setContent(resolution) {
     const promises = this.getItemsContent(resolution);
@@ -79,14 +109,71 @@ export default class Legend extends Toggle {
         const thematic = elt("div", { className: "thematic" });
         const t = thematicItems.filter((x) => x.layer === layer);
         for (const ti of t) thematic.appendChild(elt("div", {}, ti.icon, elt("span", {}, ti.label)));
-        const tools = elt("div", { className: "tools" });
-        const item = elt("div", { className: "item" }, head, thematic, tools);
+        const plus = elt("span", {}, elt("i", { className: "far fa-plus fa-fw" }));
+        const visibility = elt("span", {}, elt("i", { className: "far fa-eye fa-fw" }));
+        const active = elt("span", { className: "active" }, elt("i", { className: "far fa-square fa-fw" }));
+        active.setAttribute("data-name", layer.get("name"));
+        const sort = elt("span", { className: "sort" }, elt("i", { className: "far fa-bring-forward fa-fw" }));
+        const tools = elt("div", { className: "tools" }, plus, visibility, active, sort);
+        const opacity = elt("input", { type: "range", min: "0", max: "1", step: "0.01" });
+        const info = elt("div", { className: "info" });
+        const detail = elt("div", { className: "detail" }, elt("i", { className: "far fa-fog fa-fw" }), opacity, info);
+        const item = elt("div", { className: "item" }, head, thematic, tools, detail);
         item.setAttribute("data-name", layer.get("name"));
         this.main.appendChild(item);
+        //active: set active layer to work with (selection, draw, stats, ...)
+        if (layer instanceof VectorLayer === false) active.style.visibility = "hidden";
+        active.innerHTML = layer.get("active") ? '<i class="far fa-check-square fa-fw"></i>' : '<i class="far fa-square fa-fw"></i>';
+        active.addEventListener("click", (evt) => {
+          const layers = this.map.getLayers().getArray();
+          const e = this.main.querySelectorAll(".active");
+          const currentLayer = layers.find((x) => x.get("name") === active.dataset.name);
+          for (const i of e) i.innerHTML = '<i class="far fa-square fa-fw"></i>';
+          for (const layer of layers) if (layer !== currentLayer) layer.set("active", false);
+          currentLayer.set("active", !currentLayer.get("active"));
+          evt.currentTarget.innerHTML = currentLayer.get("active") ? '<i class="far fa-check-square fa-fw"></i>' : '<i class="far fa-square fa-fw"></i>';
+          //active layer property of layers collection (null if no layer active)
+          this.map.getLayers().set("active", layer.get("active") ? layer : null);
+        });
+        //plus: show/hide additional tools/info in legend
+        detail.style.display = "none";
+        plus.addEventListener("click", (evt) => {
+          detail.style.display = detail.style.display === "none" ? "block" : "none";
+          evt.currentTarget.innerHTML = detail.style.display === "none" ? '<i class="far fa-plus fa-fw"></i>' : '<i class="far fa-minus fa-fw"></i>';
+        });
+        //opacity:
+        opacity.value = layer.getOpacity();
+        opacity.addEventListener("change", (evt) => {
+          layer.setOpacity(Number(opacity.value));
+        });
+        //visibility: toggle layer visibility
+        if (layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
+        else visibility.firstChild.className = "far fa-eye-slash fa-fw";
+        visibility.addEventListener("click", (evt) => {
+          if (!this.getVisible(layer)) return;
+          layer.setVisible(!layer.getVisible());
+          if (layer.getVisible()) visibility.firstChild.className = "far fa-eye fa-fw";
+          else visibility.firstChild.className = "far fa-eye-slash fa-fw";
+        });
+        //hide/show layers with layer.getMaxResolution() && resolution > layer.getMinResolution())
+        if (this.hide) item.style.display = this.getVisible(layer) ? "block" : "none";
+        item.style.opacity = this.getVisible(layer) ? "1" : "0.4";
       }
+      //sort: sort layer zIndex by dragging
+      Sortable.create(this.main, {
+        handle: ".sort",
+        onEnd: (evt) => {
+          for (let i = 0; i < this.main.children.length; i++) {
+            const layer = this.map
+              .getLayers()
+              .getArray()
+              .find((x) => x.get("name") === this.main.children[i].dataset.name);
+            if (layer) layer.setZIndex(this.main.children.length - i);
+          }
+        },
+      });
     });
   }
-  toogleEdit() {}
   togglelHide() {
     this.hide = !this.hide;
     if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
