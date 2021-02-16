@@ -45,7 +45,7 @@ const ux = map.ux;
 map.setTarget(ux.getTarget());
 /**toggle in header*/
 ux.header.home = new Toggle({
-  html: '<i class="far fa-home fa-fw"></i> Home',
+  html: '<i class="far fa-home fa-fw"></i> Osnovno',
   className: "toggle",
   tipLabel: "Tip...",
   active: false,

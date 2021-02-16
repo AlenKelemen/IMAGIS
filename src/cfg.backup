@@ -6,7 +6,6 @@
     "sources": [{
             "name": "VodoopskrbaVod",
             "path": "vodovodOmis",
-            "fileName": "vod",
             "type": "geojson",
             "schema": {
                 "geometry": "linestring",
@@ -95,83 +94,8 @@
             }
         },
         {
-            "name": "VodoopskrbaMjernaZona",
-            "path": "vodovodOmis",
-            "fileName": "mjernaZona",
-            "type": "geojson",
-            "schema": {
-                "geometry": "polygon",
-                "properties": [{
-                        "Name": "Naziv",
-                        "Label": "Naziv",
-                        "Description": "Naziv",
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "Sustav",
-                        "Label": "Sustav",
-                        "Description": "Sustav",
-                        "Constrains": ["Kraljevac", "Studenci", "Ruda", "Zagrad", ""],
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "Ime",
-                        "Label": "Ime",
-                        "Description": "Ime",
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "Klasa",
-                        "Label": "Klasa",
-                        "Description": "Klasa",
-                        "Constrains": ["MjernaZona", ""],
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "Status",
-                        "Label": "Status",
-                        "Description": "Status",
-                        "Constrains": ["Plan", "Projekt", "Izgradnja", "Lokacijska dozvola", "Građevinska dozvola", "Rad", "Povremeno", "Kvar", "Izvan pogona", "Uništeno", ""],
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "PodaciIzvor",
-                        "Label": "Izvor podataka",
-                        "Description": "Izvor podataka",
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "PodaciTocnost",
-                        "Label": "Točnost podataka",
-                        "Description": "Točnost podataka",
-                        "Constrains": ["GEO", "GPS", "SV1000", "SV5000", "SV10000", "SV25000", "SV50000", "GEOSKICA", "FIKTIVNO", ""],
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "PodaciIme",
-                        "Label": "Podatke unio",
-                        "Description": "Podatke unio",
-                        "DataType": 9
-                    },
-                    {
-                        "Name": "PodaciDatum",
-                        "Label": "Datum unosa",
-                        "Description": "Datum unosa podataka",
-                        "DataType": 3
-                    },
-                    {
-                        "Name": "Napomena",
-                        "Label": "Napomena",
-                        "Description": "Napomena",
-                        "DataType": 9
-                    }
-                ]
-            }
-        },
-        {
             "name": "VodoopskrbaHidrant",
             "path": "vodovodOmis",
-            "fileName": "hidrant",
             "type": "geojson",
             "schema": {
                 "geometry": "point",
@@ -255,7 +179,6 @@
         {
             "name": "VodoopskrbaVodospremnik",
             "path": "vodovodOmis",
-            "fileName": "vodospremnik",
             "type": "geojson",
             "schema": {
                 "geometry": "point",
@@ -318,7 +241,6 @@
         {
             "name": "VodoopskrbaPodrucjeZgrada",
             "path": "vodovodOmis",
-            "fileName": "podrucjeZgrada",
             "type": "geojson",
             "schema": {
                 "geometry": "polygon",
@@ -569,52 +491,6 @@
                 "stroke": {
                     "color": "rgba(0,0,0,1)",
                     "width": 1
-                }
-            }]
-        },
-        {
-            "source": "VodoopskrbaMjernaZona",
-            "name": "mjernaZona",
-            "label": "DMA mjerne zone",
-            "info": "",
-            "visible": true,
-            "zIndex": 100,
-            "style": [{
-                "filter": {
-                    "property": "napomena",
-                    "operator": "!=",
-                    "value": "Glavne"
-                },
-                "text": {
-                    "text": "naziv",
-                    "font":"12px Arial"
-                },
-                "stroke": {
-                    "color": "red",
-                    "width": 1
-                }
-            }]
-        },
-        {
-            "source": "VodoopskrbaMjernaZona",
-            "name": "sustav",
-            "label": "Sustavi",
-            "info": "",
-            "visible": true,
-            "zIndex": 100,
-            "style": [{
-                "filter": {
-                    "property": "napomena",
-                    "operator": "=",
-                    "value": "Glavne"
-                },
-                "text": {
-                    "text": "Ime",
-                    "font":"18px Arial"
-                },
-                "stroke": {
-                    "color": "rgba(0,0,0,0.2)",
-                    "width": 4
                 }
             }]
         },

@@ -98,6 +98,7 @@ export default class Legend extends Toggle {
     const promises = this.getItemsContent(resolution);
     this.itemElements = [];
     Promise.all(promises).then((r) => {
+      console.log(r)
       this.main.innerHTML = "";
       this.items = r.filter((x) => x.thematic === false);
       const thematicItems = r.filter((x) => x.thematic === true);
@@ -249,7 +250,7 @@ export default class Legend extends Toggle {
     const label = layer.get("label") || layer.get("name") || "";
     const imagisStyle = layer.get("imagis-style");
     const thematic = [];
-    if (imagisStyle)
+    if (imagisStyle && imagisStyle.length > 1)//filter layer by no style for filtered possible ...
       for (const is of imagisStyle) {
         if (is.filter) thematic.push(`${is.filter.property} ${is.filter.operator}  ${is.filter.value} `);
       }

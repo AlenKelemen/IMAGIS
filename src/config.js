@@ -136,7 +136,7 @@ export default class Config {
           source = new VectorSource({
             loader: (extent, resolution, projection) => {
               this.result.then((r) => {
-                this.vc.readFile(this.localFolder + "/" + s.path + "/" + l.name + ".json").then((r) => {
+                this.vc.readFile(this.localFolder + "/" + s.path + "/" + s.fileName + ".json").then((r) => {
                   const features = new GeoJSON({
                     dataProjection: "EPSG:4326",
                     featureProjection: "EPSG:3765",

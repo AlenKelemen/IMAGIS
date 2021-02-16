@@ -50,6 +50,7 @@ body {
 }
 .taskbar {
   position: relative;
+  height:fit-content;
 }
 .taskpane {
   width: 20em;
