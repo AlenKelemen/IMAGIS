@@ -21,6 +21,7 @@
         "@flatten-js/core": "^1.2.18",
         "@fortawesome/fontawesome-pro": "^5.15.1",
         "@isomorphic-git/lightning-fs": "^4.3.0",
+        "chart.js": "^2.9.4",
         "cssnano": "^4.1.10",
         "isomorphic-git": "^1.8.0",
         "main.css": "^2.1.0",

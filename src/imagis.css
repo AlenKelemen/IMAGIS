@@ -37,6 +37,7 @@ body {
 .map-header {
   width: fit-content;
   position: unset;
+  display: flex;
 }
 .map-header button {
   width: fit-content;
@@ -76,6 +77,18 @@ body {
 .taskpane.no-header .main {
   top: 2px;
   padding: 3px;
+}
+.taskpane.horizontal{
+  height: 300px;
+  width:100%;
+  margin-top: auto;
+}
+.taskpane.horizontal .main{
+  top: 2em;
+  bottom: 0.5em;
+}
+.taskpane .graph{
+  background-color:white
 }
 .taskpane .footer {
   position: absolute;

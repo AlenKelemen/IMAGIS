@@ -4,18 +4,16 @@ import "@fortawesome/fontawesome-pro/css/regular.min.css";
 import "./src/imagis.css";
 import Map from "ol/Map";
 import View from "ol/View";
-
 import epsg3765 from "./src/EPSG3765";
 import UX from "./src/ux";
 import Container from "./src/container";
 import Toggle from "./src/toggle";
 import Legend from "./src/legend";
 import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
-
 import Config from "./src/config";
 import Project from "./src/project";
-
 import Select from "./src/select.js";
+import Data from "./src/data.js";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -47,11 +45,20 @@ map.setTarget(ux.getTarget());
 ux.header.home = new Toggle({
   html: '<i class="far fa-home fa-fw"></i> Osnovno',
   className: "toggle",
-  tipLabel: "Tip...",
+  tipLabel: "GIS alati...",
   active: false,
 });
 ux.header.addControl(ux.header.home);
 ux.header.home.on("change:active", (evt) => ux.aside.home.setVisible(evt.active));
+
+ux.header.DMA = new Toggle({
+  html: '<i class="far fa-hand-holding-water fa-fw"></i> DMA',
+  className: "toggle",
+  tipLabel: "Mjerne zone...",
+  active: false,
+});
+ux.header.addControl(ux.header.DMA);
+ux.header.DMA.on("change:active", (evt) => ux.aside.DMA.setVisible(evt.active));
 
 /**home taskbar -display when ux.header.home is active
  * in taskbar put app buttons or toggles to invoke apropriate containers (taskpanes) for app dialog
@@ -62,6 +69,13 @@ ux.aside.home = new Container({
 });
 ux.aside.addControl(ux.aside.home);
 ux.aside.home.setVisible(ux.header.home.getActive());
+
+ux.aside.DMA = new Container({
+  semantic: "nav",
+  className: "taskbar ol-control",
+});
+ux.aside.addControl(ux.aside.DMA);
+ux.aside.DMA.setVisible(ux.header.DMA.getActive());
 
 /**Tasks goes here*/
 
@@ -78,6 +92,13 @@ ux.aside.home.addControl(
   new Project({
     target: ux.aside,
     map: map,
+  })
+);
+
+ux.aside.DMA.addControl(
+  new Data({
+    target: ux.aside,
+    cfg: map.config.cfg,
   })
 );
 

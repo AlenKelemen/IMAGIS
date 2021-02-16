@@ -40,6 +40,9 @@ export default class Config {
       v = m.getView();
     cfg.project = m.get("project");
     cfg.gitPath = m.get("gitPath");
+    for(const s of map.get("sources")){
+      cfg.sources.push(s); //non spatial sources (type:'data') saved to map
+    }
     cfg.center = v.getCenter();
     cfg.zoom = v.getZoom();
     for (const layer of m.getLayers().getArray()) {
@@ -73,7 +76,7 @@ export default class Config {
           name: layer.getSource().get("name"),
           type: layer.getSource().get("type"),
           path: layer.getSource().get("path"),
-          fileName:layer.getSource().get("fileName")
+          fileName: layer.getSource().get("fileName"),
         });
       }
       for (const [key, value] of Object.entries(layer.getProperties())) {
@@ -99,6 +102,10 @@ export default class Config {
       v = m.getView();
     m.set("project", cfg.project);
     m.set("gitPath", cfg.gitPath);
+    m.set(
+      "sources",
+      cfg.sources.filter((x) => x.type === "data")
+    ); //non spatial sources (type:'data') saved to map
     v.setCenter(cfg.center);
     v.setZoom(cfg.zoom);
     //add layers
@@ -217,7 +224,7 @@ export default class Config {
   /**
    *Cfg styleSpec to ol/Style function
    *
-   * @param {Array} styleSpec from cfg 
+   * @param {Array} styleSpec from cfg
    * @return {Function} ol/style function
    * @memberof Config
    */
