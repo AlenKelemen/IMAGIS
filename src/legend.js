@@ -98,7 +98,6 @@ export default class Legend extends Toggle {
     const promises = this.getItemsContent(resolution);
     this.itemElements = [];
     Promise.all(promises).then((r) => {
-      console.log(r)
       this.main.innerHTML = "";
       this.items = r.filter((x) => x.thematic === false);
       const thematicItems = r.filter((x) => x.thematic === true);

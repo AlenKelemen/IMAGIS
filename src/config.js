@@ -73,6 +73,7 @@ export default class Config {
           name: layer.getSource().get("name"),
           type: layer.getSource().get("type"),
           path: layer.getSource().get("path"),
+          fileName:layer.getSource().get("fileName")
         });
       }
       for (const [key, value] of Object.entries(layer.getProperties())) {
@@ -151,6 +152,7 @@ export default class Config {
           source.set("type", s.type);
           source.set("schema", s.schema);
           source.set("path", s.path);
+          source.set("fileName", s.fileName);
           layer.setSource(source);
           break;
         case "th":
