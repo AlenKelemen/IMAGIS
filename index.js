@@ -94,11 +94,11 @@ ux.aside.home.addControl(
     map: map,
   })
 );
-
 ux.aside.DMA.addControl(
   new Data({
     target: ux.aside,
     cfg: map.config.cfg,
+    select: map.select,
   })
 );
 
@@ -109,14 +109,13 @@ ux.aside.toolbar = new Container({
 });
 ux.aside.addControl(ux.aside.toolbar);
 /**select */
-const select = new Select({
+map.select = new Select({
   target: ux.aside.toolbar,
   clear: true,
 });
-select.selectInfo({
+map.select.selectInfo({
   targetControl: ux.footer,
 });
-
 /**ol/controls */
 ux.aside.toolbar.addControl(
   new Zoom({

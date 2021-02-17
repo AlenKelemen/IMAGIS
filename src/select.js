@@ -19,15 +19,13 @@ export default class Select extends Container {
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
-    this.activeLayer = this.map
-      .getLayers()
-      .getArray()
-      .find((x) => x.get("active"));
     this.olSelect = new OlSelect({
       hitTolerance: 5,
       filter: (feature, layer) => {
-        if (!this.activeLayer) return true;
-        else return layer === this.activeLayer;
+        const activeLayer = this.map
+        .getLayers().get('active');
+        if (!activeLayer) return true;
+        else return layer === activeLayer;
       },
     });
     this.map.addInteraction(this.olSelect);
@@ -40,7 +38,6 @@ export default class Select extends Container {
       element: elt("div", { className: "select-info" }),
     });
     if (options.targetControl) options.targetControl.addControl(info);
-    
     else this.map.addControl(info);
     info.element.innerHTML = "Odabrano: 0";
     if (options.tipLabel) info.element.title = options.tipLabel;
@@ -49,13 +46,13 @@ export default class Select extends Container {
     });
   }
   selectRectangle() {
-    const toggle = new Toggle({
+    this.rectangleToggle = new Toggle({
       html: '<i class="far fa-stop fa-fw"></i>',
       className: "toggle select",
       tipLabel: "Odaberi crtnjem pravokutnika",
     });
-    this.container.addControl(toggle);
-    toggle.on("change:active", (evt) => {
+    this.container.addControl(this.rectangleToggle);
+  this.rectangleToggle.on("change:active", (evt) => {
       this.olSelect.setActive(evt.active);
       const dragBox = new DragBox();
       this.map.removeInteraction(
@@ -107,16 +104,17 @@ export default class Select extends Container {
     });
   }
   selectPoint() {
-    const toggle = new Toggle({
+    this.pointToggle = new Toggle({
       html: '<i class="far fa-mouse-pointer fa-fw"></i>',
       className: "toggle select",
       tipLabel: "Odaberi",
     });
-    this.container.addControl(toggle);
-    toggle.on("change:active", (evt) => {
+    this.container.addControl(this.pointToggle);
+    this.pointToggle.on("change:active", (evt) => {
       this.olSelect.setActive(evt.active);
     });
   }
+ 
   setClear(b) {
     this.clear = b;
   }

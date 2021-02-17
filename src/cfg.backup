@@ -1,21 +1,34 @@
 {
     "project": "Vodovod Omiš",
     "gitPath": "https://github.com/AlenKelemen/IMAGIS-data.git",
-    "center": [535420.4693824024, 4814471.358589062],
+    "center": [
+        535420.4693824024,
+        4814471.358589062
+    ],
     "zoom": 5.7,
-    "sources": [{
+    "sources": [
+        {
             "name": "VodoopskrbaVod",
             "path": "vodovodOmis",
+            "fileName": "vod",
             "type": "geojson",
             "schema": {
                 "geometry": "linestring",
-                "properties": [{
+                "properties": [
+                    {
                         "Name": "Tip",
                         "Label": "Tip",
                         "Description": "Tip",
-                        "Constrains": ["Magistralni", "Distributivni", "Interni", "Strani", ""],
+                        "Constrains": [
+                            "Magistralni",
+                            "Distributivni",
+                            "Interni",
+                            "Strani",
+                            ""
+                        ],
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "DN",
                         "Label": "DN",
                         "Description": "Nazivni promjer",
@@ -25,7 +38,16 @@
                         "Name": "Materijal",
                         "Label": "Materijal",
                         "Description": "Materijal",
-                        "Constrains": ["SL", "NL", "PEHD", "PVC", "ČE", "AC", "POC", ""],
+                        "Constrains": [
+                            "SL",
+                            "NL",
+                            "PEHD",
+                            "PVC",
+                            "ČE",
+                            "AC",
+                            "POC",
+                            ""
+                        ],
                         "DataType": 9
                     },
                     {
@@ -56,7 +78,19 @@
                         "Name": "Status",
                         "Label": "Status",
                         "Description": "Status",
-                        "Constrains": ["Plan", "Projekt", "Izgradnja", "Lokacijska dozvola", "Građevinska dozvola", "Rad", "Povremeno", "Kvar", "Izvan pogona", "Uništeno", ""],
+                        "Constrains": [
+                            "Plan",
+                            "Projekt",
+                            "Izgradnja",
+                            "Lokacijska dozvola",
+                            "Građevinska dozvola",
+                            "Rad",
+                            "Povremeno",
+                            "Kvar",
+                            "Izvan pogona",
+                            "Uništeno",
+                            ""
+                        ],
                         "DataType": 9
                     },
                     {
@@ -69,7 +103,125 @@
                         "Name": "PodaciTocnost",
                         "Label": "Točnost podataka",
                         "Description": "Točnost podataka",
-                        "Constrains": ["GEO", "GPS", "SV1000", "SV5000", "SV10000", "SV25000", "SV50000", "GEOSKICA", "FIKTIVNO", ""],
+                        "Constrains": [
+                            "GEO",
+                            "GPS",
+                            "SV1000",
+                            "SV5000",
+                            "SV10000",
+                            "SV25000",
+                            "SV50000",
+                            "GEOSKICA",
+                            "FIKTIVNO",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciIme",
+                        "Label": "Podatke unio",
+                        "Description": "Podatke unio",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciDatum",
+                        "Label": "Datum unosa",
+                        "Description": "Datum unosa podataka",
+                        "DataType": 3
+                    },
+                    {
+                        "Name": "Napomena",
+                        "Label": "Napomena",
+                        "Description": "Napomena",
+                        "DataType": 9
+                    }
+                ]
+            }
+        },
+        {
+            "name": "VodoopskrbaMjernaZona",
+            "path": "vodovodOmis",
+            "fileName": "mjernaZona",
+            "type": "geojson",
+            "schema": {
+                "geometry": "polygon",
+                "properties": [
+                    {
+                        "Name": "Naziv",
+                        "Label": "Naziv",
+                        "Description": "Naziv",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "Sustav",
+                        "Label": "Sustav",
+                        "Description": "Sustav",
+                        "Constrains": [
+                            "Kraljevac",
+                            "Studenci",
+                            "Ruda",
+                            "Zagrad",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "Ime",
+                        "Label": "Ime",
+                        "Description": "Ime",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "Klasa",
+                        "Label": "Klasa",
+                        "Description": "Klasa",
+                        "Constrains": [
+                            "MjernaZona",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "Status",
+                        "Label": "Status",
+                        "Description": "Status",
+                        "Constrains": [
+                            "Plan",
+                            "Projekt",
+                            "Izgradnja",
+                            "Lokacijska dozvola",
+                            "Građevinska dozvola",
+                            "Rad",
+                            "Povremeno",
+                            "Kvar",
+                            "Izvan pogona",
+                            "Uništeno",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciIzvor",
+                        "Label": "Izvor podataka",
+                        "Description": "Izvor podataka",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciTocnost",
+                        "Label": "Točnost podataka",
+                        "Description": "Točnost podataka",
+                        "Constrains": [
+                            "GEO",
+                            "GPS",
+                            "SV1000",
+                            "SV5000",
+                            "SV10000",
+                            "SV25000",
+                            "SV50000",
+                            "GEOSKICA",
+                            "FIKTIVNO",
+                            ""
+                        ],
                         "DataType": 9
                     },
                     {
@@ -96,27 +248,50 @@
         {
             "name": "VodoopskrbaHidrant",
             "path": "vodovodOmis",
+            "fileName": "hidrant",
             "type": "geojson",
             "schema": {
                 "geometry": "point",
-                "properties": [{
+                "properties": [
+                    {
                         "Name": "Tip",
                         "Label": "Tip",
                         "Description": "Tip",
-                        "Constrains": ["NH", "PH", "NHZ", "PHZ", ""],
+                        "Constrains": [
+                            "NH",
+                            "PH",
+                            "NHZ",
+                            "PHZ",
+                            ""
+                        ],
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "DN",
                         "Label": "DN",
                         "Description": "Nazivni promjer",
-                        "Constrains": [50, 80, 100, ""],
+                        "Constrains": [
+                            50,
+                            80,
+                            100,
+                            ""
+                        ],
                         "DataType": 8
                     },
                     {
                         "Name": "Materijal",
                         "Label": "Materijal",
                         "Description": "Materijal",
-                        "Constrains": ["SL", "NL", "PEHD", "PVC", "ČE", "AC", "POC", ""],
+                        "Constrains": [
+                            "SL",
+                            "NL",
+                            "PEHD",
+                            "PVC",
+                            "ČE",
+                            "AC",
+                            "POC",
+                            ""
+                        ],
                         "DataType": 9
                     },
                     {
@@ -124,44 +299,75 @@
                         "Label": "Lokacija",
                         "Description": "Najbliži toponim",
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "MjernaZona",
                         "Label": "DMA",
                         "Description": "Mjerna zona- DMA",
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "TehnickaCjelina",
                         "Label": "Tehnicka cjelina",
                         "Description": "Tehnicka cjelina",
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "LokalnaUprava",
                         "Label": "Lokalna uprava",
                         "Description": "Lokalna uprava",
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "Status",
                         "Label": "Status",
                         "Description": "Status",
-                        "Constrains": ["Plan", "Projekt", "Izgradnja", "Lokacijska dozvola", "Građevinska dozvola", "Rad", "Povremeno", "Kvar", "Izvan pogona", "Uništeno", ""],
+                        "Constrains": [
+                            "Plan",
+                            "Projekt",
+                            "Izgradnja",
+                            "Lokacijska dozvola",
+                            "Građevinska dozvola",
+                            "Rad",
+                            "Povremeno",
+                            "Kvar",
+                            "Izvan pogona",
+                            "Uništeno",
+                            ""
+                        ],
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "PodaciIzvor",
                         "Label": "Izvor podataka",
                         "Description": "Izvor podataka",
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "PodaciTocnost",
                         "Label": "Točnost podataka",
                         "Description": "Točnost podataka",
-                        "Constrains": ["GEO", "GPS", "SV1000", "SV5000", "SV10000", "SV25000", "SV50000", "GEOSKICA", "FIKTIVNO", ""],
+                        "Constrains": [
+                            "GEO",
+                            "GPS",
+                            "SV1000",
+                            "SV5000",
+                            "SV10000",
+                            "SV25000",
+                            "SV50000",
+                            "GEOSKICA",
+                            "FIKTIVNO",
+                            ""
+                        ],
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "PodaciIme",
                         "Label": "Podatke unio",
                         "Description": "Podatke unio",
                         "DataType": 9
-                    }, {
+                    },
+                    {
                         "Name": "PodaciDatum",
                         "Label": "Datum unosa",
                         "Description": "Datum unosa podataka",
@@ -179,125 +385,247 @@
         {
             "name": "VodoopskrbaVodospremnik",
             "path": "vodovodOmis",
+            "fileName": "vodospremnik",
             "type": "geojson",
             "schema": {
                 "geometry": "point",
-                "properties": [{
-                    "Name": "Lokacija",
-                    "Label": "Lokacija",
-                    "Description": "Najbliži toponim",
-                    "DataType": 9
-                }, {
-                    "Name": "MjernaZona",
-                    "Label": "DMA",
-                    "Description": "Mjerna zona- DMA",
-                    "DataType": 9
-                }, {
-                    "Name": "TehnickaCjelina",
-                    "Label": "Tehnicka cjelina",
-                    "Description": "Tehnicka cjelina",
-                    "DataType": 9
-                }, {
-                    "Name": "LokalnaUprava",
-                    "Label": "Lokalna uprava",
-                    "Description": "Lokalna uprava",
-                    "DataType": 9
-                }, {
-                    "Name": "Status",
-                    "Label": "Status",
-                    "Description": "Status",
-                    "Constrains": ["Plan", "Projekt", "Izgradnja", "Lokacijska dozvola", "Građevinska dozvola", "Rad", "Povremeno", "Kvar", "Izvan pogona", "Uništeno", ""],
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciIzvor",
-                    "Label": "Izvor podataka",
-                    "Description": "Izvor podataka",
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciTocnost",
-                    "Label": "Točnost podataka",
-                    "Description": "Točnost podataka",
-                    "Constrains": ["GEO", "GPS", "SV1000", "SV5000", "SV10000", "SV25000", "SV50000", "GEOSKICA", "FIKTIVNO", ""],
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciIme",
-                    "Label": "Podatke unio",
-                    "Description": "Podatke unio",
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciDatum",
-                    "Label": "Datum unosa",
-                    "Description": "Datum unosa podataka",
-                    "DataType": 3
-                },
-                {
-                    "Name": "Napomena",
-                    "Label": "Napomena",
-                    "Description": "Napomena",
-                    "DataType": 9
-                }]
+                "properties": [
+                    {
+                        "Name": "Lokacija",
+                        "Label": "Lokacija",
+                        "Description": "Najbliži toponim",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "MjernaZona",
+                        "Label": "DMA",
+                        "Description": "Mjerna zona- DMA",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "TehnickaCjelina",
+                        "Label": "Tehnicka cjelina",
+                        "Description": "Tehnicka cjelina",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "LokalnaUprava",
+                        "Label": "Lokalna uprava",
+                        "Description": "Lokalna uprava",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "Status",
+                        "Label": "Status",
+                        "Description": "Status",
+                        "Constrains": [
+                            "Plan",
+                            "Projekt",
+                            "Izgradnja",
+                            "Lokacijska dozvola",
+                            "Građevinska dozvola",
+                            "Rad",
+                            "Povremeno",
+                            "Kvar",
+                            "Izvan pogona",
+                            "Uništeno",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciIzvor",
+                        "Label": "Izvor podataka",
+                        "Description": "Izvor podataka",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciTocnost",
+                        "Label": "Točnost podataka",
+                        "Description": "Točnost podataka",
+                        "Constrains": [
+                            "GEO",
+                            "GPS",
+                            "SV1000",
+                            "SV5000",
+                            "SV10000",
+                            "SV25000",
+                            "SV50000",
+                            "GEOSKICA",
+                            "FIKTIVNO",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciIme",
+                        "Label": "Podatke unio",
+                        "Description": "Podatke unio",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciDatum",
+                        "Label": "Datum unosa",
+                        "Description": "Datum unosa podataka",
+                        "DataType": 3
+                    },
+                    {
+                        "Name": "Napomena",
+                        "Label": "Napomena",
+                        "Description": "Napomena",
+                        "DataType": 9
+                    }
+                ]
             }
         },
         {
             "name": "VodoopskrbaPodrucjeZgrada",
             "path": "vodovodOmis",
+            "fileName": "podrucjeZgrada",
             "type": "geojson",
             "schema": {
                 "geometry": "polygon",
-                "properties": [{
-                    "Name": "Lokacija",
-                    "Label": "Lokacija",
-                    "Description": "Najbliži toponim",
-                    "DataType": 9
-                }, {
-                    "Name": "MjernaZona",
-                    "Label": "DMA",
-                    "Description": "Mjerna zona- DMA",
-                    "DataType": 9
-                }, {
-                    "Name": "TehnickaCjelina",
-                    "Label": "Tehnicka cjelina",
-                    "Description": "Tehnicka cjelina",
-                    "DataType": 9
-                }, {
-                    "Name": "LokalnaUprava",
-                    "Label": "Lokalna uprava",
-                    "Description": "Lokalna uprava",
-                    "DataType": 9
-                }, {
-                    "Name": "Status",
-                    "Label": "Status",
-                    "Description": "Status",
-                    "Constrains": ["Plan", "Projekt", "Izgradnja", "Lokacijska dozvola", "Građevinska dozvola", "Rad", "Povremeno", "Kvar", "Izvan pogona", "Uništeno", ""],
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciIzvor",
-                    "Label": "Izvor podataka",
-                    "Description": "Izvor podataka",
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciTocnost",
-                    "Label": "Točnost podataka",
-                    "Description": "Točnost podataka",
-                    "Constrains": ["GEO", "GPS", "SV1000", "SV5000", "SV10000", "SV25000", "SV50000", "GEOSKICA", "FIKTIVNO", ""],
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciIme",
-                    "Label": "Podatke unio",
-                    "Description": "Podatke unio",
-                    "DataType": 9
-                }, {
-                    "Name": "PodaciDatum",
-                    "Label": "Datum unosa",
-                    "Description": "Datum unosa podataka",
-                    "DataType": 3
-                },
-                {
-                    "Name": "Napomena",
-                    "Label": "Napomena",
-                    "Description": "Napomena",
-                    "DataType": 9
-                }]
+                "properties": [
+                    {
+                        "Name": "Lokacija",
+                        "Label": "Lokacija",
+                        "Description": "Najbliži toponim",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "MjernaZona",
+                        "Label": "DMA",
+                        "Description": "Mjerna zona- DMA",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "TehnickaCjelina",
+                        "Label": "Tehnicka cjelina",
+                        "Description": "Tehnicka cjelina",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "LokalnaUprava",
+                        "Label": "Lokalna uprava",
+                        "Description": "Lokalna uprava",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "Status",
+                        "Label": "Status",
+                        "Description": "Status",
+                        "Constrains": [
+                            "Plan",
+                            "Projekt",
+                            "Izgradnja",
+                            "Lokacijska dozvola",
+                            "Građevinska dozvola",
+                            "Rad",
+                            "Povremeno",
+                            "Kvar",
+                            "Izvan pogona",
+                            "Uništeno",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciIzvor",
+                        "Label": "Izvor podataka",
+                        "Description": "Izvor podataka",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciTocnost",
+                        "Label": "Točnost podataka",
+                        "Description": "Točnost podataka",
+                        "Constrains": [
+                            "GEO",
+                            "GPS",
+                            "SV1000",
+                            "SV5000",
+                            "SV10000",
+                            "SV25000",
+                            "SV50000",
+                            "GEOSKICA",
+                            "FIKTIVNO",
+                            ""
+                        ],
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciIme",
+                        "Label": "Podatke unio",
+                        "Description": "Podatke unio",
+                        "DataType": 9
+                    },
+                    {
+                        "Name": "PodaciDatum",
+                        "Label": "Datum unosa",
+                        "Description": "Datum unosa podataka",
+                        "DataType": 3
+                    },
+                    {
+                        "Name": "Napomena",
+                        "Label": "Napomena",
+                        "Description": "Napomena",
+                        "DataType": 9
+                    }
+                ]
+            }
+        },
+        {
+            "name": "thDataPressure",
+            "path": "https://gis.edc.hr/imagisth/threport/pressure_th",
+            "type": "data",
+            "schema": {
+                "geometry": "point",
+                "properties": [
+                    {
+                        "Name": "device_id",
+                        "Label": "ID uređaja",
+                        "Description": "ID uređaja"
+                    },
+                    {
+                        "Name": "date_part",
+                        "Label": "Datum i vrijeme",
+                        "Description": "Datum i vrijeme",
+                        "DataType": 8
+                    },
+                    {
+                        "Name": "pressure",
+                        "Label": "Tlak bar",
+                        "Description": "Tlak bar",
+                        "DataType": 12
+                    }
+                ]
+            }
+        },
+        {
+            "name": "thDataFlow",
+            "path": "https://gis.edc.hr/imagisth/threport/flow_th",
+            "type": "data",
+            "schema": {
+                "geometry": "point",
+                "properties": [
+                    {
+                        "Name": "device_id",
+                        "Label": "ID uređaja",
+                        "Description": "ID uređaja"
+                    },
+                    {
+                        "Name": "date_part",
+                        "Label": "Datum i vrijeme",
+                        "Description": "Datum i vrijeme",
+                        "DataType": 8
+                    },
+                    {
+                        "Name": "flow",
+                        "Label": "Protok l/s",
+                        "Description": "Protok l/s",
+                        "DataType": 12
+                    }
+                ]
             }
         },
         {
@@ -306,29 +634,35 @@
             "type": "th",
             "schema": {
                 "geometry": "point",
-                "properties": [{
-                    "Name": "company_id",
-                    "Label": "ID kompanije",
-                    "Description": "ID kompanije"
-                }, {
-                    "Name": "device_id",
-                    "Label": "ID uređaja",
-                    "Description": "ID uređaja"
-                }, {
-                    "Name": "device_name",
-                    "Label": "Ime uređaja",
-                    "Description": "Ime uređaja"
-                }, {
-                    "Name": "gain_id",
-                    "Label": "ID mjerenja",
-                    "Description": "ID mjerenja",
-                    "Hidden": true
-                }, {
-                    "Name": "info_id",
-                    "Label": "ID info",
-                    "Description": "ID info",
-                    "Hidden": true
-                }]
+                "properties": [
+                    {
+                        "Name": "company_id",
+                        "Label": "ID kompanije",
+                        "Description": "ID kompanije"
+                    },
+                    {
+                        "Name": "device_id",
+                        "Label": "ID uređaja",
+                        "Description": "ID uređaja"
+                    },
+                    {
+                        "Name": "device_name",
+                        "Label": "Ime uređaja",
+                        "Description": "Ime uređaja"
+                    },
+                    {
+                        "Name": "gain_id",
+                        "Label": "ID mjerenja",
+                        "Description": "ID mjerenja",
+                        "Hidden": true
+                    },
+                    {
+                        "Name": "info_id",
+                        "Label": "ID info",
+                        "Description": "ID info",
+                        "Hidden": true
+                    }
+                ]
             }
         },
         {
@@ -364,7 +698,6 @@
             "APIKey": "AgFHvfmLkp5DnDE26m9RAx4MSzpNwgwCfy2nQ1dGYSs7IIF107x5-nrxgMJJsPIf",
             "imagerySet": "AerialWithLabels",
             "type": "bing"
-
         },
         {
             "name": "DGU_DOF_TOPONIMI",
@@ -409,14 +742,15 @@
             "type": "wms"
         }
     ],
-    "layers": [{
+    "layers": [
+        {
             "source": "OSM",
             "name": "OSM",
             "label": "Open Street Map",
             "info": "",
             "visible": true,
             "opacity": 0.7,
-            "zIndex":0,
+            "zIndex": 0,
             "maxResolution": 10
         },
         {
@@ -426,7 +760,7 @@
             "info": "Bing Aerial With Labels",
             "visible": false,
             "opacity": 0.9,
-            "zIndex":0
+            "zIndex": 0
         },
         {
             "source": "DGU_DOF",
@@ -435,7 +769,7 @@
             "info": "DIGITALNA ORTOFOTO KARTA U BOJI Skraćeni naziv DOF Godina nastanka 2011.",
             "visible": false,
             "opacity": 0.6,
-            "zIndex":0
+            "zIndex": 0
         },
         {
             "source": "DGU_DOF_TOPONIMI",
@@ -444,7 +778,7 @@
             "info": "DIGITALNA ORTOFOTO KARTA U BOJI Skraćeni naziv DOF Godina nastanka 2011.",
             "visible": false,
             "opacity": 0.9,
-            "zIndex":0
+            "zIndex": 0
         },
         {
             "source": "DGU_TK25",
@@ -454,7 +788,7 @@
             "minResolution": 20,
             "visible": false,
             "opacity": 0.9,
-            "zIndex":0
+            "zIndex": 0
         },
         {
             "source": "DGU_HOK",
@@ -463,7 +797,7 @@
             "info": "HRVATSKA OSNOVNA KARTA Skraćeni naziv HOK Godina nastanka 1954.-2010.",
             "visible": false,
             "opacity": 0.9,
-            "zIndex":0
+            "zIndex": 0
         },
         {
             "source": "DGU_DKP",
@@ -484,15 +818,67 @@
             "maxResolution": 10,
             "visible": true,
             "zIndex": 100,
-            "style": [{
-                "fill": {
-                    "color": "rgba(0,0,255,0.25)"
-                },
-                "stroke": {
-                    "color": "rgba(0,0,0,1)",
-                    "width": 1
+            "style": [
+                {
+                    "fill": {
+                        "color": "rgba(0,0,255,0.25)"
+                    },
+                    "stroke": {
+                        "color": "rgba(0,0,0,1)",
+                        "width": 1
+                    }
                 }
-            }]
+            ]
+        },
+        {
+            "source": "VodoopskrbaMjernaZona",
+            "name": "mjernaZona",
+            "label": "DMA mjerne zone",
+            "info": "",
+            "visible": true,
+            "zIndex": 100,
+            "style": [
+                {
+                    "filter": {
+                        "property": "napomena",
+                        "operator": "!=",
+                        "value": "Glavne"
+                    },
+                    "text": {
+                        "text": "naziv",
+                        "font": "12px Arial"
+                    },
+                    "stroke": {
+                        "color": "red",
+                        "width": 1
+                    }
+                }
+            ]
+        },
+        {
+            "source": "VodoopskrbaMjernaZona",
+            "name": "sustav",
+            "label": "Sustavi",
+            "info": "",
+            "visible": true,
+            "zIndex": 100,
+            "style": [
+                {
+                    "filter": {
+                        "property": "napomena",
+                        "operator": "=",
+                        "value": "Glavne"
+                    },
+                    "text": {
+                        "text": "Ime",
+                        "font": "18px Arial"
+                    },
+                    "stroke": {
+                        "color": "rgba(0,0,0,0.2)",
+                        "width": 4
+                    }
+                }
+            ]
         },
         {
             "source": "VodoopskrbaVod",
@@ -502,7 +888,8 @@
             "maxResolution": 100,
             "visible": true,
             "zIndex": 110,
-            "style": [{
+            "style": [
+                {
                     "filter": {
                         "property": "DN",
                         "operator": ">",
@@ -514,7 +901,10 @@
                     },
                     "text": {
                         "text": "DN",
-                        "resolution": [0, 4],
+                        "resolution": [
+                            0,
+                            4
+                        ],
                         "placement": "line",
                         "scale": 1.2
                     }
@@ -531,32 +921,36 @@
                     },
                     "text": {
                         "text": "DN",
-                        "resolution": [0, 5],
+                        "resolution": [
+                            0,
+                            5
+                        ],
                         "placement": "line"
-
                     }
                 }
             ]
         },
-       {
+        {
             "source": "VodoopskrbaVodospremnik",
             "name": "vodospremnik",
             "label": "Vodospremnik",
             "info": "",
             "visible": true,
             "zIndex": 120,
-            "style": [{
-                "regularShape": {
-                    "radius": 6,
-                    "points": 4,
-                    "fill": {
-                        "color": "rgba(214,20,20,1)"
-                    },
-                    "stroke": {
-                        "color": "black"
+            "style": [
+                {
+                    "regularShape": {
+                        "radius": 6,
+                        "points": 4,
+                        "fill": {
+                            "color": "rgba(214,20,20,1)"
+                        },
+                        "stroke": {
+                            "color": "black"
+                        }
                     }
                 }
-            }]
+            ]
         },
         {
             "source": "VodoopskrbaHidrant",
@@ -566,15 +960,17 @@
             "maxResolution": 25,
             "visible": true,
             "zIndex": 130,
-            "style": [{
-                "regularShape": {
-                    "radius": 3,
-                    "points": 24,
-                    "fill": {
-                        "color": "rgba(255,0,0,1)"
+            "style": [
+                {
+                    "regularShape": {
+                        "radius": 3,
+                        "points": 24,
+                        "fill": {
+                            "color": "rgba(255,0,0,1)"
+                        }
                     }
                 }
-            }]
+            ]
         },
         {
             "source": "TH",
@@ -584,13 +980,18 @@
             "maxResolution": 500,
             "visible": true,
             "zIndex": 0,
-            "style": [{
-                "icon": {
-                    "src": "th",
-                    "scale": 0.6,
-                    "anchor": [0.5, 0.5]
+            "style": [
+                {
+                    "icon": {
+                        "src": "th",
+                        "scale": 0.6,
+                        "anchor": [
+                            0.5,
+                            0.5
+                        ]
+                    }
                 }
-            }]
+            ]
         }
     ]
 }

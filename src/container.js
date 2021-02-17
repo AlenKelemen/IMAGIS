@@ -1,4 +1,5 @@
 import Control from "ol/control/Control";
+import Toggle from "./toggle";
 /** Container for controls
  * @constructor
  * @extends {ol_control_Control}
@@ -15,7 +16,7 @@ export default class Container extends Control {
       element: document.createElement(options.semantic || "div"),
     });
     this.element.className = options.className || "container"; // className
-    this.setVisible((options.visible === undefined) ? true : options.visible);
+    this.setVisible(options.visible === undefined ? true : options.visible);
     this.set("name", options.name);
     this.controls_ = [];
   }
@@ -24,10 +25,14 @@ export default class Container extends Control {
     if (this.getVisible() == b) return;
     if (b) this.element.classList.remove("hidden");
     else {
-      for(const c of this.getControls()){
-        c.setActive(false);
+      for (const c of this.getControls()) {
+        console.log( c instanceof Toggle)
+        if(c instanceof Toggle){
+          c.setActive(false);
+        }
       }
-      this.element.classList.add("hidden");}
+      this.element.classList.add("hidden");
+    }
     this.dispatchEvent({
       type: "change:visible",
       key: "visible",

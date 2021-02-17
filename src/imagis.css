@@ -30,7 +30,7 @@ body {
 }
 /**container hidden*/
 .hidden {
-  display: none;
+  display: none!important;
 }
 
 /** UX header control */

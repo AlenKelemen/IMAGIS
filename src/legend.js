@@ -174,6 +174,16 @@ export default class Legend extends Toggle {
       });
     });
   }
+  setActiveLayer(layer){
+    const layers = this.map.getLayers().getArray();
+    for (const l of layers) l.set("active", false);
+    layer.set('active',true);
+    this.map.getLayers().set("active", layer.get("active") ? layer : null);
+    this.setContent(this.map.getView().getResolution());
+  }
+  getActiveLayer(){
+    return this.map.getLayers().getArray().filter(x => x.get('active')=== true);
+  }
   togglelHide() {
     this.hide = !this.hide;
     if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";

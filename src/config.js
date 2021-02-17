@@ -40,7 +40,7 @@ export default class Config {
       v = m.getView();
     cfg.project = m.get("project");
     cfg.gitPath = m.get("gitPath");
-    for(const s of map.get("sources")){
+    for (const s of map.get("sources")) {
       cfg.sources.push(s); //non spatial sources (type:'data') saved to map
     }
     cfg.center = v.getCenter();
@@ -161,6 +161,7 @@ export default class Config {
           source.set("path", s.path);
           source.set("fileName", s.fileName);
           layer.setSource(source);
+          if (l.active) layer.set("active", l.active);
           break;
         case "th":
           layer = new VectorLayer();
@@ -195,6 +196,7 @@ export default class Config {
                     featureProjection: "EPSG:3765",
                   }).readFeatures(geojson);
                   source.addFeatures(features);
+                  source.getFeatures().map((x) => x.set("layer", layer));
                 });
             },
           });
@@ -203,6 +205,7 @@ export default class Config {
           source.set("path", s.path);
           source.set("schema", s.schema);
           layer.setSource(source);
+          if (l.active) layer.set("active", l.active);
           break;
       }
       if (layer) {
@@ -219,6 +222,11 @@ export default class Config {
         }
         m.addLayer(layer);
       } else console.log("Layer not written to map (no converter defined):", l);
+      const activeLayer = m
+        .getLayers()
+        .getArray()
+        .find((x) => x.get("active") === true);
+      m.getLayers().set("active", activeLayer);
     }
   }
   /**

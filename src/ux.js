@@ -39,6 +39,7 @@ export default class UX {
     });
     this.map.addControl(this.footer);
   }
+ 
   
 
   getTarget() {
