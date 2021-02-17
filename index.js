@@ -14,6 +14,7 @@ import Config from "./src/config";
 import Project from "./src/project";
 import Select from "./src/select.js";
 import Data from "./src/data.js";
+import DMA from "./src/dma.js";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -43,7 +44,7 @@ const ux = map.ux;
 map.setTarget(ux.getTarget());
 /**toggle in header*/
 ux.header.home = new Toggle({
-  html: '<i class="far fa-home fa-fw"></i> Osnovno',
+  html: '<i class="far fa-image fa-fw"></i> IMAGIS',
   className: "toggle",
   tipLabel: "GIS alati...",
   active: false,
@@ -51,14 +52,14 @@ ux.header.home = new Toggle({
 ux.header.addControl(ux.header.home);
 ux.header.home.on("change:active", (evt) => ux.aside.home.setVisible(evt.active));
 
-ux.header.DMA = new Toggle({
-  html: '<i class="far fa-hand-holding-water fa-fw"></i> DMA',
+ux.header.water = new Toggle({
+  html: '<i class="far fa-hand-holding-water fa-fw"></i> Vodoopskrba',
   className: "toggle",
-  tipLabel: "Mjerne zone...",
+  tipLabel: "Vodoopskrba",
   active: false,
 });
-ux.header.addControl(ux.header.DMA);
-ux.header.DMA.on("change:active", (evt) => ux.aside.DMA.setVisible(evt.active));
+ux.header.addControl(ux.header.water);
+ux.header.water.on("change:active", (evt) => ux.aside.water.setVisible(evt.active));
 
 /**home taskbar -display when ux.header.home is active
  * in taskbar put app buttons or toggles to invoke apropriate containers (taskpanes) for app dialog
@@ -70,12 +71,12 @@ ux.aside.home = new Container({
 ux.aside.addControl(ux.aside.home);
 ux.aside.home.setVisible(ux.header.home.getActive());
 
-ux.aside.DMA = new Container({
+ux.aside.water = new Container({
   semantic: "nav",
   className: "taskbar ol-control",
 });
-ux.aside.addControl(ux.aside.DMA);
-ux.aside.DMA.setVisible(ux.header.DMA.getActive());
+ux.aside.addControl(ux.aside.water);
+ux.aside.water.setVisible(ux.header.water.getActive());
 
 /**Tasks goes here*/
 
@@ -94,8 +95,15 @@ ux.aside.home.addControl(
     map: map,
   })
 );
-ux.aside.DMA.addControl(
+ux.aside.water.addControl(
   new Data({
+    target: ux.aside,
+    cfg: map.config.cfg,
+    select: map.select,
+  })
+);
+ux.aside.water.addControl(
+  new DMA({
     target: ux.aside,
     cfg: map.config.cfg,
     select: map.select,

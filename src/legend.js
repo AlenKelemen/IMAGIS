@@ -27,7 +27,6 @@ export default class Legend extends Toggle {
     if (!options.className) options.className = "toggle";
     if (!options.html) options.html = '<i class="far fa-layer-group fa-fw"></i>';
     super(options);
-    this.map = options.map;
     this.container = new Container({
       semantic: "section",
       className: `taskpane no-header`,

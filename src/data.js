@@ -32,7 +32,7 @@ export default class Data extends Toggle {
       const select = evt.target;
       const features = select.getFeatures().getArray();
       const f = features[features.length - 1];
-      if (f.get("layer") === th) {
+      if (f && f.get("layer") === th) {
         this.container.setVisible(true);
         const id = f.get("device_id");
         this.chart.options.title.text = f.get("device_name");
@@ -106,7 +106,7 @@ export default class Data extends Toggle {
               time: {
                 unit: "day",
                 displayFormats: {
-                  day: "DD",
+                  day: "MM:DD",
                 },
               },
             },
@@ -147,7 +147,6 @@ export default class Data extends Toggle {
       dataset.data=[]
     });
     chart.update();
-    console.log(this.chart.data.datasets[0].data.length);
     fetch(pathPressure)
       .then((r) => r.json())
       .then((r) => {
@@ -158,7 +157,6 @@ export default class Data extends Toggle {
           });
         }
         chart.update();
-        console.log(this.chart.data.datasets[0].data.length);
       });
     fetch(pathFlow)
       .then((r) => r.json())

@@ -26,7 +26,6 @@ export default class Container extends Control {
     if (b) this.element.classList.remove("hidden");
     else {
       for (const c of this.getControls()) {
-        console.log( c instanceof Toggle)
         if(c instanceof Toggle){
           c.setActive(false);
         }

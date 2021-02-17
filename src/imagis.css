@@ -30,7 +30,7 @@ body {
 }
 /**container hidden*/
 .hidden {
-  display: none!important;
+  display: none !important;
 }
 
 /** UX header control */
@@ -38,6 +38,7 @@ body {
   width: fit-content;
   position: unset;
   display: flex;
+  margin-left: auto;
 }
 .map-header button {
   width: fit-content;
@@ -51,12 +52,12 @@ body {
 }
 .taskbar {
   position: relative;
-  height:fit-content;
+  height: fit-content;
 }
+/** */
 .taskpane {
   width: 20em;
   position: relative;
-
   border-radius: 4px;
   padding: 2px;
   align-self: stretch;
@@ -74,21 +75,53 @@ body {
   color: white;
   background-color: rgba(0, 60, 136, 0.5);
 }
+.taskpane .main ul {
+  margin: 0;
+  padding: 3px;
+  list-style-type: none;
+  font-size: 1.2em;;
+}
+.caret::before {
+  font-size:12px;
+  padding-left:6px;
+  content: "\25B6";
+  color: white;
+  display: inline-block;
+  margin-right: 6px;
+}
+.caret-down::before {
+  transform: rotate(90deg);  
+}
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
 .taskpane.no-header .main {
   top: 2px;
   padding: 3px;
 }
-.taskpane.horizontal{
-  height: 300px;
-  width:100%;
-  margin-top: auto;
+.taskpane.no-header.no-footer .main {
+  top: 2px;
+  bottom: 2px;
+  padding: 3px;
 }
-.taskpane.horizontal .main{
+.taskpane.horizontal {
+  height: 300px;
+  width: 100%;
+  margin-top: auto;
+  border-radius: 4px;
+}
+.taskpane.horizontal .main {
   top: 2em;
   bottom: 0.5em;
 }
-.taskpane .graph{
-  background-color:white
+.taskpane .graph {
+  background-color: rgb(245 245 245 / 95%);
+  color: black;
 }
 .taskpane .footer {
   position: absolute;
@@ -142,9 +175,9 @@ body {
 .toolbar > div {
   position: static;
 }
-.ol-dragbox{
-  border-color:#09f;
-  background-color: rgba(0, 153, 255, 0.376)
+.ol-dragbox {
+  border-color: #09f;
+  background-color: rgba(0, 153, 255, 0.376);
 }
 
 /** UX footer control */
