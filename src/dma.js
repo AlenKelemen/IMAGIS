@@ -42,11 +42,8 @@ export default class DMA extends Toggle {
       const btnLocate = elt("button", {}, elt("i", { className: "far fa-map-marker-alt fa-fw" }), elt("span", {}, " Prikaži"));
       const stats = elt("div", { className: "stats-info" }, elt("table", {}));
       const locate = elt("ul", { className: "nested" }, elt("li", {}, btnLocate, stats));
-
       btnLocate.setAttribute("data-name", f.getId());
-
       const label = elt("li", {}, elt("span", { className: "caret" }, f.get("naziv") || ""), locate);
-
       const item = elt("ul", { className: "item" }, label);
       this.main.appendChild(item);
       //fit
@@ -63,28 +60,32 @@ export default class DMA extends Toggle {
       }
       const area = elt("tr", {}, elt("td", {}, "Površina m2"), elt("td", {}, a));
       stats.appendChild(area);
-      const p = polygon(f.getGeometry().getCoordinates());
-      const sumVod = 0;
       const vod = this.map
         .getLayers()
         .getArray()
         .find((x) => x.get("name") === "vod")
         .getSource();
+
       vod.once("change", (evt) => {
         if (vod.getState() === "ready") {
-          for (const [i,f] of vod.getFeatures().entries()) {
-            try{
-            let g = f.getGeometry();
-            ///console.log(i)
-            
-              if (p.contains(polygon(g.getCoordinates()))) sumVod = sumVod + g.getLength();
-            } catch (error) {}
-            
-          }
-          console.log(sumVod)
+          const statVod = vod.getFeatures().filter((x) => x.get("MjernaZona") === f.get("naziv"));
+          let sumLength = statVod.reduce((sumLength, cv,) => sumLength + cv.getGeometry().getLength(),0).toFixed(0);
+          const length = elt("tr", {}, elt("td", {}, "Dužina cjevovoda m"), elt("td", {}, sumLength || ""));
+          stats.appendChild(length);
         }
       });
-    }
+      const pmo = this.map
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("name") === "pmo")
+      .getSource();
+      pmo.once("change", (evt) => {
+        if (pmo.getState() === "ready") {
+          const statPmo = pmo.getFeatures().filter((x) => x.get("MjernaZona") === f.get("naziv"));
+          const count = elt("tr", {}, elt("td", {}, "Broj priključaka"), elt("td", {}, pmo.getFeatures().length));
+          stats.appendChild(count);
+        }
+      });
     //toggle caret
     const toggler = this.main.getElementsByClassName("caret");
     for (let i = 0; i < toggler.length; i++) {
