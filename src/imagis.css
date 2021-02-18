@@ -73,31 +73,46 @@ body {
   overflow-y: auto;
   border-radius: 4px;
   color: white;
-  background-color: rgba(0, 60, 136, 0.5);
+  /* background-color: rgba(0, 60, 136, 0.5); */
+  background-color: #000613e3;
 }
 .taskpane .main ul {
   margin: 0;
   padding: 3px;
   list-style-type: none;
-  font-size: 1.2em;;
+  font-size: 1.2em;
+}
+.taskpane .main .nested ul {
+  margin: 0;
+  padding-left: 10px;
+  list-style-type: none;
+  font-size: 0.8em;
+}
+.taskpane .main li {
+  font-size: 0.8em;
 }
 .caret::before {
-  font-size:12px;
-  padding-left:6px;
+  font-size: 12px;
+  padding-left: 6px;
   content: "\25B6";
   color: white;
   display: inline-block;
   margin-right: 6px;
 }
 .caret-down::before {
-  transform: rotate(90deg);  
+  transform: rotate(90deg);
 }
-.nested {
+.taskpane .main ul.nested {
   display: none;
 }
-
-.active {
+.taskpane .main ul.nested.active {
   display: block;
+  padding-left: 12px;
+}
+.taskpane .main .ol-control {
+  width: fit-content;
+  position: unset;
+  color: black;
 }
 
 .taskpane.no-header .main {
@@ -126,18 +141,36 @@ body {
 .taskpane .footer {
   position: absolute;
   bottom: 0;
-  left: 0;
   right: 0;
   color: white;
   border-radius: 4px;
   text-decoration: none;
   text-align: right;
   padding: 2px;
+  width: fit-content;
+  display: flex;
 }
-.taskpane .ol-control button {
+.taskpane .main button {
   width: unset;
   display: inline-block;
   padding: 4px;
+  background-color: rgba(255,255,255,0.4);
+  outline: none;
+  font-weight: normal;
+  margin: 1px;
+  color: white;
+  font-size: 1.14em;
+  text-decoration: none;
+  text-align: center;
+  line-height: .4em;
+  border: none;
+  border-radius: 2px;
+}
+.taskpane .main button:hover {
+  background-color: rgba(255,255,255,0.6);
+}
+.taskpane .main td{
+  padding:2px;
 }
 
 .taskpane .main .item canvas {

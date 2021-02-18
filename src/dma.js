@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import VectorLayer from "ol/layer/Vector";
+import { point, segment, circle, polygon } from "@flatten-js/core";
 
 export default class DMA extends Toggle {
   constructor(options = {}) {
@@ -28,33 +29,69 @@ export default class DMA extends Toggle {
       .find((x) => x.getSource().get("name") === srcName);
     if (!this.mzLayer || this.mzLayer instanceof VectorLayer === false) return;
     const src = this.mzLayer.getSource();
-    src.once("change", (evt) =>{
+    src.once("change", (evt) => {
       if (src.getState() === "ready") {
-        console.log(src.getFeatures());
+        //console.log(src.getFeatures());
         this.content(src.getFeatures());
       }
     });
   }
   content(features) {
-    const fo = features.sort((a,b)=>a.get('naziv').toLowerCase().localeCompare(b.get('naziv').toLowerCase()))
-    for(const f of fo){
-        console.log(f.get('naziv'));
-        const locate=elt('ul',{className:'nested'},elt('li',{},'lociraj'),elt('li',{},'ohih'));
-        const label =elt('li',{},elt('span',{className:'caret'},f.get('naziv')||''),locate)
-        
-        const item = elt('ul',{className:'item'},label)
-        this.main.appendChild(item)
-    }
-    const toggler = this.main.getElementsByClassName("caret");
-    
-    for (let i = 0; i < toggler.length; i++) {
-        
-        toggler[i].addEventListener("click", function() {
-            console.log(this.parentElement)
-          this.parentElement.querySelector(".nested").classList.toggle("active");
-          this.classList.toggle("caret-down");
-        })
-    }
+    const fo = features.filter((x) => x.get("napomena") !== "Glavne").sort((a, b) => a.get("naziv").toLowerCase().localeCompare(b.get("naziv").toLowerCase()));
+    for (const f of fo) {
+      const btnLocate = elt("button", {}, elt("i", { className: "far fa-map-marker-alt fa-fw" }), elt("span", {}, " Prikaži"));
+      const stats = elt("div", { className: "stats-info" }, elt("table", {}));
+      const locate = elt("ul", { className: "nested" }, elt("li", {}, btnLocate, stats));
 
+      btnLocate.setAttribute("data-name", f.getId());
+
+      const label = elt("li", {}, elt("span", { className: "caret" }, f.get("naziv") || ""), locate);
+
+      const item = elt("ul", { className: "item" }, label);
+      this.main.appendChild(item);
+      //fit
+      btnLocate.addEventListener("click", (evt) => {
+        //console.log(evt.currentTarget.dataset.name);
+        const extent = f.getGeometry().getExtent();
+        this.map.getView().fit(extent);
+      });
+      //stats
+      let a = "";
+      if (f.getGeometry().getType() === "Polygon") {
+        a = f.getGeometry().getArea();
+        a = (a / 1000).toFixed(0);
+      }
+      const area = elt("tr", {}, elt("td", {}, "Površina m2"), elt("td", {}, a));
+      stats.appendChild(area);
+      const p = polygon(f.getGeometry().getCoordinates());
+      const sumVod = 0;
+      const vod = this.map
+        .getLayers()
+        .getArray()
+        .find((x) => x.get("name") === "vod")
+        .getSource();
+      vod.once("change", (evt) => {
+        if (vod.getState() === "ready") {
+          for (const [i,f] of vod.getFeatures().entries()) {
+            try{
+            let g = f.getGeometry();
+            ///console.log(i)
+            
+              if (p.contains(polygon(g.getCoordinates()))) sumVod = sumVod + g.getLength();
+            } catch (error) {}
+            
+          }
+          console.log(sumVod)
+        }
+      });
+    }
+    //toggle caret
+    const toggler = this.main.getElementsByClassName("caret");
+    for (let i = 0; i < toggler.length; i++) {
+      toggler[i].addEventListener("click", function () {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+      });
+    }
   }
 }
