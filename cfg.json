@@ -795,7 +795,7 @@
       "name": "hidrant",
       "label": "Hidrant",
       "info": "",
-      "maxResolution": 25,
+      "maxResolution": 50,
       "visible": true,
       "zIndex": 130,
       "style": [
@@ -814,8 +814,8 @@
         "source": "VodoopskrbaPmo",
         "name": "pmo",
         "label": "Potrošna mjesta",
-        "maxResolution": 5,
-        "visible": true,
+        "maxResolution": 50,
+        "visible": false,
         "zIndex": 180,
         "style": [
             {

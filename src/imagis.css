@@ -76,39 +76,7 @@ body {
   /* background-color: rgba(0, 60, 136, 0.5); */
   background-color: #000613e3;
 }
-.taskpane .main ul {
-  margin: 0;
-  padding: 3px;
-  list-style-type: none;
-  font-size: 1.2em;
-}
-.taskpane .main .nested ul {
-  margin: 0;
-  padding-left: 10px;
-  list-style-type: none;
-  font-size: 0.8em;
-}
-.taskpane .main li {
-  font-size: 0.8em;
-}
-.caret::before {
-  font-size: 12px;
-  padding-left: 6px;
-  content: "\25B6";
-  color: white;
-  display: inline-block;
-  margin-right: 6px;
-}
-.caret-down::before {
-  transform: rotate(90deg);
-}
-.taskpane .main ul.nested {
-  display: none;
-}
-.taskpane .main ul.nested.active {
-  display: block;
-  padding-left: 12px;
-}
+
 .taskpane .main .ol-control {
   width: fit-content;
   position: unset;
@@ -151,26 +119,34 @@ body {
   display: flex;
 }
 .taskpane .main button {
-  width: unset;
-  display: inline-block;
-  padding: 4px;
+  padding: 2px;
   background-color: rgba(255,255,255,0.4);
   outline: none;
-  font-weight: normal;
-  margin: 1px;
+  margin: 3px;
   color: white;
-  font-size: 1.14em;
-  text-decoration: none;
   text-align: center;
-  line-height: .4em;
   border: none;
   border-radius: 2px;
 }
 .taskpane .main button:hover {
   background-color: rgba(255,255,255,0.6);
 }
+.taskpane .main table{
+  padding-left:2px;
+  padding-right:2px;
+  color:inherit;
+  font-size: inherit;
+}
 .taskpane .main td{
-  padding:2px;
+  white-space: nowrap;
+}
+.taskpane .main td>input{
+  background-color: black;
+    border: none;
+    width: 25%;
+    outline: none;
+    color: white;
+    padding-left:3px;
 }
 
 .taskpane .main .item canvas {

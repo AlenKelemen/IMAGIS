@@ -102,13 +102,17 @@ ux.aside.water.addControl(
     select: map.select,
   })
 );
-ux.aside.water.addControl(
-  new DMA({
-    target: ux.aside,
-    cfg: map.config.cfg,
-    select: map.select,
-  })
-);
+const dma = new DMA({
+  target: ux.aside,
+  cfg: map.config.cfg,
+  select: map.select,
+})
+ux.aside.water.addControl(dma);
+
+//!!
+//tmp
+dma.setActive(true)
+//
 
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
 ux.aside.toolbar = new Container({

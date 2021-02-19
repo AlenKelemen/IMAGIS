@@ -23,76 +23,115 @@ export default class DMA extends Toggle {
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
-    this.mzLayer = this.map
-      .getLayers()
-      .getArray()
-      .find((x) => x.getSource().get("name") === srcName);
-    if (!this.mzLayer || this.mzLayer instanceof VectorLayer === false) return;
-    const src = this.mzLayer.getSource();
-    src.once("change", (evt) => {
-      if (src.getState() === "ready") {
-        //console.log(src.getFeatures());
-        this.content(src.getFeatures());
-      }
+    const promises = [this.query("mjernaZona"), this.query("vod"), this.query("pmo"), this.query("hidrant")];
+    Promise.all(promises).then((r) => {
+      const mZ = r[0].getFeatures(); //mjernaZona
+      this.content(mZ);
     });
   }
-  content(features) {
-    const fo = features.filter((x) => x.get("napomena") !== "Glavne").sort((a, b) => a.get("naziv").toLowerCase().localeCompare(b.get("naziv").toLowerCase()));
-    for (const f of fo) {
-      const btnLocate = elt("button", {}, elt("i", { className: "far fa-map-marker-alt fa-fw" }), elt("span", {}, " Prikaži"));
-      const stats = elt("div", { className: "stats-info" }, elt("table", {}));
-      const locate = elt("ul", { className: "nested" }, elt("li", {}, btnLocate, stats));
-      btnLocate.setAttribute("data-name", f.getId());
-      const label = elt("li", {}, elt("span", { className: "caret" }, f.get("naziv") || ""), locate);
-      const item = elt("ul", { className: "item" }, label);
-      this.main.appendChild(item);
-      //fit
-      btnLocate.addEventListener("click", (evt) => {
-        //console.log(evt.currentTarget.dataset.name);
-        const extent = f.getGeometry().getExtent();
-        this.map.getView().fit(extent);
-      });
-      //stats
-      let a = "";
-      if (f.getGeometry().getType() === "Polygon") {
-        a = f.getGeometry().getArea();
-        a = (a / 1000).toFixed(0);
-      }
-      const area = elt("tr", {}, elt("td", {}, "Površina m2"), elt("td", {}, a));
-      stats.appendChild(area);
-      const vod = this.map
-        .getLayers()
-        .getArray()
-        .find((x) => x.get("name") === "vod")
-        .getSource();
-
-      vod.once("change", (evt) => {
-        if (vod.getState() === "ready") {
-          const statVod = vod.getFeatures().filter((x) => x.get("MjernaZona") === f.get("naziv"));
-          let sumLength = statVod.reduce((sumLength, cv,) => sumLength + cv.getGeometry().getLength(),0).toFixed(0);
-          const length = elt("tr", {}, elt("td", {}, "Dužina cjevovoda m"), elt("td", {}, sumLength || ""));
-          stats.appendChild(length);
+  getInside(feature, layer) {
+    if (feature.getGeometry().getType() !== "Polygon") return;
+    const p = polygon(feature.getGeometry().getCoordinates());
+    let sumLength = 0;
+    const insideFeat = [];
+    for (const f of layer.getSource().getFeatures()) {
+      let flag = false;
+      let g = f.getGeometry();
+      if (g.getType() === "Point") {
+        const intersect = p.intersect(point(g.getFirstCoordinate()));
+        if (intersect.length > 0) {
+          insideFeat.push(f);
         }
+      }
+      if (g.getType() === "LineString") {
+        g.forEachSegment((s, e) => {
+          try {
+            const ls = segment(point(s), point(e));
+            if (p.contains(ls)) flag = true;
+            else flag = false;
+          } catch (err) {}
+        });
+      }
+      if (flag) {
+        sumLength = sumLength + g.getLength();
+        insideFeat.push(f);
+      }
+    }
+    sumLength = (sumLength * 0.001).toFixed(1);
+    return { features: insideFeat, length: sumLength };
+  }
+  getArea(polygon) {
+    if (polygon.getGeometry().getType() !== "Polygon") return;
+    return (polygon.getGeometry().getArea() * 0.001).toFixed(0);
+  }
+  content(mZ) {
+    const mZSort = mZ.filter((x) => x.get("napomena") !== "Glavne").sort((a, b) => a.get("naziv").toLowerCase().localeCompare(b.get("naziv").toLowerCase()));
+    for (const f of mZSort) {
+      const ngsgValue = elt("td", {}, "");
+      let unit = elt("td", {}, "NGSG m3/(priključak * dan)");
+      const NGSG = elt("tr", {}, unit, elt("td", {}, ngsgValue)); //neizbježni godišnji stvarni gubitci
+      const pValue = elt("input", {});
+      pValue.value = 30;
+      const p = elt("tr", {}, elt("td", {}, "Prosječan tlak mVs"), elt("td", {}, pValue)); //pressure
+      const clValue = elt("td", {}, "0");
+      const cl = elt("tr", {}, elt("td", {}, "Priključaka/km"), clValue); //connections/km
+      const countValue = elt("td", {}, "0");
+      const count = elt("tr", {}, elt("td", {}, "Broj priključaka"), countValue);
+      const lengthValue = elt("td", {}, "0");
+      const length = elt("tr", {}, elt("td", {}, "Dužina mreže km"), lengthValue);
+      const area = elt("tr", {}, elt("td", {}, "Površina m2"), elt("td", {}, this.getArea(f)));
+      const tbl = elt("table", {}, area, length, count, cl, p, NGSG);
+      const container = elt("div", { className: "container" }, tbl);
+      container.style.display = "none";
+      const btn = elt("button", {}, f.get("naziv"));
+      const item = elt("div", { className: "item" }, btn, container);
+      item.setAttribute("data-id", f.getId());
+      item.setAttribute("data-name", f.get("naziv"));
+      this.main.appendChild(item);
+      btn.addEventListener("click", (evt) => {
+        container.style.display = container.style.display === "none" ? "block" : "none";
+        if (container.style.display === "block") this.map.getView().fit(f.getGeometry().getExtent());
+        const layers = this.map.getLayers().getArray();
+        const insideVod = this.getInside(
+          f,
+          layers.find((x) => x.get("name") === "vod")
+        );
+        lengthValue.innerHTML = insideVod.length;
+        const insidePmo = this.getInside(
+          f,
+          layers.find((x) => x.get("name") === "pmo")
+        );
+        countValue.innerHTML = insidePmo.features.length;
+        clValue.innerHTML = (insidePmo.features.length / insideVod.length).toFixed(1);
+        const lm = insideVod.length;
+        const nc = insidePmo.features.length;
+        const lp = nc * 0.02;
+        const p = pValue.value;
+        if (insidePmo.features.length / insideVod.length >= 20) unit.innerHTML = "NGSG m3/(km * dan)";
+        let ngsgCal = ((18 * lm + 0.8 * nc + 25 * lp) * p) / lm;
+        if (insidePmo.features.length / insideVod.length >= 20) ngsgCal = (18 * lm + 0.8 * nc + 25 * lp * p) / nc;
+        ngsgValue.innerHTML = ngsgCal.toFixed(0);
       });
-      const pmo = this.map
+     
+    }
+  }
+
+  query(layerName = "mjernaZona") {
+    const layer = this.map
       .getLayers()
       .getArray()
-      .find((x) => x.get("name") === "pmo")
-      .getSource();
-      pmo.once("change", (evt) => {
-        if (pmo.getState() === "ready") {
-          const statPmo = pmo.getFeatures().filter((x) => x.get("MjernaZona") === f.get("naziv"));
-          const count = elt("tr", {}, elt("td", {}, "Broj priključaka"), elt("td", {}, pmo.getFeatures().length));
-          stats.appendChild(count);
+      .find((x) => x.get("name") === layerName);
+    return new Promise(function (resolve, reject) {
+      if (!layer) reject();
+      const visible = layer.getVisible();
+      layer.setVisible(true); //to be loaded!!
+      const src = layer.getSource();
+      src.once("change", (evt) => {
+        layer.setVisible(visible);
+        if (src.getState() === "ready") {
+          resolve(src);
         }
       });
-    //toggle caret
-    const toggler = this.main.getElementsByClassName("caret");
-    for (let i = 0; i < toggler.length; i++) {
-      toggler[i].addEventListener("click", function () {
-        this.parentElement.querySelector(".nested").classList.toggle("active");
-        this.classList.toggle("caret-down");
-      });
-    }
+    });
   }
 }
