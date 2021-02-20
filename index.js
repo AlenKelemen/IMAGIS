@@ -15,6 +15,7 @@ import Project from "./src/project";
 import Select from "./src/select.js";
 import Data from "./src/data.js";
 import DMA from "./src/dma.js";
+import Theme from "./src/theme.js";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -88,6 +89,11 @@ ux.aside.home.addControl(map.legend);
 map.legend.activeLayerInfo({
   targetControl: ux.footer,
 });
+ux.aside.home.addControl(
+  new Theme({
+    target: ux.aside,
+  })
+);
 
 ux.aside.home.addControl(
   new Project({
@@ -111,7 +117,7 @@ ux.aside.water.addControl(dma);
 
 //!!
 //tmp
-dma.setActive(true)
+//dma.setActive(true)
 //
 
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */

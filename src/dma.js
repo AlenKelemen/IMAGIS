@@ -111,6 +111,10 @@ export default class DMA extends Toggle {
         let ngsgCal = ((18 * lm + 0.8 * nc + 25 * lp) * p) / lm;
         if (insidePmo.features.length / insideVod.length >= 20) ngsgCal = (18 * lm + 0.8 * nc + 25 * lp * p) / nc;
         ngsgValue.innerHTML = ngsgCal.toFixed(0);
+        //
+        for(const pmo of insidePmo.features){
+          console.log(pmo.getProperties())
+        }
       });
      
     }
