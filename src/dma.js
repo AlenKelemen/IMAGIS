@@ -38,10 +38,14 @@ export default class DMA extends Toggle {
       let flag = false;
       let g = f.getGeometry();
       if (g.getType() === "Point") {
+        try {
+         
         const intersect = p.intersect(point(g.getFirstCoordinate()));
+        
         if (intersect.length > 0) {
           insideFeat.push(f);
         }
+      }catch (err) {}
       }
       if (g.getType() === "LineString") {
         g.forEachSegment((s, e) => {
@@ -67,6 +71,8 @@ export default class DMA extends Toggle {
   content(mZ) {
     const mZSort = mZ.filter((x) => x.get("napomena") !== "Glavne").sort((a, b) => a.get("naziv").toLowerCase().localeCompare(b.get("naziv").toLowerCase()));
     for (const f of mZSort) {
+      const consValue=elt("td", {}, "0");
+      const cons = elt("tr", {}, elt("td", {}, "Potrošnja m3/mjesec"), consValue);
       const ngsgValue = elt("td", {}, "");
       let unit = elt("td", {}, "NGSG m3/(priključak * dan)");
       const NGSG = elt("tr", {}, unit, elt("td", {}, ngsgValue)); //neizbježni godišnji stvarni gubitci
@@ -80,7 +86,7 @@ export default class DMA extends Toggle {
       const lengthValue = elt("td", {}, "0");
       const length = elt("tr", {}, elt("td", {}, "Dužina mreže km"), lengthValue);
       const area = elt("tr", {}, elt("td", {}, "Površina m2"), elt("td", {}, this.getArea(f)));
-      const tbl = elt("table", {}, area, length, count, cl, p, NGSG);
+      const tbl = elt("table", {}, area, length, count, cl, p, NGSG,cons);
       const container = elt("div", { className: "container" }, tbl);
       container.style.display = "none";
       const btn = elt("button", {}, f.get("naziv"));
@@ -112,9 +118,12 @@ export default class DMA extends Toggle {
         if (insidePmo.features.length / insideVod.length >= 20) ngsgCal = (18 * lm + 0.8 * nc + 25 * lp * p) / nc;
         ngsgValue.innerHTML = ngsgCal.toFixed(0);
         //
+        let cV = 0;//potrošnja m3/mjesec
         for(const pmo of insidePmo.features){
-          console.log(pmo.getProperties())
+          cV = cV + pmo.get('UTROSAK');
         }
+        consValue.innerHTML = cV;
+        console.log(cV)
       });
      
     }
