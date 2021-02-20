@@ -29,7 +29,8 @@ export default class Legend extends Toggle {
     super(options);
     this.container = new Container({
       semantic: "section",
-      className: `taskpane no-header`,
+     // className: `taskpane no-header`,
+     className: `taskpane`,
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
@@ -40,7 +41,7 @@ export default class Legend extends Toggle {
     this.image = elt("button", { className: "download-image" }, elt("i", { className: "far fa-arrow-to-bottom fa-fw" }));
     this.hideButton = elt("button", { className: "hide" }, elt("i", { className: "far fa-lightbulb-on fa-fw" }));
     this.saveButton = elt("button", { className: "edit" }, elt("i", { className: "far fa-save fa-fw" }));
-    this.footer = elt("footer", { className: `footer ol-control` }, this.image, this.hideButton, this.saveButton);
+    this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton, this.saveButton);
     this.container.element.appendChild(this.footer);
     this.symbols = {
       polygon: new Polygon([

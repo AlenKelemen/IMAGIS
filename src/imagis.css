@@ -58,24 +58,45 @@ body {
 .taskpane {
   width: 20em;
   position: relative;
-  border-radius: 4px;
-  padding: 2px;
   align-self: stretch;
-}
-.taskpane .header {
-  text-align: center;
-}
-.taskpane .main {
-  width: inherit;
-  position: absolute;
-  top: 2em;
-  bottom: 2.5em;
-  overflow-y: auto;
   border-radius: 4px;
+  margin-bottom:0.5em;
   color: white;
-  /* background-color: rgba(0, 60, 136, 0.5); */
   background-color: #000613e3;
 }
+
+.taskpane .main {
+  position: absolute;
+  height:100%;
+  overflow-y: auto;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.taskpane .footer{
+  position: absolute;
+  background-color:inherit;
+  bottom:0;
+  left:0;
+  right:0;
+}
+
 
 .taskpane .main .ol-control {
   width: fit-content;
@@ -155,7 +176,7 @@ body {
 }
 
 .taskpane .main {
-  font-size: 0.85em;
+ 
 }
 .taskpane .main .thematic {
   padding-left: 18px;

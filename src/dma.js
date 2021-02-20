@@ -15,60 +15,28 @@ export default class DMA extends Toggle {
     const srcName = options.srcName || "VodoopskrbaMjernaZona"; //
     this.container = new Container({
       semantic: "section",
-      className: `taskpane no-header no-footer`,
+      className: `taskpane no-footer`,
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
     this.container.setVisible(this.active);
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
+
+    this.header = elt("header", { className: `header` });
+    this.container.element.appendChild(this.header);
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
+
     const promises = [this.query("mjernaZona"), this.query("vod"), this.query("pmo"), this.query("hidrant")];
     Promise.all(promises).then((r) => {
       const mZ = r[0].getFeatures(); //mjernaZona
       this.content(mZ);
     });
   }
-  getInside(feature, layer) {
-    if (feature.getGeometry().getType() !== "Polygon") return;
-    const p = polygon(feature.getGeometry().getCoordinates());
-    let sumLength = 0;
-    const insideFeat = [];
-    for (const f of layer.getSource().getFeatures()) {
-      let flag = false;
-      let g = f.getGeometry();
-      if (g.getType() === "Point") {
-        try {
-         
-        const intersect = p.intersect(point(g.getFirstCoordinate()));
-        
-        if (intersect.length > 0) {
-          insideFeat.push(f);
-        }
-      }catch (err) {}
-      }
-      if (g.getType() === "LineString") {
-        g.forEachSegment((s, e) => {
-          try {
-            const ls = segment(point(s), point(e));
-            if (p.contains(ls)) flag = true;
-            else flag = false;
-          } catch (err) {}
-        });
-      }
-      if (flag) {
-        sumLength = sumLength + g.getLength();
-        insideFeat.push(f);
-      }
-    }
-    sumLength = (sumLength * 0.001).toFixed(1);
-    return { features: insideFeat, length: sumLength };
-  }
-  getArea(polygon) {
-    if (polygon.getGeometry().getType() !== "Polygon") return;
-    return (polygon.getGeometry().getArea() * 0.001).toFixed(0);
-  }
+
   content(mZ) {
+    const date = elt('input',{type:'month'});
+    this.header.appendChild(elt('div',{},'Datum',date))
     const mZSort = mZ.filter((x) => x.get("napomena") !== "Glavne").sort((a, b) => a.get("naziv").toLowerCase().localeCompare(b.get("naziv").toLowerCase()));
     for (const f of mZSort) {
       const consValue=elt("td", {}, "0");
@@ -123,12 +91,48 @@ export default class DMA extends Toggle {
           cV = cV + pmo.get('UTROSAK');
         }
         consValue.innerHTML = cV;
-        console.log(cV)
       });
-     
     }
   }
-
+  getInside(feature, layer) {
+    if (feature.getGeometry().getType() !== "Polygon") return;
+    const p = polygon(feature.getGeometry().getCoordinates());
+    let sumLength = 0;
+    const insideFeat = [];
+    for (const f of layer.getSource().getFeatures()) {
+      let flag = false;
+      let g = f.getGeometry();
+      if (g.getType() === "Point") {
+        try {
+         
+        const intersect = p.intersect(point(g.getFirstCoordinate()));
+        
+        if (intersect.length > 0) {
+          insideFeat.push(f);
+        }
+      }catch (err) {}
+      }
+      if (g.getType() === "LineString") {
+        g.forEachSegment((s, e) => {
+          try {
+            const ls = segment(point(s), point(e));
+            if (p.contains(ls)) flag = true;
+            else flag = false;
+          } catch (err) {}
+        });
+      }
+      if (flag) {
+        sumLength = sumLength + g.getLength();
+        insideFeat.push(f);
+      }
+    }
+    sumLength = (sumLength * 0.001).toFixed(1);
+    return { features: insideFeat, length: sumLength };
+  }
+  getArea(polygon) {
+    if (polygon.getGeometry().getType() !== "Polygon") return;
+    return (polygon.getGeometry().getArea() * 0.001).toFixed(0);
+  }
   query(layerName = "mjernaZona") {
     const layer = this.map
       .getLayers()
