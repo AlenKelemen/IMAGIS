@@ -15,18 +15,14 @@ export default class DMA extends Toggle {
     const srcName = options.srcName || "VodoopskrbaMjernaZona"; //
     this.container = new Container({
       semantic: "section",
-      className: `taskpane no-footer`,
+      className: `taskpane`,
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
     this.container.setVisible(this.active);
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
-
-    this.header = elt("header", { className: `header` });
-    this.container.element.appendChild(this.header);
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
-
     const promises = [this.query("mjernaZona"), this.query("vod"), this.query("pmo"), this.query("hidrant")];
     Promise.all(promises).then((r) => {
       const mZ = r[0].getFeatures(); //mjernaZona
@@ -36,7 +32,9 @@ export default class DMA extends Toggle {
 
   content(mZ) {
     const date = elt('input',{type:'month'});
-    this.header.appendChild(elt('div',{},'Datum',date))
+    date.value ="2018-12"
+    this.header = elt("header", { className: `header` },'Datum',date);
+    this.main.appendChild(this.header);
     const mZSort = mZ.filter((x) => x.get("napomena") !== "Glavne").sort((a, b) => a.get("naziv").toLowerCase().localeCompare(b.get("naziv").toLowerCase()));
     for (const f of mZSort) {
       const consValue=elt("td", {}, "0");

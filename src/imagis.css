@@ -8,6 +8,38 @@ body {
   line-height: 1.5;
   color: #333;
 }
+/***
+***/
+
+.indent {
+  padding-left: 16px;
+}
+canvas,
+span {
+  padding: 2px;
+  vertical-align: middle;
+}
+canvas {
+  background-color: white;
+}
+table {
+  color: inherit;
+  font-size: 0.8em;
+}
+td {
+  white-space: nowrap;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+input {
+  outline: none;
+  background-color: #1c212d;
+  color: white;
+  font-style: inherit;
+  font-family: inherit;
+  border: none;
+}
+
 /*ol map controls parent element*/
 .ol-overlaycontainer-stopevent {
   display: flex;
@@ -54,144 +86,79 @@ body {
   position: relative;
   height: fit-content;
 }
-/** */
+/*******/
 .taskpane {
   width: 20em;
   position: relative;
   align-self: stretch;
+  border: solid;
+  border-color: rgba(255, 255, 255, 0);
   border-radius: 4px;
-  margin-bottom:0.5em;
-  color: white;
-  background-color: #000613e3;
+  background-color: white;
 }
-
+.taskpane.horizontal{
+    height: 300px;
+    flex-shrink: 0;
+    flex-grow: 1;
+    margin-top: auto;
+    border-radius: 4px;
+}
 .taskpane .main {
   position: absolute;
-  height:100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   overflow-y: auto;
-}
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-}
-.taskpane .footer{
-  position: absolute;
-  background-color:inherit;
-  bottom:0;
-  left:0;
-  right:0;
-}
-
-
-.taskpane .main .ol-control {
-  width: fit-content;
-  position: unset;
-  color: black;
-}
-
-.taskpane.no-header .main {
-  top: 2px;
-  padding: 3px;
-}
-.taskpane.no-header.no-footer .main {
-  top: 2px;
-  bottom: 2px;
-  padding: 3px;
-}
-.taskpane.horizontal {
-  height: 300px;
-  width: 100%;
-  margin-top: auto;
-  border-radius: 4px;
-}
-.taskpane.horizontal .main {
-  top: 2em;
-  bottom: 0.5em;
-}
-.taskpane .graph {
-  background-color: rgb(245 245 245 / 95%);
-  color: black;
+.taskpane .footer,
+.taskpane .header {
+  position: sticky;
+  left: 0;
+  right: 0;
+  top: 0;
+  color: white;
+  background-color: rgb(73 79 93);
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 .taskpane .footer {
-  position: absolute;
   bottom: 0;
-  right: 0;
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  text-align: right;
-  padding: 2px;
-  width: fit-content;
-  display: flex;
+  margin-top: auto;
 }
-.taskpane .main button {
+.taskpane .main input {
+  background-color: #e8e8e8;
+  width: 3em;
+  color: black;
+  border: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  border-color: gray;
+}
+.taskpane .main .header input {
+  background-color: #1c212d;
+  color: white;
+  width: unset;
+}
+.taskpane button {
   padding: 2px;
-  background-color: rgba(255,255,255,0.4);
+  color: white;
+  background-color: rgba(148, 170, 198, 0.9);
   outline: none;
   margin: 3px;
-  color: white;
   text-align: center;
   border: none;
   border-radius: 2px;
+  font: inherit;
 }
-.taskpane .main button:hover {
-  background-color: rgba(255,255,255,0.6);
-}
-.taskpane .main table{
-  padding-left:2px;
-  padding-right:2px;
-  color:inherit;
-  font-size: inherit;
-}
-.taskpane .main td{
-  white-space: nowrap;
-}
-.taskpane .main td>input{
-  background-color: black;
-    border: none;
-    width: 25%;
-    outline: none;
-    color: white;
-    padding-left:3px;
-}
-
-.taskpane .main .item canvas {
-  vertical-align: middle;
-  padding: 2px;
-}
-
-.taskpane .main {
- 
-}
-.taskpane .main .thematic {
-  padding-left: 18px;
-}
-.taskpane .main .tools {
-  padding-left: 16px;
-}
-.taskpane .main .tools span {
-  padding-right: 8px;
-}
-.taskpane .main .detail {
-  padding-left: 16px;
-}
-.taskpane .main .detail input {
-  vertical-align: middle;
+.taskpane button:hover {
+  background-color: rgb(100 181 161);
+  outline: none;
 }
 
 /** UX right side child of aside */
@@ -213,6 +180,7 @@ body {
 /** UX footer control */
 .map-footer {
   display: flex;
+  margin-top: 0.2em;
 }
 .map-footer div:not(:first-child):not(:last-child) {
   margin-left: 4px;
@@ -244,4 +212,27 @@ body {
   margin-left: auto;
   position: unset;
   background: rgba(0, 60, 136, 0.4);
+}
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(28 33 45);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

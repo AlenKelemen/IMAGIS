@@ -12,7 +12,7 @@ export default class Theme extends Toggle {
       super(options);
       this.container = new Container({
         semantic: "section",
-        className: `taskpane no-header`,
+        className: `taskpane`,
       });
       options.target.addControl(this.container);
       this.map = this.container.getMap();

@@ -38,11 +38,10 @@ export default class Legend extends Toggle {
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
-    this.image = elt("button", { className: "download-image" }, elt("i", { className: "far fa-arrow-to-bottom fa-fw" }));
-    this.hideButton = elt("button", { className: "hide" }, elt("i", { className: "far fa-lightbulb-on fa-fw" }));
-    this.saveButton = elt("button", { className: "edit" }, elt("i", { className: "far fa-save fa-fw" }));
+    this.image = elt("i", { className: "far fa-arrow-to-bottom fa-fw" });
+    this.hideButton =  elt("i", { className: "far fa-lightbulb-on fa-fw" });
+    this.saveButton = elt("i", { className: "far fa-save fa-fw" });
     this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton, this.saveButton);
-    this.container.element.appendChild(this.footer);
     this.symbols = {
       polygon: new Polygon([
         [
@@ -66,6 +65,7 @@ export default class Legend extends Toggle {
     if (options.hide) this.togglelHide();
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
+    
   }
   //save to cfg.json
   save() {
@@ -106,7 +106,7 @@ export default class Legend extends Toggle {
         const icon = i.icon;
         const label = i.label;
         const head = elt("div", { className: "head" }, icon, elt("span", {}, label));
-        const thematic = elt("div", { className: "thematic" });
+        const thematic = elt("div", { className: "thematic indent" });
         const t = thematicItems.filter((x) => x.layer === layer);
         for (const ti of t) thematic.appendChild(elt("div", {}, ti.icon, elt("span", {}, ti.label)));
         const plus = elt("span", {}, elt("i", { className: "far fa-plus fa-fw" }));
@@ -114,10 +114,10 @@ export default class Legend extends Toggle {
         const active = elt("span", { className: "active" }, elt("i", { className: "far fa-square fa-fw" }));
         active.setAttribute("data-name", layer.get("name"));
         const sort = elt("span", { className: "sort" }, elt("i", { className: "far fa-bring-forward fa-fw" }));
-        const tools = elt("div", { className: "tools" }, plus, visibility, active, sort);
+        const tools = elt("div", { className: "tools indent" }, plus, visibility, active, sort);
         const opacity = elt("input", { type: "range", min: "0", max: "1", step: "0.01" });
         const info = elt("div", { className: "info" });
-        const detail = elt("div", { className: "detail" }, elt("i", { className: "far fa-fog fa-fw" }), opacity, info);
+        const detail = elt("div", { className: "detail indent" }, elt("i", { className: "far fa-fog fa-fw" }), opacity, info);
         const item = elt("div", { className: "item" }, head, thematic, tools, detail);
         item.setAttribute("data-name", layer.get("name"));
         this.main.appendChild(item);
@@ -159,6 +159,7 @@ export default class Legend extends Toggle {
         if (this.hide) item.style.display = this.getVisible(layer) ? "block" : "none";
         item.style.opacity = this.getVisible(layer) ? "1" : "0.4";
       }
+      this.main.appendChild(this.footer);
       //sort: sort layer zIndex by dragging
       Sortable.create(this.main, {
         handle: ".sort",
@@ -186,8 +187,12 @@ export default class Legend extends Toggle {
   }
   togglelHide() {
     this.hide = !this.hide;
-    if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
-    else this.hideButton.firstChild.className = "far fa-lightbulb-on fa-fw";
+   /*  if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
+    else this.hideButton.firstChild.className = "far fa-lightbulb-on fa-fw"; */
+
+    if (this.hide) this.hideButton.className = "far fa-lightbulb fa-fw";
+    else this.hideButton.className = "far fa-lightbulb-on fa-fw";
+
     const elements = Array.from(this.main.children);
     for (const l of this.map.getLayers().getArray()) {
       const visible = this.getVisible(l);
@@ -206,7 +211,7 @@ export default class Legend extends Toggle {
   drawIcon(style, label, thematic, layer) {
     if (!style || style.length) return;
     return new Promise((resolve, reject) => {
-      const icon = elt("canvas", { width: 16, height: 16 });
+     const icon = elt("canvas", { width: 16, height: 16 });
       const ctx = icon.getContext("2d");
       const vctx = toContext(ctx, {
         size: [16, 16],
