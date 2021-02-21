@@ -104,27 +104,28 @@ export default class Theme extends Toggle {
            </ul>
       </ul>
       `;
-      map.getLayers().on('change:active',evt =>this.setLayer(evt.target.get('active')));
-      map.getLayers().changed();
+      this.map.getLayers().on('change:active',evt =>this.setLayer(evt.target.get('active')));
+      this.setLayer(this.map.getLayers().getArray().find(x => x.get('active')))
     }
     setLayer(layer) {
       if (!layer) {
+          console.log(layer)
           //for (const e of this.content.querySelectorAll('.wrapper')) e.remove();
           this.header.className = 'middle-center';
           this.header.innerHTML = `Odaberi aktivni sloj u legendi`;
       } else {
           this.layer = layer;
-          this.header.className = 'header';
+          this.header.className = 'header columns';
           this.header.innerHTML = `
           Tematizacija sloja ${layer.get('label')||layer.get('name')||''}
-          <div>
-              <span class="add ol-control" title="Dodaj stil"><i class="far fa-plus fa-fw"></i> Stil</span>
-              <span class="apply ol-control" title="Primjeni"><i class="far fa-check fa-fw"></i> Primijeni</span>
+          <div class='right'>
+              <span class="add" title="Dodaj stil"><i class="far fa-plus fa-fw"></i> Stil</span>
+              <span class="apply" title="Primjeni"><i class="far fa-check fa-fw"></i> Primijeni</span>
           </div>
           `;
           this.header.querySelector('.add').addEventListener('click', evt => this.styleAdd_());
           this.header.querySelector('.apply').addEventListener('click', evt => this.styleApply_());
-          this.styleSet_(); //set style from def.layer.style to body treeview
+         //this.styleSet_(); //set style from def.layer.style to body treeview
       }
   }
 }
