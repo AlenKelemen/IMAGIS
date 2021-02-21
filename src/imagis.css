@@ -64,6 +64,11 @@ input {
 .hidden {
   display: none !important;
 }
+/** h & v centered text in flex container*/
+.middle-center{
+  align-self: center;
+  margin: auto;
+}
 
 /** UX header control */
 .map-header {
@@ -94,7 +99,7 @@ input {
   border: solid;
   border-color: rgba(255, 255, 255, 0);
   border-radius: 4px;
-  background-color: white;
+  background-color: #f8f9fa
 }
 .taskpane.horizontal{
     height: 300px;
@@ -224,7 +229,7 @@ input {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: rgb(28 33 45);
+  background:#f8f9fa
 }
 
 /* Handle */

@@ -89,11 +89,11 @@ ux.aside.home.addControl(map.legend);
 map.legend.activeLayerInfo({
   targetControl: ux.footer,
 });
-ux.aside.home.addControl(
-  new Theme({
-    target: ux.aside,
-  })
-);
+map.theme = new Theme({
+  target: ux.aside,
+})
+ux.aside.home.addControl(map.theme);
+map.getLayers().get('active')
 
 ux.aside.home.addControl(
   new Project({
