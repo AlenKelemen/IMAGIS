@@ -8,8 +8,6 @@ body {
   line-height: 1.5;
   color: #333;
 }
-/***
-***/
 
 .indent {
   padding-left: 16px;
@@ -131,6 +129,7 @@ input {
   bottom: 0;
   margin-top: auto;
 }
+/**input inside taskpane .main*/
 .taskpane .main input {
   background-color: #e8e8e8;
   width: 3em;
@@ -145,6 +144,7 @@ input {
   color: white;
   width: unset;
 }
+/**button inside taskpane .main*/
 .taskpane button {
   padding: 2px;
   color: white;
