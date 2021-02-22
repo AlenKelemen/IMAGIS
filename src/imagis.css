@@ -143,8 +143,8 @@ input {
 flex-direction: column;
 }
 .taskpane .main input {
+  width:90%;
   background-color: #e8e8e8;
-  width: 3em;
   color: black;
   border: solid;
   border-width: 1px;
