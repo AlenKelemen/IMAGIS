@@ -1,0 +1,255 @@
+html {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.indent {
+  padding-left: 16px;
+}
+.right{
+  margin-left:auto;
+}
+.columns{
+  flex-direction: column;
+}
+canvas,
+span {
+  padding: 2px;
+  vertical-align: middle;
+}
+canvas {
+  background-color: white;
+}
+table {
+  color: inherit;
+  font-size: 0.8em;
+}
+td {
+  white-space: nowrap;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+input {
+  outline: none;
+  background-color: #1c212d;
+  color: white;
+  font-style: inherit;
+  font-family: inherit;
+  border: none;
+}
+
+/*ol map controls parent element*/
+.ol-overlaycontainer-stopevent {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 1em) !important;
+  height: calc(100% - 1em) !important;
+  margin: 0.5em;
+}
+/** toggle button active/inactive*/
+.toggle.active {
+  background-color: rgba(0, 136, 105, 0.6);
+}
+.ol-control .toggle.active:focus,
+.ol-control .toggle.active:hover {
+  background-color: rgb(54 148 2 / 75%);
+}
+.ol-control button {
+  outline: none;
+  font-weight: normal;
+}
+/**container hidden*/
+.hidden {
+  display: none !important;
+}
+/** h & v centered text in flex container*/
+.middle-center{
+  align-self: center;
+  margin: auto;
+}
+
+/** UX header control */
+.map-header {
+  width: fit-content;
+  position: unset;
+  display: flex;
+  margin-left: auto;
+}
+.map-header button {
+  width: fit-content;
+  padding: 2px;
+}
+/** aside: UX left & right side controls contaner */
+.map-aside {
+  display: flex;
+  flex-grow: 1;
+  pointer-events: none !important;
+}
+.taskbar {
+  position: relative;
+  height: fit-content;
+}
+/*******/
+.taskpane {
+  width: 20em;
+  position: relative;
+  align-self: stretch;
+  border: solid;
+  border-color: rgba(255, 255, 255, 0);
+  border-radius: 4px;
+  background-color: #f8f9fa
+}
+.taskpane.horizontal{
+    height: 300px;
+    flex-shrink: 0;
+    flex-grow: 1;
+    margin-top: auto;
+    border-radius: 4px;
+}
+.taskpane .main {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.taskpane .footer,
+.taskpane .header {
+  position: sticky;
+  left: 0;
+  right: 0;
+  top: 0;
+  color: white;
+  background-color: rgb(73 79 93);
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.taskpane .footer {
+  bottom: 0;
+  margin-top: auto;
+}
+<<<<<<< HEAD
+/**input inside taskpane .main*/
+=======
+.taskpane .header.columns{
+flex-direction: column;
+}
+>>>>>>> a0dd023df7a7c25f46475803354c29019dc4a452
+.taskpane .main input {
+  background-color: #e8e8e8;
+  width: 3em;
+  color: black;
+  border: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  border-color: gray;
+}
+.taskpane .main .header input {
+  background-color: #1c212d;
+  color: white;
+  width: unset;
+}
+/**button inside taskpane .main*/
+.taskpane button {
+  padding: 2px;
+  color: white;
+  background-color: rgba(148, 170, 198, 0.9);
+  outline: none;
+  margin: 3px;
+  text-align: center;
+  border: none;
+  border-radius: 2px;
+  font: inherit;
+}
+.taskpane button:hover {
+  background-color: rgb(100 181 161);
+  outline: none;
+}
+
+/** UX right side child of aside */
+.toolbar {
+  margin-left: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.toolbar > div {
+  position: static;
+}
+.ol-dragbox {
+  border-color: #09f;
+  background-color: rgba(0, 153, 255, 0.376);
+}
+
+/** UX footer control */
+.map-footer {
+  display: flex;
+  margin-top: 0.2em;
+}
+.map-footer div:not(:first-child):not(:last-child) {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.map-footer .active-layer-info,
+.map-footer .select-info {
+  background: rgba(0, 60, 136, 0.4);
+  border-radius: 4px;
+  color: #eee;
+  font-size: 12px;
+  padding: 2px;
+}
+/**ol native controls */
+.ol-zoom {
+  top: 0;
+  right: 0;
+  left: unset;
+  bottom: unset;
+}
+.ol-rotate {
+  top: 0;
+  right: 2em;
+  left: unset;
+  bottom: unset;
+}
+
+.ol-scale-line {
+  margin-left: auto;
+  position: unset;
+  background: rgba(0, 60, 136, 0.4);
+}
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background:#f8f9fa
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
