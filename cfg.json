@@ -731,7 +731,8 @@
             "text": "DN",
             "resolution": [0, 4],
             "placement": "line",
-            "scale": 1.2
+            "scale": 1.2,
+            "textBaseline":"bottom"
           }
         },
         {
@@ -747,7 +748,8 @@
           "text": {
             "text": "DN",
             "resolution": [0, 5],
-            "placement": "line"
+            "placement": "line",
+            "textBaseline":"bottom"
           }
         }
       ]
@@ -775,6 +777,7 @@
             "text": "DN",
             "resolution": [0, 4],
             "placement": "line",
+            "textBaseline":"bottom",
             "scale": 1.2
           }
         }

@@ -105,17 +105,20 @@ export default class Theme extends Toggle {
       </ul>
       `;
     this.map.getLayers().on("change:active", (evt) => this.setLayer(evt.target.get("active")));
+    const l= this.map
+    .getLayers()
+    .getArray()
+    .find((x) => x.get("active"))
+    console.log('l');
     this.setLayer(
-      this.map
-        .getLayers()
-        .getArray()
-        .find((x) => x.get("active"))
+     l
     );
+    
   }
   setLayer(layer) {
     if (!layer) {
       console.log(layer);
-      //for (const e of this.content.querySelectorAll('.wrapper')) e.remove();
+      for (const e of this.main.querySelectorAll('.wrapper')) e.remove();
       this.header.className = "middle-center";
       this.header.innerHTML = `Odaberi aktivni sloj u legendi`;
     } else {
@@ -130,19 +133,24 @@ export default class Theme extends Toggle {
           `;
       this.header.querySelector(".add").addEventListener("click", (evt) => this.styleAdd_());
       this.header.querySelector(".apply").addEventListener("click", (evt) => this.styleApply_());
-      //this.styleSet_(); //set style from def.layer.style to body treeview
+      this.styleSet_(); //set style from def.layer.style to body treeview
     }
   }
   styleSet_() {
     //add style from this.layer.def.layer.style to this.element UI
-    for (const e of this.content.querySelectorAll(".wrapper")) e.remove();
-    const style = this.layer.get("def").style; //array of styles in def
+    for (const e of this.main.querySelectorAll(".wrapper")) e.remove();
+   // const style = this.layer.get("def").style; //array of styles in def
+
+   const style = this.layer.get('imagis-style');
+   console.log(layer,style)
+
+
     style.forEach((x) => this.styleAdd_()); //add styles to UI
   }
   styleAdd_() {
     this.wrapper = document.createElement('div');
     this.wrapper.className = 'wrapper';
-    this.content.appendChild(this.wrapper); //item wrapper
+    this.main.appendChild(this.wrapper); //item wrapper
     this.wrapper.innerHTML = this.htmlItem; //item ul
     //style items accordion style item
     for (const j of this.wrapper.querySelectorAll('.caret')) {
@@ -177,5 +185,144 @@ export default class Theme extends Toggle {
     this.fillConstrains_(this.wrapper);
     this.fillOperators_(this.wrapper);
     this.colorPicker_(this.wrapper)
+}
+styleApply_() { //apply style from UI to def.layer.style and through makeStyle(def.layer.style) apply to layer
+    const
+        ns = [], //new style
+        ds = this.layer.get('def'),
+        s = sName => this.main.querySelector(`.${sName} .check`);
+    for (const i of this.main.querySelectorAll('.item')) {
+        const is = {};
+        for (const e of i.querySelectorAll('.fa-check-square')) {
+            if (e.closest('ul').className === 'resolution') {
+                is.resolution = e.closest('ul').querySelector('.resolution').value.split(',');
+            }
+            if (e.closest('ul').className === 'icon') {
+                is.icon = {};
+                is.icon.src = e.closest('ul').querySelector('.src').value;
+                is.icon.scale = e.closest('ul').querySelector('.scale').value;
+                is.icon.anchor = e.closest('ul').querySelector('.anchor').value.split(',');
+            }
+            if (e.closest('ul').className === 'regularShape') {
+                is.regularShape = {};
+                is.regularShape.points = e.closest('ul').querySelector('.points').value;
+                is.regularShape.radius = e.closest('ul').querySelector('.radius').value;
+                is.regularShape.fill = {};
+                is.regularShape.fill.color = e.closest('ul').querySelector('.fill.color').style.backgroundColor;
+                is.regularShape.stroke = {};
+                is.regularShape.stroke.color = e.closest('ul').querySelector('.stroke.color').style.backgroundColor;
+                is.regularShape.stroke.width = e.closest('ul').querySelector('.stroke.width').value;
+            }
+            if (e.closest('ul').className === 'stroke') {
+                is.stroke = {};
+                is.stroke.color = e.closest('ul').querySelector('.color').style.backgroundColor;
+                is.stroke.width = e.closest('ul').querySelector('.width').value;
+            }
+            if (e.closest('ul').className === 'fill') {
+                is.fill = {};
+                is.fill.color = e.closest('ul').querySelector('.color').style.backgroundColor;
+            }
+            if (e.closest('ul').className === 'text') {
+                is.text = {};
+                if (e.closest('ul').querySelector('.text').value) is.text.text = '*' + e.closest('ul').querySelector('.text').value;
+                else is.text.text = e.closest('ul').querySelector('.properties').value;
+                is.text.placement = e.closest('ul').querySelector('.placement').value;
+                is.text.textBaseline = e.closest('ul').querySelector('.textBaseline').value;
+                is.text.scale = e.closest('ul').querySelector('.scale').value;
+                is.text.font = e.closest('ul').querySelector('.font').value;
+            }
+            if (e.closest('ul').className === 'filter') {
+                is.filter = {};
+                is.filter.property = e.closest('ul').querySelector('.properties').value;
+                is.filter.operator = e.closest('ul').querySelector('.operators').value;
+                if (e.closest('ul').querySelector('.value').value) is.filter.value = e.closest('ul').querySelector('.value').value;
+                else is.filter.value = e.closest('ul').querySelector('.constrains').value;
+            }
+        }
+        ns.push(is);
+
+    }
+    this.layer.get('def').style = ns;
+    console.log(this.layer.get('def'))
+    this.layer.setStyle(makeStyle(ns));
+}
+fillOperators_(itemElement) {
+    for (const e of itemElement.querySelectorAll('.operators')) {
+        if (!this.layer.getSource().get('def')) return; // if no def should read props from features
+        e.closest('ul').querySelector('.properties').addEventListener('change', evt => {
+            e.length = 3;
+            const pd = this.layer.getSource().get('def').schema.properties.find(x => x.Name === evt.target.value);
+            if ([6, 7, 8].includes(pd.DataType)) { //numbers
+                e.add(new Option('veće od', '>'));
+                e.add(new Option('manje od', '<'));
+                e.add(new Option('veće ili jednako', '>='));
+                e.add(new Option('manje ili jednako', '<='));
+            }
+            if (pd.DataType === 9) e.add(new Option('sadrži', 'LIKE')); //strings
+        });
+    }
+}
+fillProperties_(itemElement) { //fill .text .properties & .filter .properties
+    if (!(this.layer || this.layer.getSource().get('def'))) return; // if no def should read props from features
+    for (const e of itemElement.querySelectorAll('.properties')) {
+        e.length = 1; //first allways visible
+        for (const p of this.layer.getSource().get('def').schema.properties) e.add(new Option(p.Label, p.Name));
+    }
+}
+fillConstrains_(itemElement) { //fill .filter .constrains
+    if (!this.layer.getSource().get('def')) return; // if no def should read values from features
+    for (const e of itemElement.querySelectorAll('.constrains')) {
+        e.closest('ul').querySelector('.properties').addEventListener('change', evt => {
+            e.length = 1;
+            const pd = this.layer.getSource().get('def').schema.properties.find(x => x.Name === evt.target.value);
+            if (pd.Constrains) pd.Constrains.map(x => e.add(new Option(x, x)));
+        });
+    }
+}
+fillIcons_(itemElement) { //fill .icons .src select first
+    if (!images) return;
+    for (const e of itemElement.querySelectorAll('.icon .src')) {
+        for (const [key, value] of Object.entries(images)) {
+            e.add(new Option(key, key));
+        }
+        e.selectedIndex = 1;
+    }
+}
+colorPicker_(itemElement) {
+    for (const ce of itemElement.querySelectorAll('.color')) {
+        ce.addEventListener('click', evt => {
+            this.cp.movePopup({
+                parent: evt.currentTarget,
+                color: evt.currentTarget.style.backgroundColor,
+            }, true);
+        });
+    }
+    this.cp.onChange = function (color) {
+        this.settings.parent.style.backgroundColor = color.rgbaString;
+    };
+}
+getLayer() {
+    return this.layer;
+}
+setActive(b) {
+    this.main.style.display = b ? 'flex' : 'none';
+    if (this.main.innerHTML === '') this.theme_();
+    if (this.getActive() == b) return;
+    if (b) {
+        this.button.classList.add('active');
+        if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
+    } else this.button.classList.remove('active');
+    this.dispatchEvent({
+        type: 'change:active',
+        key: 'active',
+        oldValue: !b,
+        active: b
+    });
+}
+getActive() {
+    return this.button.classList.contains('active');
+}
+getParent() {
+    if (this.get('parent')) return this.get('parent');
 }
 }
