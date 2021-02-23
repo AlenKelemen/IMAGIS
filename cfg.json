@@ -594,7 +594,7 @@
       "info": "",
       "visible": true,
       "opacity": 0.7,
-      "zIndex": 0,
+      "zIndex": 10,
       "maxResolution": 10
     },
     {
@@ -604,7 +604,7 @@
       "info": "Bing Aerial With Labels",
       "visible": false,
       "opacity": 0.9,
-      "zIndex": 0
+      "zIndex": 20
     },
     {
       "source": "DGU_DOF",
@@ -613,7 +613,7 @@
       "info": "DIGITALNA ORTOFOTO KARTA U BOJI Skraćeni naziv DOF Godina nastanka 2011.",
       "visible": false,
       "opacity": 0.6,
-      "zIndex": 0
+      "zIndex": 30
     },
     {
       "source": "DGU_DOF_TOPONIMI",
@@ -622,7 +622,7 @@
       "info": "DIGITALNA ORTOFOTO KARTA U BOJI Skraćeni naziv DOF Godina nastanka 2011.",
       "visible": false,
       "opacity": 0.9,
-      "zIndex": 0
+      "zIndex": 40
     },
     {
       "source": "DGU_TK25",
@@ -632,7 +632,7 @@
       "minResolution": 20,
       "visible": false,
       "opacity": 0.9,
-      "zIndex": 0
+      "zIndex": 50
     },
     {
       "source": "DGU_HOK",
@@ -641,7 +641,7 @@
       "info": "HRVATSKA OSNOVNA KARTA Skraćeni naziv HOK Godina nastanka 1954.-2010.",
       "visible": false,
       "opacity": 0.9,
-      "zIndex": 0
+      "zIndex": 60
     },
     {
       "source": "DGU_DKP",
@@ -652,7 +652,7 @@
       "visible": false,
       "opacity": 0.9,
       "translucent": true,
-      "zIndex": 10
+      "zIndex": 99
     },
     {
       "source": "VodoopskrbaPodrucjeZgrada",
@@ -661,7 +661,7 @@
       "info": "",
       "maxResolution": 10,
       "visible": true,
-      "zIndex": 100,
+      "zIndex": 130,
       "style": [
         {
           "fill": {
@@ -680,7 +680,7 @@
       "label": "DMA mjerne zone",
       "info": "",
       "visible": true,
-      "zIndex": 100,
+      "zIndex": 120,
       "style": [
         {
           "filter": {
@@ -731,7 +731,7 @@
       "info": "",
       "maxResolution": 100,
       "visible": true,
-      "zIndex": 110,
+      "zIndex": 140,
       "style": [
         {
           "filter": {
@@ -797,7 +797,7 @@
       "info": "",
       "maxResolution": 50,
       "visible": true,
-      "zIndex": 130,
+      "zIndex": 150,
       "style": [
         {
           "regularShape": {
@@ -816,7 +816,7 @@
         "label": "Potrošna mjesta",
         "maxResolution": 50,
         "visible": false,
-        "zIndex": 180,
+        "zIndex": 160,
         "style": [
             {
               "regularShape": {
@@ -836,7 +836,7 @@
       "info": "",
       "maxResolution": 500,
       "visible": true,
-      "zIndex": 0,
+      "zIndex": 170,
       "style": [
         {
           "icon": {
