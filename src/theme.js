@@ -176,6 +176,6 @@ export default class Theme extends Toggle {
     this.fillProperties_(this.wrapper);
     this.fillConstrains_(this.wrapper);
     this.fillOperators_(this.wrapper);
-    this.colorPicker_(this.wrapper);
+    this.colorPicker_(this.wrapper)
 }
 }
