@@ -8,14 +8,15 @@ body {
   line-height: 1.5;
   color: #333;
 }
-/***
-***/
 
 .indent {
   padding-left: 16px;
 }
 .right{
   margin-left:auto;
+}
+.columns{
+  flex-direction: column;
 }
 canvas,
 span {
@@ -139,9 +140,13 @@ input {
   bottom: 0;
   margin-top: auto;
 }
+<<<<<<< HEAD
+/**input inside taskpane .main*/
+=======
 .taskpane .header.columns{
 flex-direction: column;
 }
+>>>>>>> a0dd023df7a7c25f46475803354c29019dc4a452
 .taskpane .main input {
   width:90%;
   background-color: #e8e8e8;
@@ -156,6 +161,7 @@ flex-direction: column;
   color: white;
   width: unset;
 }
+/**button inside taskpane .main*/
 .taskpane button {
   padding: 2px;
   color: white;

@@ -169,7 +169,6 @@ export default class Theme extends Control {
             if (style[i].text && style[i].text.textBaseline) item.querySelector('.text .textBaseline').value = style[i].text.textBaseline;
             if (style[i].text && style[i].text.scale) item.querySelector('.text .scale').value = style[i].text.scale;
             if (style[i].text && style[i].text.font) item.querySelector('.text .font').value = style[i].text.font;
-
             if (style[i].filter && style[i].filter.property) {
                 item.querySelector('.filter .properties').value = style[i].filter.property;
                 item.querySelector('.filter .properties').dispatchEvent(new Event('change'));
