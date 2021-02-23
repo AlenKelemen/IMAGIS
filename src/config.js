@@ -77,7 +77,7 @@ export default class Config {
           type: layer.getSource().get("type"),
           path: layer.getSource().get("path"),
           fileName: layer.getSource().get("fileName"),
-          schema:layer.getSource().get("schema")
+          schema: layer.getSource().get("schema"),
         });
       }
       for (const [key, value] of Object.entries(layer.getProperties())) {

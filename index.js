@@ -53,6 +53,7 @@ ux.header.home = new Toggle({
 ux.header.addControl(ux.header.home);
 ux.header.home.on("change:active", (evt) => ux.aside.home.setVisible(evt.active));
 
+
 ux.header.water = new Toggle({
   html: '<i class="far fa-hand-holding-water fa-fw"></i> Vodoopskrba',
   className: "toggle",
@@ -71,6 +72,8 @@ ux.aside.home = new Container({
 });
 ux.aside.addControl(ux.aside.home);
 ux.aside.home.setVisible(ux.header.home.getActive());
+/**Default active */
+map.ux.header.home.setActive(true);
 
 ux.aside.water = new Container({
   semantic: "nav",
@@ -114,11 +117,6 @@ const dma = new DMA({
   select: map.select,
 })
 ux.aside.water.addControl(dma);
-
-//!!
-//tmp
-//dma.setActive(true)
-//
 
 /**toolbar content- buttons for actions on map area like zoom, select, draw, etc */
 ux.aside.toolbar = new Container({

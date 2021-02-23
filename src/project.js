@@ -30,23 +30,13 @@ export default class CfgEdit extends Toggle {
     this.footerHtml = options.footer || "Footer";
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
 
-    this.header = elt("header", { className: `header` }, this.headerHtml);
+    this.header = elt("header", { className: `Svojstva` }, this.headerHtml);
     this.container.element.appendChild(this.header);
 
     this.main = elt("main", { className: `main` }, this.contentHtml);
     this.container.element.appendChild(this.main);
     
-    this.save = elt("button", { className: "save" }, "Spremi");
-    this.default = elt("button", { className: "default" }, "Pretpostavljeno");
-    this.footer = elt("footer", { className: `ol-control footer` }, this.default, this.save);
-    this.container.element.appendChild(this.footer);
-    this.setContent();
-    this.default.addEventListener("click", (evt) => {
-      console.log(evt)
-    });
-    this.save.addEventListener("click", (evt) => {
-      console.log(evt)
-    });
+    
   }
 
   setContent() {

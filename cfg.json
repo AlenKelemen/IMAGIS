@@ -518,22 +518,6 @@
       "type": "mg"
     },
     {
-      "name": "mgSplit",
-      "restUrl": "https://gis.edc.hr/mapguide/rest/",
-      "agentUrl": "https://gis.edc.hr/mapguide/mapagent/mapagent.fcgi?",
-      "mapdefinition": "Library://vikSplit/Maps/osnovno.MapDefinition",
-      "format": "PNG",
-      "type": "mg"
-    },
-    {
-      "name": "mgKrizevci",
-      "restUrl": "https://gis.edc.hr/mapguide/rest/",
-      "agentUrl": "https://gis.edc.hr/mapguide/mapagent/mapagent.fcgi?",
-      "mapdefinition": "Library://vodneUslugeKrizevci/Maps/tiled.MapDefinition",
-      "format": "PNG",
-      "type": "mg"
-    },
-    {
       "name": "OSM",
       "type": "osm"
     },
@@ -595,7 +579,7 @@
       "visible": true,
       "opacity": 0.7,
       "zIndex": 10,
-      "maxResolution": 10
+      "maxResolution": 100
     },
     {
       "source": "Bing",
@@ -693,8 +677,8 @@
             "font": "12px Arial"
           },
           "stroke": {
-            "color": "red",
-            "width": 1
+            "color": "#d0a7a6",
+            "width": 5
           }
         }
       ]
@@ -719,7 +703,7 @@
           },
           "stroke": {
             "color": "rgba(0,0,0,0.2)",
-            "width": 4
+            "width": 6
           }
         }
       ]
@@ -764,6 +748,34 @@
             "text": "DN",
             "resolution": [0, 5],
             "placement": "line"
+          }
+        }
+      ]
+    },
+    {
+      "source": "VodoopskrbaVod",
+      "name": "vod",
+      "label": "Magistralni cjevovod",
+      "info": "",
+      "maxResolution": 100,
+      "visible": false,
+      "zIndex": 140,
+      "style": [
+        {
+          "filter": {
+            "property": "Tip",
+            "operator": "=",
+            "value": "Magistralni"
+          },
+          "stroke": {
+            "color": "rgba(0,0,255,1)",
+            "width": 6
+          },
+          "text": {
+            "text": "DN",
+            "resolution": [0, 4],
+            "placement": "line",
+            "scale": 1.2
           }
         }
       ]
