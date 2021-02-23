@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import Picker from "vanilla-picker";
+const images = require('../img/*.png');
 
 export default class Theme extends Toggle {
   constructor(options = {}) {
@@ -24,6 +25,9 @@ export default class Theme extends Toggle {
     this.header = document.createElement("div");
     this.header.className = "header";
     this.main.appendChild(this.header);
+    this.cp = new Picker({
+        popup: 'bottom'
+    });
     this.htmlItem = `
       <ul class="item">
           <li class="caret">Stil <i class="far fa-trash-alt fa-fw style"></i></li>
@@ -105,15 +109,8 @@ export default class Theme extends Toggle {
       </ul>
       `;
     this.map.getLayers().on("change:active", (evt) => this.setLayer(evt.target.get("active")));
-    const l= this.map
-    .getLayers()
-    .getArray()
-    .find((x) => x.get("active"))
-    console.log('l');
-    this.setLayer(
-     l
-    );
-    
+   console.log(this.map.getLayers().get('active'))
+    this.setLayer(this.map.getLayers().get('active'))
   }
   setLayer(layer) {
     if (!layer) {
@@ -140,9 +137,8 @@ export default class Theme extends Toggle {
     //add style from this.layer.def.layer.style to this.element UI
     for (const e of this.main.querySelectorAll(".wrapper")) e.remove();
    // const style = this.layer.get("def").style; //array of styles in def
-
    const style = this.layer.get('imagis-style');
-   console.log(layer,style)
+
 
 
     style.forEach((x) => this.styleAdd_()); //add styles to UI
@@ -161,7 +157,7 @@ export default class Theme extends Toggle {
             j.classList.toggle('caret-down');
         });
     }
-    //chech style item
+    //check style item
     for (const j of this.wrapper.querySelectorAll('.fa-square, .fa-check-square')) {
         j.addEventListener('click', evt => {
             evt.stopPropagation();
@@ -189,7 +185,7 @@ export default class Theme extends Toggle {
 styleApply_() { //apply style from UI to def.layer.style and through makeStyle(def.layer.style) apply to layer
     const
         ns = [], //new style
-        ds = this.layer.get('def'),
+        ds = this.layer.get('imagis-schema'),
         s = sName => this.main.querySelector(`.${sName} .check`);
     for (const i of this.main.querySelectorAll('.item')) {
         const is = {};
@@ -242,16 +238,16 @@ styleApply_() { //apply style from UI to def.layer.style and through makeStyle(d
         ns.push(is);
 
     }
-    this.layer.get('def').style = ns;
-    console.log(this.layer.get('def'))
+    this.layer.get('imagis-style').style = ns;
+    console.log(this.layer.get('imagis-style'))
     this.layer.setStyle(makeStyle(ns));
 }
 fillOperators_(itemElement) {
     for (const e of itemElement.querySelectorAll('.operators')) {
-        if (!this.layer.getSource().get('def')) return; // if no def should read props from features
+        if (!this.layer.getSource().get('schema')) return; // if no def should read props from features
         e.closest('ul').querySelector('.properties').addEventListener('change', evt => {
             e.length = 3;
-            const pd = this.layer.getSource().get('def').schema.properties.find(x => x.Name === evt.target.value);
+            const pd = this.layer.getSource().get('schema').properties.find(x => x.Name === evt.target.value);
             if ([6, 7, 8].includes(pd.DataType)) { //numbers
                 e.add(new Option('veće od', '>'));
                 e.add(new Option('manje od', '<'));
@@ -263,18 +259,18 @@ fillOperators_(itemElement) {
     }
 }
 fillProperties_(itemElement) { //fill .text .properties & .filter .properties
-    if (!(this.layer || this.layer.getSource().get('def'))) return; // if no def should read props from features
+    if (!(this.layer || this.layer.getSource().get('schema'))) return; // if no def should read props from features
     for (const e of itemElement.querySelectorAll('.properties')) {
         e.length = 1; //first allways visible
-        for (const p of this.layer.getSource().get('def').schema.properties) e.add(new Option(p.Label, p.Name));
+        for (const p of this.layer.getSource().get('schema').properties) e.add(new Option(p.Label, p.Name));
     }
 }
 fillConstrains_(itemElement) { //fill .filter .constrains
-    if (!this.layer.getSource().get('def')) return; // if no def should read values from features
+    if (!this.layer.getSource().get('schema')) return; // if no def should read values from features
     for (const e of itemElement.querySelectorAll('.constrains')) {
         e.closest('ul').querySelector('.properties').addEventListener('change', evt => {
             e.length = 1;
-            const pd = this.layer.getSource().get('def').schema.properties.find(x => x.Name === evt.target.value);
+            const pd = this.layer.getSource().get('schema').properties.find(x => x.Name === evt.target.value);
             if (pd.Constrains) pd.Constrains.map(x => e.add(new Option(x, x)));
         });
     }
@@ -304,25 +300,5 @@ colorPicker_(itemElement) {
 getLayer() {
     return this.layer;
 }
-setActive(b) {
-    this.main.style.display = b ? 'flex' : 'none';
-    if (this.main.innerHTML === '') this.theme_();
-    if (this.getActive() == b) return;
-    if (b) {
-        this.button.classList.add('active');
-        if (this.getParent()) this.getParent().deactivateControls(this); //see container.js for deactivateControls
-    } else this.button.classList.remove('active');
-    this.dispatchEvent({
-        type: 'change:active',
-        key: 'active',
-        oldValue: !b,
-        active: b
-    });
-}
-getActive() {
-    return this.button.classList.contains('active');
-}
-getParent() {
-    if (this.get('parent')) return this.get('parent');
-}
+
 }

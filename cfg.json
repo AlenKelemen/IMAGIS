@@ -716,6 +716,7 @@
       "maxResolution": 100,
       "visible": true,
       "zIndex": 140,
+      "active":true,
       "style": [
         {
           "filter": {
