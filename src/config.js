@@ -211,7 +211,7 @@ export default class Config {
       }
       if (layer) {
         for (const [key, value] of Object.entries(l)) {
-          if (key !== "source" && key != "style") layer.set(key, value);
+          //if (key !== "source" && key != "style") layer.set(key, value);
           if (key === "style") {
             if (layer instanceof VectorLayer) {
               layer.setStyle(this.imagisSyle(l.style));
