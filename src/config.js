@@ -213,6 +213,7 @@ export default class Config {
         for (const [key, value] of Object.entries(l)) {
           //if (key !== "source" && key != "style") layer.set(key, value);
           if(key=== 'visibility') layer.setVisibility(value)
+          if(key=== 'zIndex') layer.setZIndex(value)
           console.log(key, value)
           if (key === "style") {
             if (layer instanceof VectorLayer) {
