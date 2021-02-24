@@ -23,7 +23,7 @@ body {
   padding: 2px;
   vertical-align: middle;
 }
-canvas {
+.taskpane canvas {
   background-color: white;
 }
 table {
