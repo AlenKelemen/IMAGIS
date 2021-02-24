@@ -90,6 +90,7 @@ input {
   display: flex;
   flex-grow: 1;
   pointer-events: none !important;
+  touch-action: none!important;
 }
 .taskbar {
   position: relative;
