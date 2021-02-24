@@ -134,8 +134,8 @@ input {
   background-color: rgb(73 79 93);
   display: flex;
   justify-content: space-evenly;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 .taskpane .footer {
   bottom: 0;

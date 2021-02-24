@@ -757,11 +757,11 @@
     },
     {
       "source": "VodoopskrbaVod",
-      "name": "vod",
+      "name": "vodMagistralni",
       "label": "Magistralni cjevovod",
       "info": "",
       "maxResolution": 100,
-      "visible": false,
+      "visible": true,
       "zIndex": 140,
       "style": [
         {

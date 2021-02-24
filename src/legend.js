@@ -40,8 +40,9 @@ export default class Legend extends Toggle {
     this.container.element.appendChild(this.main);
     this.image = elt("i", { className: "far fa-arrow-to-bottom fa-fw" });
     this.hideButton =  elt("i", { className: "far fa-lightbulb-on fa-fw" });
+    this.defaultButton = elt('i',{className:"far fa-hammer"});
     this.saveButton = elt("i", { className: "far fa-save fa-fw" });
-    this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton, this.saveButton);
+    this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton,this.defaultButton, this.saveButton);
     this.symbols = {
       polygon: new Polygon([
         [
@@ -65,6 +66,9 @@ export default class Legend extends Toggle {
     if (options.hide) this.togglelHide();
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
+    this.defaultButton.addEventListener('click',evt =>{
+      map.config.writeDefault();
+    })
     
   }
   //save to cfg.json

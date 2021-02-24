@@ -109,7 +109,6 @@ export default class Theme extends Toggle {
       </ul>
       `;
     this.map.getLayers().on("change:active", (evt) => this.setLayer(evt.target.get("active")));
-   console.log(this.map.getLayers().get('active'))
     this.setLayer(this.map.getLayers().get('active'))
   }
   setLayer(layer) {

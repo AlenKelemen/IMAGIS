@@ -25,14 +25,9 @@ export default class CfgEdit extends Toggle {
     });
     options.target.addControl(this.container);
     this.container.setVisible(this.active);
-    this.headerHtml = options.header || "Header";
     this.contentHtml = options.content || "Content";
     this.footerHtml = options.footer || "Footer";
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
-
-    this.header = elt("header", { className: `Svojstva` }, this.headerHtml);
-    this.container.element.appendChild(this.header);
-
     this.main = elt("main", { className: `main` }, this.contentHtml);
     this.container.element.appendChild(this.main);
     

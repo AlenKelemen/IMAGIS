@@ -53,7 +53,6 @@ ux.header.home = new Toggle({
 ux.header.addControl(ux.header.home);
 ux.header.home.on("change:active", (evt) => ux.aside.home.setVisible(evt.active));
 
-
 ux.header.water = new Toggle({
   html: '<i class="far fa-hand-holding-water fa-fw"></i> Vodoopskrba',
   className: "toggle",

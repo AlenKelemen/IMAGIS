@@ -28,6 +28,13 @@ export default class Config {
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
   }
+  getDefault(){
+    return JSON.stringify(def);
+  }
+  writeDefault(){
+    this.cfg=def;
+    this.write();
+  }
   /**
    *From ol/map to cfg object
    *
