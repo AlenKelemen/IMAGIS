@@ -11,7 +11,8 @@
   * prava korištenja grupa podataka
   * centralni export podataka iz GIS-a
 * Pregledavanje i korištenje GIS-a (mainmenu:home)
-  * legenda: prozirnost, izbor simbola, sql, izbor podloga,dodavanje slojeva iz drugih portala (upis linka)
+  * podloge uključuju SRPJ
+  * legenda: prozirnost, izbor simbola, izbor podloga,dodavanje slojeva iz drugih portala (upis linka)
   * pozicioniranje na objekt i geokoding
   * info: atributi, dužina, površina, visine, točke
   * mjerenje udaljenosti i površine
@@ -54,6 +55,8 @@
     * pohrana mjerenja
   * Nadzor gubitaka vode (mainmenu: Gubici, login)
     * definiranje DMA
+    * izračun ILI po IWA metodologiji za DMA i sustave za mjesec, kvartal i godinu
+    * tablični prikaz gubitaka
     * pridruživanje mjerača i privremenih mjerača
     * izračun gubitka vode pri akcidentu
     * izračun ili upis min. noćnog protoka
