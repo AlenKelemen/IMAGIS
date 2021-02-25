@@ -1,4 +1,5 @@
 {
     "prettier.printWidth": 512,
-    "terminal.integrated.fontSize":12,
+    "terminal.integrated.fontSize": 12,
+    "json.maxItemsComputed": 10000000,
 }
