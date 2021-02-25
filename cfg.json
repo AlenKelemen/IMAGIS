@@ -348,7 +348,7 @@
     {
       "name": "srpjNaselja",
       "path": "vodovodOmis",
-      "fileName": "podrucjeZgrada",
+      "fileName": "srpjNaselja",
       "type": "geojson",
       "schema": {
         "geometry": "polygon",
@@ -648,7 +648,27 @@
       "translucent": true,
       "zIndex": 99
     },
-    { "source": "srpjNaselja", "name": "srpjNaselja", "Label": "Granice naselja", "info": "" },
+    {
+      "source": "srpjNaselja",
+      "name": "srpjNaselja",
+      "Label": "Granice naselja",
+      "info": "",
+      "visible": false,
+      "opacity": 0.6,
+      "zIndex": 101,
+      "style": [
+        {
+          "stroke": {
+            "color": "black",
+            "width": 1.5
+          },
+          "text": {
+            "text": "NAS_NAZIV",
+            "font": "12px Arial"
+          }
+        }
+      ]
+    },
     {
       "source": "VodoopskrbaPodrucjeZgrada",
       "name": "podrucjeZgrada",
