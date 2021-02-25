@@ -1,4 +1,5 @@
 {
+  "meta": "imagis 0.1",
   "project": "Vodovod Omiš",
   "gitPath": "https://github.com/AlenKelemen/IMAGIS-data.git",
   "center": [535420.4693824024, 4814471.358589062],
@@ -346,6 +347,16 @@
       }
     },
     {
+      "name": "srpjNaselja",
+      "path": "vodovodOmis",
+      "fileName": "srpjNaselja",
+      "type": "geojson",
+      "schema": {
+        "geometry": "polygon",
+        "properties": [{ "Name": "NAS_MB" }, { "Label": "MB" }, { "Description": "Matični broj" }, { "DataType": 9 }, { "Name": "NAS_NAZIV" }, { "Label": "Naziv" }, { "Description": "Naziv" }, { "DataType": 9 }]
+      }
+    },
+    {
       "name": "VodoopskrbaPodrucjeZgrada",
       "path": "vodovodOmis",
       "fileName": "podrucjeZgrada",
@@ -518,22 +529,6 @@
       "type": "mg"
     },
     {
-      "name": "mgSplit",
-      "restUrl": "https://gis.edc.hr/mapguide/rest/",
-      "agentUrl": "https://gis.edc.hr/mapguide/mapagent/mapagent.fcgi?",
-      "mapdefinition": "Library://vikSplit/Maps/osnovno.MapDefinition",
-      "format": "PNG",
-      "type": "mg"
-    },
-    {
-      "name": "mgKrizevci",
-      "restUrl": "https://gis.edc.hr/mapguide/rest/",
-      "agentUrl": "https://gis.edc.hr/mapguide/mapagent/mapagent.fcgi?",
-      "mapdefinition": "Library://vodneUslugeKrizevci/Maps/tiled.MapDefinition",
-      "format": "PNG",
-      "type": "mg"
-    },
-    {
       "name": "OSM",
       "type": "osm"
     },
@@ -595,7 +590,7 @@
       "visible": true,
       "opacity": 0.7,
       "zIndex": 10,
-      "maxResolution": 10
+      "maxResolution": 100
     },
     {
       "source": "Bing",
@@ -655,6 +650,27 @@
       "zIndex": 99
     },
     {
+      "source": "srpjNaselja",
+      "name": "srpjNaselja",
+      "Label": "Granice naselja",
+      "info": "",
+      "visible": false,
+      "opacity": 0.6,
+      "zIndex": 101,
+      "style": [
+        {
+          "stroke": {
+            "color": "black",
+            "width": 1.5
+          },
+          "text": {
+            "text": "NAS_NAZIV",
+            "font": "12px Arial"
+          }
+        }
+      ]
+    },
+    {
       "source": "VodoopskrbaPodrucjeZgrada",
       "name": "podrucjeZgrada",
       "label": "Područje, parcela, zgrada (poligoni)",
@@ -693,8 +709,8 @@
             "font": "12px Arial"
           },
           "stroke": {
-            "color": "red",
-            "width": 1
+            "color": "#d0a7a6",
+            "width": 5
           }
         }
       ]
@@ -719,7 +735,7 @@
           },
           "stroke": {
             "color": "rgba(0,0,0,0.2)",
-            "width": 4
+            "width": 6
           }
         }
       ]
@@ -732,6 +748,7 @@
       "maxResolution": 100,
       "visible": true,
       "zIndex": 140,
+      "active": true,
       "style": [
         {
           "filter": {
@@ -747,7 +764,8 @@
             "text": "DN",
             "resolution": [0, 4],
             "placement": "line",
-            "scale": 1.2
+            "scale": 1.2,
+            "textBaseline": "bottom"
           }
         },
         {
@@ -763,7 +781,37 @@
           "text": {
             "text": "DN",
             "resolution": [0, 5],
-            "placement": "line"
+            "placement": "line",
+            "textBaseline": "bottom"
+          }
+        }
+      ]
+    },
+    {
+      "source": "VodoopskrbaVod",
+      "name": "vodMagistralni",
+      "label": "Magistralni cjevovod",
+      "info": "",
+      "maxResolution": 100,
+      "visible": true,
+      "zIndex": 140,
+      "style": [
+        {
+          "filter": {
+            "property": "Tip",
+            "operator": "=",
+            "value": "Magistralni"
+          },
+          "stroke": {
+            "color": "rgba(0,0,255,1)",
+            "width": 6
+          },
+          "text": {
+            "text": "DN",
+            "resolution": [0, 4],
+            "placement": "line",
+            "textBaseline": "bottom",
+            "scale": 1.2
           }
         }
       ]
@@ -774,14 +822,15 @@
       "label": "Vodospremnik",
       "info": "",
       "visible": true,
-      "zIndex": 120,
+      "zIndex": 160,
       "style": [
         {
           "regularShape": {
             "radius": 6,
             "points": 4,
+            "angle":0.78539816339,
             "fill": {
-              "color": "rgba(214,20,20,1)"
+              "color": "blue"
             },
             "stroke": {
               "color": "black"
@@ -811,24 +860,24 @@
       ]
     },
     {
-        "source": "VodoopskrbaPmo",
-        "name": "pmo",
-        "label": "Potrošna mjesta",
-        "maxResolution": 50,
-        "visible": false,
-        "zIndex": 160,
-        "style": [
-            {
-              "regularShape": {
-                "radius": 3,
-                "points": 6,
-                "fill": {
-                  "color": "green"
-                }
-              }
+      "source": "VodoopskrbaPmo",
+      "name": "pmo",
+      "label": "Potrošna mjesta",
+      "maxResolution": 50,
+      "visible": false,
+      "zIndex": 160,
+      "style": [
+        {
+          "regularShape": {
+            "radius": 3,
+            "points": 6,
+            "fill": {
+              "color": "green"
             }
-          ]
-      },
+          }
+        }
+      ]
+    },
     {
       "source": "TH",
       "name": "TH",

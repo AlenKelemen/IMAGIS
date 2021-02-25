@@ -67,10 +67,8 @@ export default class Legend extends Toggle {
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
     this.defaultButton.addEventListener("click", (evt) => {
-      for (const l of this.map.getLayers().getArray()) {
-        this.map.removeLayer(l);
-      }
       map.config.writeDefault();
+      this.setContent(this.map.getView().getResolution());
     });
   }
   //save to cfg.json

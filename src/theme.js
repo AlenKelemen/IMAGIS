@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import Picker from "vanilla-picker";
+import { labelCache } from "ol/render/canvas";
 
 export default class Theme extends Toggle {
   constructor(options = {}) {
@@ -106,6 +107,18 @@ export default class Theme extends Toggle {
     this.setLayer(this.map.getLayers().get("active"));
   }
   setLayer(layer) {
-    console.log(layer);
+    this.layer = layer;
+    if (!layer) {
+        this.header.className = 'middle';
+        this.header.innerHTML = `Odaberite aktivni sloj u legendi`;
+    } else {
+        this.header.className = 'header column';
+        this.header.innerHTML = `Tematizacija sloja ${layer.get('label')||layer.get('name')||''}
+        <div class='right'>
+        <span class="add" title="Dodaj stil"><i class="far fa-plus fa-fw"></i> Stil</span>
+        <span class="apply" title="Primjeni"><i class="far fa-check fa-fw"></i> Primijeni</span>
+    </div>
+        `;
+    }
   }
 }

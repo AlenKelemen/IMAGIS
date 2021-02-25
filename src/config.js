@@ -28,13 +28,25 @@ export default class Config {
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
   }
-  getDefault(){
+  getDefault() {
     return JSON.stringify(def);
   }
-  writeDefault(){
-    this.cfg=def;
+  writeDefault(update = true) {
+    //set layers from default cfg, update= true removes all imagis-cfg layers from map
+    if (update) {
+      const layersToRemove = [];
+      this.map.getLayers().forEach((layer) => {
+        if (layer.get("imagis-cfg") != undefined) layersToRemove.push(layer);
+      });
+      const len = layersToRemove.length;
+      for (let i = 0; i < len; i++) {
+        this.map.removeLayer(layersToRemove[i]);
+      }
+    }
+    this.cfg = def;
     this.write();
   }
+
   /**
    *From ol/map to cfg object
    *
@@ -47,6 +59,7 @@ export default class Config {
       v = m.getView();
     cfg.project = m.get("project");
     cfg.gitPath = m.get("gitPath");
+    cfg.meta = m.get("meta");
     for (const s of map.get("sources")) {
       cfg.sources.push(s); //non spatial sources (type:'data') saved to map
     }
@@ -110,6 +123,7 @@ export default class Config {
       v = m.getView();
     m.set("project", cfg.project);
     m.set("gitPath", cfg.gitPath);
+    m.set("meta", cfg.meta);
     m.set(
       "sources",
       cfg.sources.filter((x) => x.type === "data")
@@ -228,7 +242,7 @@ export default class Config {
           if (key === "maxResolution" && value === null) layer.set(key, Infinity);
           if (key === "minResolution" && value === null) layer.set(key, 0);
         }
-        layer.set('imagis-cfg',cfg.meta);
+        layer.set("imagis-cfg", cfg.meta);
         m.addLayer(layer);
       } else console.log("Layer not written to map (no converter defined):", l);
       const activeLayer = m

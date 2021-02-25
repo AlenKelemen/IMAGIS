@@ -12,20 +12,13 @@ body {
 .indent {
   padding-left: 16px;
 }
-.right{
-  margin-left:auto;
+.right {
+  margin-left: auto;
 }
-.columns{
+.columns {
   flex-direction: column;
 }
-.taskpane canvas,
-.taskpane span {
-  padding: 2px;
-  vertical-align: middle;
-}
-.taskpane canvas {
-  background-color: white;
-}
+
 table {
   color: inherit;
   font-size: 0.8em;
@@ -69,7 +62,7 @@ input {
   display: none !important;
 }
 /** h & v centered text in flex container*/
-.middle-center{
+.middle-center {
   align-self: center;
   margin: auto;
 }
@@ -90,7 +83,7 @@ input {
   display: flex;
   flex-grow: 1;
   pointer-events: none !important;
-  touch-action: none!important;
+  touch-action: none !important;
 }
 .taskbar {
   position: relative;
@@ -104,14 +97,14 @@ input {
   border: solid;
   border-color: rgba(255, 255, 255, 0);
   border-radius: 4px;
-  background-color: #f8f9fa
+  background-color: #f8f9fa;
 }
-.taskpane.horizontal{
-    height: 300px;
-    flex-shrink: 0;
-    flex-grow: 1;
-    margin-top: auto;
-    border-radius: 4px;
+.taskpane.horizontal {
+  height: 300px;
+  flex-shrink: 0;
+  flex-grow: 1;
+  margin-top: auto;
+  border-radius: 4px;
 }
 .taskpane .main {
   position: absolute;
@@ -137,14 +130,13 @@ input {
   padding-top: 6px;
   padding-bottom: 6px;
 }
+
 .taskpane .footer {
   bottom: 0;
   margin-top: auto;
 }
-
-
 .taskpane .main input {
-  width:90%;
+  width: 90%;
   background-color: #e8e8e8;
   color: black;
   border: solid;
@@ -156,6 +148,17 @@ input {
   background-color: #1c212d;
   color: white;
   width: unset;
+}
+.taskpane canvas,
+.taskpane span {
+  padding: 2px;
+  vertical-align: middle;
+}
+.taskpane canvas {
+  background-color: white;
+}
+.taskpane .middle {
+  margin: auto;
 }
 /**button inside taskpane .main*/
 .taskpane button {
@@ -237,7 +240,7 @@ input {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background:#f8f9fa
+  background: #f8f9fa;
 }
 
 /* Handle */
