@@ -346,6 +346,16 @@
       }
     },
     {
+      "name": "srpjNaselja",
+      "path": "vodovodOmis",
+      "fileName": "podrucjeZgrada",
+      "type": "geojson",
+      "schema": {
+        "geometry": "polygon",
+        "properties": [{ "Name": "NAS_MB" }, { "Label": "MB" }, { "Description": "Matični broj" }, { "DataType": 9 }, { "Name": "NAS_NAZIV" }, { "Label": "Naziv" }, { "Description": "Naziv" }, { "DataType": 9 }]
+      }
+    },
+    {
       "name": "VodoopskrbaPodrucjeZgrada",
       "path": "vodovodOmis",
       "fileName": "podrucjeZgrada",
@@ -638,6 +648,7 @@
       "translucent": true,
       "zIndex": 99
     },
+    { "source": "srpjNaselja", "name": "srpjNaselja", "Label": "Granice naselja", "info": "" },
     {
       "source": "VodoopskrbaPodrucjeZgrada",
       "name": "podrucjeZgrada",
@@ -716,7 +727,7 @@
       "maxResolution": 100,
       "visible": true,
       "zIndex": 140,
-      "active":true,
+      "active": true,
       "style": [
         {
           "filter": {
@@ -733,7 +744,7 @@
             "resolution": [0, 4],
             "placement": "line",
             "scale": 1.2,
-            "textBaseline":"bottom"
+            "textBaseline": "bottom"
           }
         },
         {
@@ -750,7 +761,7 @@
             "text": "DN",
             "resolution": [0, 5],
             "placement": "line",
-            "textBaseline":"bottom"
+            "textBaseline": "bottom"
           }
         }
       ]
@@ -778,7 +789,7 @@
             "text": "DN",
             "resolution": [0, 4],
             "placement": "line",
-            "textBaseline":"bottom",
+            "textBaseline": "bottom",
             "scale": 1.2
           }
         }
@@ -827,24 +838,24 @@
       ]
     },
     {
-        "source": "VodoopskrbaPmo",
-        "name": "pmo",
-        "label": "Potrošna mjesta",
-        "maxResolution": 50,
-        "visible": false,
-        "zIndex": 160,
-        "style": [
-            {
-              "regularShape": {
-                "radius": 3,
-                "points": 6,
-                "fill": {
-                  "color": "green"
-                }
-              }
+      "source": "VodoopskrbaPmo",
+      "name": "pmo",
+      "label": "Potrošna mjesta",
+      "maxResolution": 50,
+      "visible": false,
+      "zIndex": 160,
+      "style": [
+        {
+          "regularShape": {
+            "radius": 3,
+            "points": 6,
+            "fill": {
+              "color": "green"
             }
-          ]
-      },
+          }
+        }
+      ]
+    },
     {
       "source": "TH",
       "name": "TH",
