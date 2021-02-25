@@ -29,8 +29,8 @@ export default class Legend extends Toggle {
     super(options);
     this.container = new Container({
       semantic: "section",
-     // className: `taskpane no-header`,
-     className: `taskpane`,
+      // className: `taskpane no-header`,
+      className: `taskpane`,
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
@@ -39,10 +39,10 @@ export default class Legend extends Toggle {
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
     this.image = elt("i", { className: "far fa-arrow-to-bottom fa-fw" });
-    this.hideButton =  elt("i", { className: "far fa-lightbulb-on fa-fw" });
-    this.defaultButton = elt('i',{className:"far fa-hammer"});
+    this.hideButton = elt("i", { className: "far fa-lightbulb-on fa-fw" });
+    this.defaultButton = elt("i", { className: "far fa-hammer" });
     this.saveButton = elt("i", { className: "far fa-save fa-fw" });
-    this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton,this.defaultButton, this.saveButton);
+    this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton, this.defaultButton, this.saveButton);
     this.symbols = {
       polygon: new Polygon([
         [
@@ -66,14 +66,16 @@ export default class Legend extends Toggle {
     if (options.hide) this.togglelHide();
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
-    this.defaultButton.addEventListener('click',evt =>{
+    this.defaultButton.addEventListener("click", (evt) => {
+      for (const l of this.map.getLayers().getArray()) {
+        this.map.removeLayer(l);
+      }
       map.config.writeDefault();
-    })
-    
+    });
   }
   //save to cfg.json
   save() {
-    if(map.config) localStorage.setItem("cfg", JSON.stringify(map.config.read()));
+    if (map.config) localStorage.setItem("cfg", JSON.stringify(map.config.read()));
   }
   activeLayerInfo(options) {
     const activeInfo = new Control({
@@ -179,19 +181,22 @@ export default class Legend extends Toggle {
       });
     });
   }
-  setActiveLayer(layer){
+  setActiveLayer(layer) {
     const layers = this.map.getLayers().getArray();
     for (const l of layers) l.set("active", false);
-    layer.set('active',true);
+    layer.set("active", true);
     this.map.getLayers().set("active", layer.get("active") ? layer : null);
     this.setContent(this.map.getView().getResolution());
   }
-  getActiveLayer(){
-    return this.map.getLayers().getArray().filter(x => x.get('active')=== true);
+  getActiveLayer() {
+    return this.map
+      .getLayers()
+      .getArray()
+      .filter((x) => x.get("active") === true);
   }
   togglelHide() {
     this.hide = !this.hide;
-   /*  if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
+    /*  if (this.hide) this.hideButton.firstChild.className = "far fa-lightbulb fa-fw";
     else this.hideButton.firstChild.className = "far fa-lightbulb-on fa-fw"; */
 
     if (this.hide) this.hideButton.className = "far fa-lightbulb fa-fw";
@@ -215,7 +220,7 @@ export default class Legend extends Toggle {
   drawIcon(style, label, thematic, layer) {
     if (!style || style.length) return;
     return new Promise((resolve, reject) => {
-     const icon = elt("canvas", { width: 16, height: 16 });
+      const icon = elt("canvas", { width: 16, height: 16 });
       const ctx = icon.getContext("2d");
       const vctx = toContext(ctx, {
         size: [16, 16],
@@ -268,7 +273,8 @@ export default class Legend extends Toggle {
     const label = layer.get("label") || layer.get("name") || "";
     const imagisStyle = layer.get("imagis-style");
     const thematic = [];
-    if (imagisStyle && imagisStyle.length > 1)//filter layer by no style for filtered possible ...
+    if (imagisStyle && imagisStyle.length > 1)
+      //filter layer by no style for filtered possible ...
       for (const is of imagisStyle) {
         if (is.filter) thematic.push(`${is.filter.property} ${is.filter.operator}  ${is.filter.value} `);
       }
