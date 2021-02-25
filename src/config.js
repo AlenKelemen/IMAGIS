@@ -228,6 +228,7 @@ export default class Config {
           if (key === "maxResolution" && value === null) layer.set(key, Infinity);
           if (key === "minResolution" && value === null) layer.set(key, 0);
         }
+        layer.set('imagis-cfg',cfg.meta);
         m.addLayer(layer);
       } else console.log("Layer not written to map (no converter defined):", l);
       const activeLayer = m
