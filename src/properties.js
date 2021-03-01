@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import moment from "moment";
+import Select from "ol/interaction/Select";
 
 export default class Properties extends Toggle {
   constructor(options = {}) {
@@ -17,15 +18,29 @@ export default class Properties extends Toggle {
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
-    this.container.setVisible(this.active);
-    this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
-
-    this.select = options.select; //
-    this.map.select.olSelect.on('select', evt => console.log(evt))
-   /*  this.select.on("select", (evt) => {
-      console.log(this.select.getFeatures().getArray());
-    }); */
+    this.container.setVisible(this.active);
+    const evtFunction = (evt) => {
+      const select = evt.target;
+      const features = select.getFeatures().getArray();
+      console.log(features)
+    }
+    this.on("change:active", (evt) => {
+      this.container.setVisible(evt.active);
+      const select = this.getSelect();
+      if (evt.active && select) {
+        select.on("select", evtFunction);
+      }else {
+        select.un("select", evtFunction);
+        this.container.setVisible(false);
+      }
+    });
+  }
+  getSelect() {
+    return this.map
+      .getInteractions()
+      .getArray()
+      .find((x) => x instanceof Select);
   }
 }
