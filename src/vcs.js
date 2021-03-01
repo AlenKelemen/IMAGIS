@@ -34,4 +34,56 @@ export default class VersionControl {
     };
     return await git.status(fileInfo);
   }
+
+  async add(dir, filepath) {
+    return await git.add({ fs, dir: dir, filepath: filepath});
+  }
+
+  async commit(dir, name, message) {
+    return await git.commit({
+      fs,
+      dir: dir,
+      author: {
+        name: name
+      },
+      message: message
+    })
+  }
+
+  // Username and password missing
+  async push(dir, username, password) {
+    return await git.push({
+      fs,
+      http,
+      dir: dir,
+      remote: 'origin',
+      ref: 'main',
+      onAuth: () => ({ username: username, password: password}),
+    });
+  }
+
+  async fetch(url, dir) {
+    return await git.fetch({
+      fs,
+      http,
+      dir: dir,
+      corsProxy: this.corsProxy,
+      url: url,
+      ref: 'main',
+      depth: 1,
+      singleBranch: true,
+      tags: false
+    });
+  }
+
+  async pull(dir) {
+    return await git.pull({
+      fs,
+      http,
+      corsProxy: this.corsProxy,
+      dir: dir,
+      ref: 'main',
+      singleBranch: true
+    })
+  }
 }
