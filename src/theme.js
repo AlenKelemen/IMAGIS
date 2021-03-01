@@ -6,7 +6,7 @@ import Toggle from "./toggle";
 import { elt } from "./util";
 import Picker from "vanilla-picker";
 import { labelCache } from "ol/render/canvas";
-const images = require('../img/*.png');
+const images = require("../img/*.png");
 
 export default class Theme extends Toggle {
   constructor(options = {}) {
@@ -15,7 +15,7 @@ export default class Theme extends Toggle {
     super(options);
     this.container = new Container({
       semantic: "section",
-      className: `taskpane`,
+      className: `taskpane theme`,
     });
     options.target.addControl(this.container);
     this.map = this.container.getMap();
@@ -24,6 +24,9 @@ export default class Theme extends Toggle {
     this.header = elt("div", { className: "header right" });
     this.main = elt("main", { className: `main` }, this.header);
     this.container.element.appendChild(this.main);
+    this.cp = new Picker({
+      popup: "bottom",
+    });
     this.htmlItem = `
       <ul class="item">
           <li class="caret">Stil <i class="far fa-trash-alt fa-fw style"></i></li>
@@ -147,53 +150,54 @@ export default class Theme extends Toggle {
       evt.currentTarget.closest(".wrapper").remove();
     });
     this.fillIcons_(this.wrapper);
-    
+    this.fillProperties_(this.wrapper);
+    this.fillConstrains_(this.wrapper);
+    this.fillOperators_(this.wrapper);
+    this.colorPicker_(this.wrapper);
   }
   //add style layer.get('imagis-style') to this.element UI
   styleSet_() {
     const style = this.layer.get("imagis-style");
     style.forEach((x) => this.styleAdd_()); //add style wrapper div to UI
-    for (const [i, item] of this.main.querySelectorAll('.item').entries()) { // style item checked or not
-        for (const e of item.querySelectorAll('.fa-square, .fa-check-square')) {
-            e.classList.remove('fa-square', 'fa-check-square');
-            if (style[i][e.closest('ul').className] !== undefined)
-                e.classList.add('fa-check-square');
-            else
-                e.classList.add('fa-square');
-        }
-        if (style[i].resolution) item.querySelector('.resolution .resolution').value = style[i].resolution.join();
-        if (style[i].icon && style[i].icon.src) item.querySelector('.icon .src').value = style[i].icon.src;
-        if (style[i].icon && style[i].icon.scale) item.querySelector('.icon .scale').value = style[i].icon.scale;
-        if (style[i].icon && style[i].icon.anchor) item.querySelector('.icon .anchor').value = style[i].icon.anchor.join();
-        if (style[i].regularShape && style[i].regularShape.points) item.querySelector('.regularShape .points').value = style[i].regularShape.points;
-        if (style[i].regularShape && style[i].regularShape.radius) item.querySelector('.regularShape .radius').value = style[i].regularShape.radius;
-        if (style[i].regularShape && style[i].regularShape.fill && style[i].regularShape.fill.color) item.querySelector('.regularShape .fill.color').style.backgroundColor = style[i].regularShape.fill.color;
-        if (style[i].regularShape && style[i].regularShape.stroke && style[i].regularShape.stroke.color) item.querySelector('.regularShape .stroke.color').style.backgroundColor = style[i].regularShape.stroke.color;
-        if (style[i].regularShape && style[i].regularShape.stroke && style[i].regularShape.stroke.width) item.querySelector('.regularShape .stroke.width').value = style[i].regularShape.stroke.width;
-        if (style[i].stroke && style[i].stroke.color) item.querySelector('.stroke .color').style.backgroundColor = style[i].stroke.color;
-        if (style[i].stroke && style[i].stroke.width) item.querySelector('.stroke .width').value = style[i].stroke.width;
-        if (style[i].fill && style[i].fill.color) item.querySelector('.fill .color').style.backgroundColor = style[i].fill.color;
-        if (style[i].text && style[i].text.text) {
-            const e = Array.from(item.querySelector(`.text .properties`).options);
-            if(e.find(o => o.value === style[i].text.text)){
-               item.querySelector('.text .properties').value = style[i].text.text;
-               item.querySelector('.text .text').value = '';
-            }
-            else item.querySelector('.text .text').value = style[i].text.text;
-        }
-        if (style[i].text && style[i].text.placement) item.querySelector('.text .placement').value = style[i].text.placement;
-        if (style[i].text && style[i].text.textBaseline) item.querySelector('.text .textBaseline').value = style[i].text.textBaseline;
-        if (style[i].text && style[i].text.scale) item.querySelector('.text .scale').value = style[i].text.scale;
-        if (style[i].text && style[i].text.font) item.querySelector('.text .font').value = style[i].text.font;
-        if (style[i].filter && style[i].filter.property) {
-            item.querySelector('.filter .properties').value = style[i].filter.property;
-            item.querySelector('.filter .properties').dispatchEvent(new Event('change'));
-        }
-        if (style[i].filter && style[i].filter.operator) item.querySelector('.filter .operators').value = style[i].filter.operator;
-        if (style[i].filter && style[i].filter.value) {
-            if (item.querySelector(`.filter .constrains select[value="${style[i].filter.value}"]`)) item.querySelector('.filter .constrains').value = style[i].filter.value;
-            else item.querySelector('.filter .value').value = style[i].filter.value;
-        }
+    for (const [i, item] of this.main.querySelectorAll(".item").entries()) {
+      // style item checked or not
+      for (const e of item.querySelectorAll(".fa-square, .fa-check-square")) {
+        e.classList.remove("fa-square", "fa-check-square");
+        if (style[i][e.closest("ul").className] !== undefined) e.classList.add("fa-check-square");
+        else e.classList.add("fa-square");
+      }
+      if (style[i].resolution) item.querySelector(".resolution .resolution").value = style[i].resolution.join();
+      if (style[i].icon && style[i].icon.src) item.querySelector(".icon .src").value = style[i].icon.src;
+      if (style[i].icon && style[i].icon.scale) item.querySelector(".icon .scale").value = style[i].icon.scale;
+      if (style[i].icon && style[i].icon.anchor) item.querySelector(".icon .anchor").value = style[i].icon.anchor.join();
+      if (style[i].regularShape && style[i].regularShape.points) item.querySelector(".regularShape .points").value = style[i].regularShape.points;
+      if (style[i].regularShape && style[i].regularShape.radius) item.querySelector(".regularShape .radius").value = style[i].regularShape.radius;
+      if (style[i].regularShape && style[i].regularShape.fill && style[i].regularShape.fill.color) item.querySelector(".regularShape .fill.color").style.backgroundColor = style[i].regularShape.fill.color;
+      if (style[i].regularShape && style[i].regularShape.stroke && style[i].regularShape.stroke.color) item.querySelector(".regularShape .stroke.color").style.backgroundColor = style[i].regularShape.stroke.color;
+      if (style[i].regularShape && style[i].regularShape.stroke && style[i].regularShape.stroke.width) item.querySelector(".regularShape .stroke.width").value = style[i].regularShape.stroke.width;
+      if (style[i].stroke && style[i].stroke.color) item.querySelector(".stroke .color").style.backgroundColor = style[i].stroke.color;
+      if (style[i].stroke && style[i].stroke.width) item.querySelector(".stroke .width").value = style[i].stroke.width;
+      if (style[i].fill && style[i].fill.color) item.querySelector(".fill .color").style.backgroundColor = style[i].fill.color;
+      if (style[i].text && style[i].text.text) {
+        const e = Array.from(item.querySelector(`.text .properties`).options);
+        if (e.find((o) => o.value === style[i].text.text)) {
+          item.querySelector(".text .properties").value = style[i].text.text;
+          item.querySelector(".text .text").value = "";
+        } else item.querySelector(".text .text").value = style[i].text.text;
+      }
+      if (style[i].text && style[i].text.placement) item.querySelector(".text .placement").value = style[i].text.placement;
+      if (style[i].text && style[i].text.textBaseline) item.querySelector(".text .textBaseline").value = style[i].text.textBaseline;
+      if (style[i].text && style[i].text.scale) item.querySelector(".text .scale").value = style[i].text.scale;
+      if (style[i].text && style[i].text.font) item.querySelector(".text .font").value = style[i].text.font;
+      if (style[i].filter && style[i].filter.property) {
+        item.querySelector(".filter .properties").value = style[i].filter.property;
+        item.querySelector(".filter .properties").dispatchEvent(new Event("change"));
+      }
+      if (style[i].filter && style[i].filter.operator) item.querySelector(".filter .operators").value = style[i].filter.operator;
+      if (style[i].filter && style[i].filter.value) {
+        if (item.querySelector(`.filter .constrains select[value="${style[i].filter.value}"]`)) item.querySelector(".filter .constrains").value = style[i].filter.value;
+        else item.querySelector(".filter .value").value = style[i].filter.value;
+      }
     }
   }
   //working layer
@@ -201,7 +205,6 @@ export default class Theme extends Toggle {
     this.layer = layer;
     for (const e of this.main.querySelectorAll(".wrapper")) e.remove();
     if (!layer) {
-      
       this.header.className = "middle";
       this.header.innerHTML = `Odaberite aktivni sloj u legendi`;
     } else {
@@ -211,76 +214,138 @@ export default class Theme extends Toggle {
         <span class="add" title="Dodaj stil"><i class="far fa-plus fa-fw"></i> Stil</span>
         <span class="apply" title="Primjeni"><i class="far fa-check fa-fw"></i> Primijeni</span>
     </div> `;
-    this.header.querySelector('.add').addEventListener('click', evt => this.styleAdd_());
-    this.header.querySelector('.apply').addEventListener('click', evt => this.styleApply_());
+      this.header.querySelector(".add").addEventListener("click", (evt) => this.styleAdd_());
+      this.header.querySelector(".apply").addEventListener("click", (evt) => this.styleApply_());
       this.styleSet_();
     }
   }
-  styleApply_() { //apply style from UI to def.layer.style and through makeStyle(def.layer.style) apply to layer
-    const
-        ns = [], //new style
-        s = sName => this.main.querySelector(`.${sName} .check`);
-    for (const i of this.main.querySelectorAll('.item')) {
-        const is = {};
-        for (const e of i.querySelectorAll('.fa-check-square')) {
-            if (e.closest('ul').className === 'resolution') {
-                is.resolution = e.closest('ul').querySelector('.resolution').value.split(',');
-            }
-            if (e.closest('ul').className === 'icon') {
-                is.icon = {};
-                is.icon.src = e.closest('ul').querySelector('.src').value;
-                is.icon.scale = e.closest('ul').querySelector('.scale').value;
-                is.icon.anchor = e.closest('ul').querySelector('.anchor').value.split(',');
-            }
-            if (e.closest('ul').className === 'regularShape') {
-                is.regularShape = {};
-                is.regularShape.points = e.closest('ul').querySelector('.points').value;
-                is.regularShape.radius = e.closest('ul').querySelector('.radius').value;
-                is.regularShape.fill = {};
-                is.regularShape.fill.color = e.closest('ul').querySelector('.fill.color').style.backgroundColor;
-                is.regularShape.stroke = {};
-                is.regularShape.stroke.color = e.closest('ul').querySelector('.stroke.color').style.backgroundColor;
-                is.regularShape.stroke.width = e.closest('ul').querySelector('.stroke.width').value;
-            }
-            if (e.closest('ul').className === 'stroke') {
-                is.stroke = {};
-                is.stroke.color = e.closest('ul').querySelector('.color').style.backgroundColor;
-                is.stroke.width = e.closest('ul').querySelector('.width').value;
-            }
-            if (e.closest('ul').className === 'fill') {
-                is.fill = {};
-                is.fill.color = e.closest('ul').querySelector('.color').style.backgroundColor;
-            }
-            if (e.closest('ul').className === 'text') {
-                is.text = {};
-                if (e.closest('ul').querySelector('.text').value) is.text.text = '*' + e.closest('ul').querySelector('.text').value;
-                else is.text.text = e.closest('ul').querySelector('.properties').value;
-                is.text.placement = e.closest('ul').querySelector('.placement').value;
-                is.text.textBaseline = e.closest('ul').querySelector('.textBaseline').value;
-                is.text.scale = e.closest('ul').querySelector('.scale').value;
-                is.text.font = e.closest('ul').querySelector('.font').value;
-            }
-            if (e.closest('ul').className === 'filter') {
-                is.filter = {};
-                is.filter.property = e.closest('ul').querySelector('.properties').value;
-                is.filter.operator = e.closest('ul').querySelector('.operators').value;
-                if (e.closest('ul').querySelector('.value').value) is.filter.value = e.closest('ul').querySelector('.value').value;
-                else is.filter.value = e.closest('ul').querySelector('.constrains').value;
-            }
+  styleApply_() {
+    //apply style from UI to style and through makeStyle() apply to layer
+    const ns = [], //new style
+      s = (sName) => this.main.querySelector(`.${sName} .check`);
+    for (const i of this.main.querySelectorAll(".item")) {
+      const is = {};
+      for (const e of i.querySelectorAll(".fa-check-square")) {
+        if (e.closest("ul").className === "resolution") {
+          is.resolution = e.closest("ul").querySelector(".resolution").value.split(",");
         }
-        ns.push(is);
+        if (e.closest("ul").className === "icon") {
+          is.icon = {};
+          is.icon.src = e.closest("ul").querySelector(".src").value;
+          is.icon.scale = e.closest("ul").querySelector(".scale").value;
+          is.icon.anchor = e.closest("ul").querySelector(".anchor").value.split(",");
+        }
+        if (e.closest("ul").className === "regularShape") {
+          is.regularShape = {};
+          is.regularShape.points = e.closest("ul").querySelector(".points").value;
+          is.regularShape.radius = e.closest("ul").querySelector(".radius").value;
+          is.regularShape.fill = {};
+          is.regularShape.fill.color = e.closest("ul").querySelector(".fill.color").style.backgroundColor;
+          is.regularShape.stroke = {};
+          is.regularShape.stroke.color = e.closest("ul").querySelector(".stroke.color").style.backgroundColor;
+          is.regularShape.stroke.width = e.closest("ul").querySelector(".stroke.width").value;
+        }
+        if (e.closest("ul").className === "stroke") {
+          is.stroke = {};
+          is.stroke.color = e.closest("ul").querySelector(".color").style.backgroundColor;
+          is.stroke.width = e.closest("ul").querySelector(".width").value;
+        }
+        if (e.closest("ul").className === "fill") {
+          is.fill = {};
+          is.fill.color = e.closest("ul").querySelector(".color").style.backgroundColor;
+        }
+        if (e.closest("ul").className === "text") {
+          is.text = {};
+          if (e.closest("ul").querySelector(".text").value) is.text.text = "*" + e.closest("ul").querySelector(".text").value;
+          else is.text.text = e.closest("ul").querySelector(".properties").value;
+          is.text.placement = e.closest("ul").querySelector(".placement").value;
+          is.text.textBaseline = e.closest("ul").querySelector(".textBaseline").value;
+          is.text.scale = e.closest("ul").querySelector(".scale").value;
+          is.text.font = e.closest("ul").querySelector(".font").value;
+        }
+        if (e.closest("ul").className === "filter") {
+          is.filter = {};
+          is.filter.property = e.closest("ul").querySelector(".properties").value;
+          is.filter.operator = e.closest("ul").querySelector(".operators").value;
+          if (e.closest("ul").querySelector(".value").value) is.filter.value = e.closest("ul").querySelector(".value").value;
+          else is.filter.value = e.closest("ul").querySelector(".constrains").value;
+        }
+      }
+      ns.push(is);
     }
-    this.layer.set('imagis-style', ns);
-    console.log(ns)
-    //this.layer.setStyle(makeStyle(ns));
-}
-fillIcons_(itemElement) { //fill .icons .src select first
+    this.layer.set("imagis-style", ns);
+    this.layer.setStyle(this.map.config.imagisSyle(ns));
+  }
+  fillIcons_(itemElement) {
+    //fill .icons .src select first
     if (!images) return;
-    for (const e of itemElement.querySelectorAll('.icon .src')) {
-        for (const [key, value] of Object.entries(images)) {
-            e.add(new Option(key, key));
-        }
-        e.selectedIndex = 1;
+    for (const e of itemElement.querySelectorAll(".icon .src")) {
+      for (const [key, value] of Object.entries(images)) {
+        e.add(new Option(key, key));
+      }
+      e.selectedIndex = 1;
     }
-}
+  }
+  colorPicker_(itemElement) {
+    for (const ce of itemElement.querySelectorAll(".color")) {
+      ce.addEventListener("click", (evt) => {
+        this.cp.movePopup(
+          {
+            parent: evt.currentTarget,
+            color: evt.currentTarget.style.backgroundColor,
+          },
+          true
+        );
+      });
+    }
+    this.cp.onChange = function (color) {
+      this.settings.parent.style.backgroundColor = color.rgbaString;
+    };
+  }
+  fillOperators_(itemElement) {
+    for (const e of itemElement.querySelectorAll(".operators")) {
+      if (!this.layer.getSource().get("schema")) return; 
+      e.closest("ul")
+        .querySelector(".properties")
+        .addEventListener("change", (evt) => {
+          e.length = 3;
+          const pd = this.layer
+            .getSource()
+            .get("schema")
+            .properties.find((x) => x.Name === evt.target.value);
+          if (!pd || [6, 7, 8].includes(pd.DataType)) {
+            //numbers
+            e.add(new Option("veće od", ">"));
+            e.add(new Option("manje od", "<"));
+            e.add(new Option("veće ili jednako", ">="));
+            e.add(new Option("manje ili jednako", "<="));
+          }
+          if (pd && pd.DataType === 9) e.add(new Option("sadrži", "LIKE")); //strings
+        });
+    }
+  }
+  fillConstrains_(itemElement) {
+    //fill .filter .constrains
+    if (!this.layer.getSource().get("schema")) return; // if no def should read values from features
+    for (const e of itemElement.querySelectorAll(".constrains")) {
+      e.closest("ul")
+        .querySelector(".properties")
+        .addEventListener("change", (evt) => {
+          e.length = 1;
+          const pd = this.layer
+            .getSource()
+            .get("schema")
+            .properties.find((x) => x.Name === evt.target.value);
+          if (pd && pd.Constrains) pd.Constrains.map((x) => e.add(new Option(x, x)));
+        });
+    }
+  }
+  fillProperties_(itemElement) {
+    //fill .text .properties & .filter .properties
+    if (!(this.layer || this.layer.getSource().get("schema"))) return; // if no schema should read props from features
+    for (const e of itemElement.querySelectorAll(".properties")) {
+      e.length = 1; //first allways visible
+      for (const p of this.layer.getSource().get("schema").properties) e.add(new Option(p.Label, p.Name));
+    }
+  }
 }

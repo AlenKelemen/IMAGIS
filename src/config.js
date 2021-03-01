@@ -28,6 +28,9 @@ export default class Config {
     this.vc = new VersionControl("fs");
     this.result = this.vc.clone(this.cfg.gitPath, this.localFolder);
   }
+  setCfg(cfg){
+    this.cfg=cfg;
+  }
   getDefault() {
     return JSON.stringify(def);
   }
@@ -261,7 +264,7 @@ export default class Config {
    */
   imagisSyle(styleSpec) {
     if (!styleSpec) return; //default style
-    const sp = Array.isArray(styleSpec) ? styleSpec : [styleSpec]; //allways as array
+    const sp = Array.isArray(styleSpec) ? styleSpec : [styleSpec]; //always as array
     return function (feature, resolution) {
       const styles = [];
       for (const s of sp) {

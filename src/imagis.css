@@ -128,6 +128,7 @@ input {
   background-color: rgb(73 79 93);
   padding-top: 6px;
   padding-bottom: 6px;
+  z-index: 9999;
 }
 .flex-menu{
   display: flex;
@@ -178,6 +179,87 @@ input {
 .taskpane button:hover {
   background-color: rgb(100 181 161);
   outline: none;
+}
+/* taskpane.theme */
+
+.taskpane.theme {
+  flex-direction: column;
+}
+
+.taskpane.theme .top div {
+  padding-top: 16px;
+  float: right;
+}
+
+.taskpane.theme .middle {
+  align-self: center;
+  margin: auto;
+}
+
+.taskpane.theme .wrapper ul {
+  list-style-type: none;
+  padding-left: 8px;
+  margin: 0;
+}
+
+.taskpane.theme .caret {
+  cursor: pointer;
+  user-select: none;
+}
+
+.taskpane.theme .style {
+  color: red;
+}
+
+.taskpane.theme .nested {
+  display: none;
+}
+
+.taskpane.theme .caret::before {
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 900;
+  font-size: 16px;
+  content: "\f0da";
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.taskpane.theme .caret-down::before {
+  transform: rotate(90deg);
+}
+
+.taskpane.theme input,
+.taskpane.theme select,
+.taskpane.theme .color {
+  margin-right: 8px;
+  padding: 2px;
+  border: 0;
+  width: 95%
+}
+
+.taskpane.theme .color {
+  height: 18px;
+  background-color: white;
+  border: 2px solid white;
+  padding: 0;
+}
+
+.taskpane.theme .color:hover {
+  cursor: pointer;
+}
+
+.picker_editor,
+.picker_sample,
+.picker_done,
+.picker_cancel,
+.picker_arrow {
+  display: none;
+}
+
+.picker_wrapper {
+  box-shadow: unset !important;
+  width: 220px !important;
+  margin: 0 !important
 }
 
 /** UX right side child of aside */
