@@ -42,7 +42,7 @@ export default class Legend extends Toggle {
     this.hideButton = elt("i", { className: "far fa-lightbulb-on fa-fw" });
     this.defaultButton = elt("i", { className: "far fa-hammer" });
     this.saveButton = elt("i", { className: "far fa-save fa-fw" });
-    this.footer = elt("footer", { className: `footer` }, this.image, this.hideButton, this.defaultButton, this.saveButton);
+    this.footer = elt("footer", { className: `footer flex-menu` }, this.image, this.hideButton, this.defaultButton, this.saveButton);
     this.symbols = {
       polygon: new Polygon([
         [

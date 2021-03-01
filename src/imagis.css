@@ -14,6 +14,7 @@ body {
 }
 .right {
   margin-left: auto;
+  float:right;
 }
 .columns {
   flex-direction: column;
@@ -125,10 +126,12 @@ input {
   top: 0;
   color: white;
   background-color: rgb(73 79 93);
-  display: flex;
-  justify-content: space-evenly;
   padding-top: 6px;
   padding-bottom: 6px;
+}
+.flex-menu{
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .taskpane .footer {
