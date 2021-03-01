@@ -16,6 +16,7 @@ import Select from "./src/select.js";
 import Data from "./src/data.js";
 import DMA from "./src/dma.js";
 import Theme from "./src/theme.js";
+import Properties from "./src/properties.js";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -95,12 +96,16 @@ map.theme = new Theme({
   target: ux.aside,
 })
 ux.aside.home.addControl(map.theme);
-map.getLayers().get('active')
+
+map.properties = new Properties({
+  target: ux.aside,
+ select:map.select.olSelect
+})
+ux.aside.home.addControl(map.properties);
 
 ux.aside.home.addControl(
   new Project({
-    target: ux.aside,
-    map: map,
+    target: ux.aside
   })
 );
 ux.aside.water.addControl(

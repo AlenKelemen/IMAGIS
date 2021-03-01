@@ -38,6 +38,7 @@ export default class Legend extends Toggle {
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
     this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
+    
     this.image = elt("i", { className: "far fa-arrow-to-bottom fa-fw" });
     this.hideButton = elt("i", { className: "far fa-lightbulb-on fa-fw" });
     this.defaultButton = elt("i", { className: "far fa-hammer" });

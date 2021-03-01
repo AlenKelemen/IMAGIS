@@ -67,6 +67,9 @@ input {
   align-self: center;
   margin: auto;
 }
+.center{
+  text-align: center;
+}
 
 /** UX header control */
 .map-header {

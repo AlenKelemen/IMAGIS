@@ -6,10 +6,10 @@ import Toggle from "./toggle";
 import { elt } from "./util";
 import moment from "moment";
 
-export default class Project extends Toggle {
+export default class Properties extends Toggle {
   constructor(options = {}) {
-    if (!options.className) options.className = "toggle";
-    if (!options.html) options.html = '<i class="far fa-cog fa-fw"></i>';
+    if (!options.className) options.className = "properties";
+    if (!options.html) options.html = '<i class="far fa-th-list fa-fw"></i>';
     super(options);
     this.container = new Container({
       semantic: "section",
@@ -19,17 +19,13 @@ export default class Project extends Toggle {
     this.map = this.container.getMap();
     this.container.setVisible(this.active);
     this.on("change:active", (evt) => this.container.setVisible(evt.active));
-    this.header = elt("div", { className: "header center" }, "Postavke");
-    this.main = elt("main", { className: `main` }, this.header);
+    this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
-    this.content();
-    this.footer = elt("div", { className: "footer center" }, "Pogledaj postavke");
-    this.main.appendChild(this.footer);
-  }
-  content() {
-    const n = 150;
-    for (let i = 0; i < n; i++) {
-      this.main.appendChild(elt("div", { className: `item` },`item: ${i}`));
-    }
+
+    this.select = options.select; //
+    this.map.select.olSelect.on('select', evt => console.log(evt))
+   /*  this.select.on("select", (evt) => {
+      console.log(this.select.getFeatures().getArray());
+    }); */
   }
 }
