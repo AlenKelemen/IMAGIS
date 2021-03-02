@@ -105,7 +105,8 @@ ux.aside.home.addControl(map.properties);
 
 ux.aside.home.addControl(
   new Project({
-    target: ux.aside
+    target: ux.aside,
+    select:map.select
   })
 );
 ux.aside.water.addControl(

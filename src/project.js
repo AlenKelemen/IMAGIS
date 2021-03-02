@@ -21,39 +21,49 @@ export default class Project extends Toggle {
     //main
     this.main = elt("main", { className: `main` }, this.header);
     this.container.element.appendChild(this.main);
-    //main with scroll bar
-    this.content();
+    //main content wrapper
+    this.wrapper = elt("div", { className: "wrapper" });
+    this.main.appendChild(this.wrapper);
+    // fill wrapper
+    this.wrapperFill();
     //footer
     this.footer = elt("div", { className: "footer center" }, "Pogledaj postavke");
     this.main.appendChild(this.footer);
     //ol/map
     this.map = this.container.getMap();
-    //visibility
+    //select depended display of wrapper && visibility on click
     this.container.setVisible(this.active);
+    const onSelect = (evt) => this.wrapperSelect(evt.target);
     this.on("change:active", (evt) => {
       this.container.setVisible(evt.active);
-      //select
-      this.select = this.map
-        .getInteractions()
+      const select = this.map
+        .getInteractions(select)
         .getArray()
         .find((x) => x instanceof Select);
-      if (evt.active) {
-        this.onSelect();
-        this.select.on("select", this.onSelect);
-      } else this.select.un("select", this.onSelect);
+      if (evt.active && select) {
+        this.wrapperSelect(select);
+        select.on("select", onSelect);
+      } else select.un("select", onSelect);
     });
   }
-  //function on select
-  onSelect(evt) {
-    if (evt) this.features = evt.target.getFeatures().getArray();
-    else this.features = this.select.getFeatures().getArray();
-    console.log(this.features);
+
+  //this.wrapper example select depended display
+  wrapperSelect(select) {
+    if (!select) return;
+    const features = select.getFeatures().getArray();
+    this.wrapper.innerHTML = features.length === 0 ? "Odaberi" : "";
+    for (const f of features) {
+      const item = elt("div", {}, f.getId().toString());
+      item.setAttribute("data-id", f.getId());
+      this.wrapper.appendChild(item);
+    }
   }
-  //this.main content
-  content() {
+
+  //this.wrapper fill with 150 items to example scroll
+  wrapperFill() {
     const n = 150;
-    for (let i = 0; i < n; i++) {
-      this.main.appendChild(elt("div", { className: `item` }, `item: ${i}`));
+    for (let i = 0; i <= n; i++) {
+      this.wrapper.appendChild(elt("div", { className: `item` }, `item: ${i}`));
     }
   }
 }

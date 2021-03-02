@@ -36,7 +36,6 @@ export default class Data extends Toggle {
         this.container.setVisible(true);
         const id = f.get("device_id");
         this.chart.options.title.text = f.get("device_name");
-
         this.getData(id);
       }
     };
