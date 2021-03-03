@@ -264,7 +264,33 @@ input {
   width: 220px !important;
   margin: 0 !important
 }
-
+/** properties */
+.taskpane.properties .wrapper{
+  padding:2px
+}
+.taskpane.properties .layer{
+  background-color: #494f5d4d;
+  padding: 4px;
+  margin-top:2px;
+  margin-bottom:2px;
+}
+.taskpane.properties .items{
+  margin:4px
+}
+.taskpane.properties .item{
+  margin:4px
+}
+.taskpane.properties .item label{
+  display:block
+}
+.taskpane.properties .item input,
+.taskpane.properties .item select{
+  width:100%;
+  background-color: #e8e8e8;
+  padding:2px;
+  outline: none;
+}
+/** */
 /** UX right side child of aside */
 .toolbar {
   margin-left: auto;

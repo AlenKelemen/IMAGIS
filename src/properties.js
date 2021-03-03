@@ -15,7 +15,7 @@ export default class Properties extends Toggle {
     this.onChange = options.onChange || function (evt) {console.log(evt)} //
     this.container = new Container({
       semantic: "section",
-      className: `taskpane`,
+      className: `taskpane properties`,
     });
     options.target.addControl(this.container); //options.target (defines map also)
     //main
@@ -25,7 +25,7 @@ export default class Properties extends Toggle {
     this.wrapper = elt("div", { className: "wrapper" });
     this.main.appendChild(this.wrapper);
     //footer
-    this.footer = elt("div", { className: "footer center" }, "Postavke...");
+    this.footer = elt("div", { className: "footer" }, "Postavke...");
     this.main.appendChild(this.footer);
     //ol/map
     this.map = this.container.getMap();
@@ -116,7 +116,6 @@ export default class Properties extends Toggle {
         }
       }
     }
-    console.log(props);
     props = props.filter((x) => x.Hidden !== true); //in layer.def.source.schema.properties hiden properties can be defined
     for (const p of props) {
       const div = document.createElement("div"),
