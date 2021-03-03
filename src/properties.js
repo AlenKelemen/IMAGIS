@@ -12,21 +12,20 @@ export default class Properties extends Toggle {
     if (!options.html) options.html = '<i class="far fa-th-list fa-fw"></i>'; //
     super(options);
     this.readOnly = options.readOnly; //
+    this.onChange = options.onChange || function (evt) {console.log(evt)} //
     this.container = new Container({
       semantic: "section",
       className: `taskpane`,
     });
     options.target.addControl(this.container); //options.target (defines map also)
-    //header
-    this.header = elt("div", { className: "header center" }, "Postavke");
     //main
-    this.main = elt("main", { className: `main` }, this.header);
+    this.main = elt("main", { className: `main` });
     this.container.element.appendChild(this.main);
     //main content wrapper
     this.wrapper = elt("div", { className: "wrapper" });
     this.main.appendChild(this.wrapper);
     //footer
-    this.footer = elt("div", { className: "footer center" }, "Pogledaj postavke");
+    this.footer = elt("div", { className: "footer center" }, "Postavke...");
     this.main.appendChild(this.footer);
     //ol/map
     this.map = this.container.getMap();
@@ -46,7 +45,7 @@ export default class Properties extends Toggle {
     });
   }
 
-  //this.wrapper example select depended display
+  //this.wrapper select depended display
   wrapperSelect(select) {
     if (!select) return;
     const features = select.getFeatures().getArray();
@@ -98,14 +97,106 @@ export default class Properties extends Toggle {
       return;
     }
     let props = []; //consolidated props
-    console.log(layer,features,element);
     for (const f of features) {
       for (const key of f.getKeys()) {
-        if (key !== f.getGeometryName() && props.find((x) => x.Name === key) === undefined){
-          const prop = layer.getSource().get('schema').properties.find(x => x.Name === key); //only props defined in schema
-          console.log(layer.getSource().get('schema').properties)
+        if (key !== f.getGeometryName() && props.find((x) => x.Name === key) === undefined) {
+          const prop = layer
+            .getSource()
+            .get("schema")
+            .properties.find((x) => x.Name === key); //only props defined in schema
+          if (prop) props.push(prop);
+          if (props.length > 0) props[props.length - 1].values = [];
         }
       }
+    }
+    for (const f of features) {
+      for (const p of props) {
+        if (p.values.indexOf(f.get(p.Name)) === -1) {
+          p.values.push(f.get(p.Name));
+        }
+      }
+    }
+    console.log(props);
+    props = props.filter((x) => x.Hidden !== true); //in layer.def.source.schema.properties hiden properties can be defined
+    for (const p of props) {
+      const div = document.createElement("div"),
+        label = document.createElement("label");
+      let input = document.createElement("input");
+      div.className = "item";
+      input.className = "input";
+      if (p.Constrains && !this.readOnly) {
+        input = document.createElement("select");
+        input.className = "input";
+        for (const constrain of p.Constrains) {
+          const option = document.createElement("option");
+          option.value = constrain;
+          option.innerHTML = constrain;
+          input.appendChild(option);
+        }
+        if (p.values.length > 1) input.options[input.options.length] = new Option("*VARIRA*", "*VARIRA*");
+      }
+      label.innerText = p.Label || p.Name;
+      input.value = p.values.length > 1 ? "*VARIRA*" : p.values[0];
+      input.id = layer.get("name") + ":" + p.Name; // id = property name
+      input.dataset.source = layer.getSource().get('name');
+      input.dataset.key = p.Name;
+      input.disabled = this.readOnly;
+      div.appendChild(label);
+      div.appendChild(input);
+      element.appendChild(div);
+      switch (p.DataType) {
+        case undefined || null || 0 || "":
+          console.log('dataType: undefined ||null||0||"" for:' + input.id);
+          break;
+        case 1: //boolean
+          input.setAttribute("type", "checkbox");
+          input.className = "w3-check w3-border input";
+          if (item.values.length > 1) {
+            input.indeterminate = true;
+          } else {
+            input.checked = item.values[0];
+          }
+          break;
+        case 3: //datetime
+          input.placeholder = "YYYY-MM-DD HH:mm:ss";
+          input.addEventListener("focus", (evt) => {
+            input.oldValue = evt.target.value;
+          });
+          input.addEventListener("change", (evt) => {
+            let value = evt.target.value;
+            if (value == "") return;
+            let momentValue = moment(value, "YYYY-MM-DD HH:mm:ss");
+            evt.target.value = momentValue.isValid() ? momentValue.format("YYYY-MM-DD HH:mm:ss") : input.oldValue;
+          });
+          break;
+        case 6:
+        case 7:
+        case 8: // integer
+          input.placeholder = "cijeli broj";
+          input.addEventListener("focus", (evt) => {
+            input.oldValue = evt.target.value;
+          });
+          input.addEventListener("change", (evt) => {
+            evt.target.value = isNaN(parseInt(evt.target.value, 10)) ? input.oldValue : parseInt(evt.target.value, 10);
+          });
+          break;
+        case 4:
+        case 5:
+        case 15: //float
+          input.placeholder = "decimalni broj";
+          input.addEventListener("focus", (evt) => {
+            input.oldValue = evt.target.value;
+          });
+          input.addEventListener("change", (evt) => {
+            evt.target.value = isNaN(parseFloat(evt.target.value, 10)) ? input.oldValue : parseFloat(evt.target.value, 10);
+          });
+          break;
+        case 9: //string
+          break;
+        default: //geometry
+      }
+      if (input.tagName === "INPUT") input.addEventListener("change", (evt) => this.onChange.call(this, evt));
+      if (input.tagName === "SELECT") input.addEventListener("change", (evt) => this.onChange.call(this, evt));
     }
   }
 }
