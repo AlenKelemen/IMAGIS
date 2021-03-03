@@ -51,7 +51,7 @@ export default class Project extends Toggle {
   wrapperSelect(select) {
     if (!select) return;
     const features = select.getFeatures().getArray();
-    this.wrapper.innerHTML = features.length === 0 ? "Odaberi" : "";
+    this.wrapper.innerHTML = features.length === 0 ? '<div class="middle-center">Ništa nije odabrano</div>' : "";
     for (const f of features) {
       const item = elt("div", {}, f.getId().toString());
       item.setAttribute("data-id", f.getId());

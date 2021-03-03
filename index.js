@@ -99,7 +99,7 @@ ux.aside.home.addControl(map.theme);
 
 map.properties = new Properties({
   target: ux.aside,
- select:map.select
+ readOnly:true
 })
 ux.aside.home.addControl(map.properties);
 

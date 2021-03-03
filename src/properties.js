@@ -11,6 +11,7 @@ export default class Properties extends Toggle {
     if (!options.className) options.className = "toggle"; //
     if (!options.html) options.html = '<i class="far fa-th-list fa-fw"></i>'; //
     super(options);
+    this.readOnly = options.readOnly; //
     this.container = new Container({
       semantic: "section",
       className: `taskpane`,
@@ -49,12 +50,62 @@ export default class Properties extends Toggle {
   wrapperSelect(select) {
     if (!select) return;
     const features = select.getFeatures().getArray();
-    this.wrapper.innerHTML = features.length === 0 ? '<span class="middle-center">Ništa nije odabrano</span>' : "";
+    this.wrapper.innerHTML = features.length === 0 ? '<div class="middle-center">Ništa nije odabrano</div>' : "";
+    const item = [];
     for (const f of features) {
-      const item = elt("div", {}, f.getId().toString());
-      item.setAttribute("data-id", f.getId());
-      this.wrapper.appendChild(item);
+      const l = f.get("layer");
+      if (l) {
+        if (item.find((x) => x.layer === l)) {
+          item.find((x) => x.layer === l).features.push(f);
+        } else {
+          item.push({
+            layer: l,
+            features: [f],
+          });
+        }
+      }
+    }
+    for (const [index, i] of item.entries()) {
+      const ld = document.createElement("div"); //layer div
+      ld.className = "layer";
+      ld.innerHTML = `
+              <div class="layer-header"><i class="far fa-plus"></i> ${i.layer.get("label") || i.layer.get("name")} (${i.features.length})</div>
+          `;
+      this.wrapper.appendChild(ld);
+      const content = document.createElement("div");
+      content.className = "items";
+      if (index === 0) {
+        //show only first layer items...
+        content.style.display = "block";
+        ld.querySelector("i").className = "far fa-minus";
+      } else {
+        content.style.display = "none";
+        ld.querySelector("i").className = "far fa-plus";
+      }
+      ld.querySelector("i").addEventListener("click", (evt) => {
+        const e = evt.currentTarget;
+        content.style.display = content.style.display === "none" ? "block" : "none";
+        e.className = content.style.display === "none" ? "far fa-plus" : "far fa-minus";
+      });
+      ld.appendChild(content);
+      this.table(i.layer, i.features, content);
     }
   }
-
+  table(layer, features, element) {
+    //creates feature table
+    if (!layer.getSource().get("schema")) {
+      console.log("no schema");
+      return;
+    }
+    let props = []; //consolidated props
+    console.log(layer,features,element);
+    for (const f of features) {
+      for (const key of f.getKeys()) {
+        if (key !== f.getGeometryName() && props.find((x) => x.Name === key) === undefined){
+          const prop = layer.getSource().get('schema').properties.find(x => x.Name === key); //only props defined in schema
+          console.log(layer.getSource().get('schema').properties)
+        }
+      }
+    }
+  }
 }
