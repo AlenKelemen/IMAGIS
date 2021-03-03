@@ -62,15 +62,16 @@ export default class Legend extends Toggle {
     };
     this.image.addEventListener("click", (evt) => this.getLegendImage(this.map.getView().getResolution()));
     this.hideButton.addEventListener("click", (evt) => this.togglelHide());
+    this.defaultButton.addEventListener("click", (evt) => {
+      map.config.writeDefault();
+      this.setContent(this.map.getView().getResolution());
+    });
     this.saveButton.addEventListener("click", (evt) => this.save());
     this.hide = false;
     if (options.hide) this.togglelHide();
     this.setContent(this.map.getView().getResolution());
     this.map.getView().on("change:resolution", (evt) => this.setContent(evt.target.getResolution()));
-    this.defaultButton.addEventListener("click", (evt) => {
-      map.config.writeDefault();
-      this.setContent(this.map.getView().getResolution());
-    });
+    
   }
   //save to cfg.json
   save() {

@@ -265,11 +265,18 @@ input {
   margin: 0 !important
 }
 /** properties */
+.taskpane.properties .main .footer{
+  display:flex;
+  justify-content: space-evenly;
+}
 .taskpane.properties .wrapper{
   padding:2px
 }
+.taskpane.properties .layer-header{
+  background-color: rgba(26, 26, 27, 0.226);
+  padding-left: 4px;
+}
 .taskpane.properties .layer{
-  background-color: #494f5d4d;
   padding: 4px;
   margin-top:2px;
   margin-bottom:2px;

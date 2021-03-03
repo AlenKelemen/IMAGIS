@@ -12,7 +12,11 @@ export default class Properties extends Toggle {
     if (!options.html) options.html = '<i class="far fa-th-list fa-fw"></i>'; //
     super(options);
     this.readOnly = options.readOnly; //
-    this.onChange = options.onChange || function (evt) {console.log(evt)} //
+    this.onChange =
+      options.onChange ||
+      function (evt) {
+        console.log(evt);
+      }; //
     this.container = new Container({
       semantic: "section",
       className: `taskpane properties`,
@@ -25,7 +29,11 @@ export default class Properties extends Toggle {
     this.wrapper = elt("div", { className: "wrapper" });
     this.main.appendChild(this.wrapper);
     //footer
-    this.footer = elt("div", { className: "footer" }, "Postavke...");
+    this.image = elt("i", { className: "far fa-arrow-to-bottom fa-fw" });
+    this.hideButton = elt("i", { className: "far fa-lightbulb-on fa-fw" });
+    this.defaultButton = elt("i", { className: "far fa-hammer" });
+    this.saveButton = elt("i", { className: "far fa-save fa-fw" });
+    this.footer = elt("div", { className: "footer" }, this.image, this.hideButton, this.defaultButton, this.saveButton);
     this.main.appendChild(this.footer);
     //ol/map
     this.map = this.container.getMap();
@@ -43,8 +51,20 @@ export default class Properties extends Toggle {
         select.on("select", onSelect);
       } else select.un("select", onSelect);
     });
+    this.image.addEventListener("click", (evt) => getCss(select));
+    this.hideButton.addEventListener("click", (evt) => console.log("show geometry of selected"));
+    this.defaultButton.addEventListener("click", (evt) => console.log("undo changes"));
+    this.saveButton.addEventListener("click", (evt) => console.log("stage changes"));
   }
-
+  // download properties as json
+  getCss(select) {
+    if (!select) return;
+    const features = select.getFeatures().getArray();
+    const item = [];
+    for (const f of features) {
+     console.log("download properties as json",f)
+    }
+  }
   //this.wrapper select depended display
   wrapperSelect(select) {
     if (!select) return;
@@ -137,7 +157,7 @@ export default class Properties extends Toggle {
       label.innerText = p.Label || p.Name;
       input.value = p.values.length > 1 ? "*VARIRA*" : p.values[0];
       input.id = layer.get("name") + ":" + p.Name; // id = property name
-      input.dataset.source = layer.getSource().get('name');
+      input.dataset.source = layer.getSource().get("name");
       input.dataset.key = p.Name;
       input.disabled = this.readOnly;
       div.appendChild(label);
