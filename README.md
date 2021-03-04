@@ -11,13 +11,14 @@
   * prava korištenja grupa podataka
   * centralni export podataka iz GIS-a
 * Pregledavanje i korištenje GIS-a (mainmenu:home)
-  * podloge uključuju SRPJ
-  * legenda: prozirnost, izbor simbola, izbor podloga,dodavanje slojeva iz drugih portala (upis linka)
+  * [x] podloge uključuju SRPJ
+  * [x] legenda: prozirnost, izbor simbola, izbor podloga
+  * dodavanje slojeva iz drugih portala (upis linka)
   * pozicioniranje na objekt i geokoding
-  * info: atributi, dužina, površina, visine, točke
+  * [ ] info: atributi, dužina, površina, visine, točke
   * mjerenje udaljenosti i površine
   * sql upit za selekciju
-  * selekcija sa točkom, linijom, poligonom i objektom na karti (u posebnom menu-u)
+  * [ ] selekcija sa točkom, linijom, poligonom i objektom na karti (u posebnom menu-u)
   * statistika na odabrano
   * pisanje i crtanje
   * tisak u pdf
@@ -28,9 +29,10 @@
     * dužina. materijal, pad
     * eksport profila DXF
     * umetanje čvorova u profil
-* Pregledavanje i korištenje GIS-a - web (već je u predhodnom)
+* Pregledavanje i korištenje GIS-a - web (podskup predhodnog)
   * pozicioniranje po adresi i objektima
   * prilagođeni GUI
+  * offline prikpljanje podataka
 * GIS vodoopskrbe (mainmenu: Sustav, login)
   * Evidencija i ažuriranje podataka (mainmenu: Uredi, login)
     * definirani standard ASCII/DXF
@@ -54,14 +56,14 @@
     * interpolacija vrijednosti koje fale
     * pohrana mjerenja
   * Nadzor gubitaka vode (mainmenu: Gubici, login)
-    * definiranje DMA
-    * izračun ILI po IWA metodologiji za DMA i sustave za mjesec, kvartal i godinu
+    * [ ] definiranje DMA
+    * [x] izračun ILI po IWA metodologiji za DMA i sustave za mjesec, kvartal i godinu
     * tablični prikaz gubitaka
     * pridruživanje mjerača i privremenih mjerača
     * izračun gubitka vode pri akcidentu
     * izračun ili upis min. noćnog protoka
-    * graf mjerenja
-    * povezano s bazom očitanja vode, analiza prividnih gubitaka (krađe vode) po zoni/ mjesečno
+    * [x] graf mjerenja
+    * [ ] povezano s bazom očitanja vode, analiza prividnih gubitaka (krađe vode) po zoni/ mjesečno
   * Povezivanje i eksport u EPANET
 * GIS odvodnje (mainmenu: Sustav, login)- separate page
   * Evidencija i ažuriranje podataka (mainmenu: Uredi, login)

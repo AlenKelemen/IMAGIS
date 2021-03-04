@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import Select from "ol/interaction/Select";
+import GeoJSON from "ol/format/GeoJSON";
 
 export default class Properties extends Toggle {
   constructor(options = {}) {
@@ -30,8 +31,8 @@ export default class Properties extends Toggle {
     this.main.appendChild(this.wrapper);
     //footer
     this.image = elt("i", { className: "far fa-arrow-to-bottom fa-fw" });
-    this.hideButton = elt("i", { className: "far fa-lightbulb-on fa-fw" });
-    this.defaultButton = elt("i", { className: "far fa-hammer" });
+    this.hideButton = elt("i", { className: "far fa-draw-polygon fa-fw" });
+    this.defaultButton = elt("i", { className: "far fa-undo fa-fw" });
     this.saveButton = elt("i", { className: "far fa-save fa-fw" });
     this.footer = elt("div", { className: "footer" }, this.image, this.hideButton, this.defaultButton, this.saveButton);
     this.main.appendChild(this.footer);
@@ -42,16 +43,16 @@ export default class Properties extends Toggle {
     const onSelect = (evt) => this.wrapperSelect(evt.target);
     this.on("change:active", (evt) => {
       this.container.setVisible(evt.active);
-      const select = this.map
-        .getInteractions(select)
+      this.select = this.map
+        .getInteractions(this.select)
         .getArray()
         .find((x) => x instanceof Select);
-      if (evt.active && select) {
-        this.wrapperSelect(select);
-        select.on("select", onSelect);
-      } else select.un("select", onSelect);
+      if (evt.active && this.select) {
+        this.wrapperSelect(this.select);
+        this.select.on("select", onSelect);
+      } else this.select.un("select", onSelect);
     });
-    this.image.addEventListener("click", (evt) => getCss(select));
+    this.image.addEventListener("click", (evt) => this.getCss(this.select));
     this.hideButton.addEventListener("click", (evt) => console.log("show geometry of selected"));
     this.defaultButton.addEventListener("click", (evt) => console.log("undo changes"));
     this.saveButton.addEventListener("click", (evt) => console.log("stage changes"));
@@ -60,10 +61,9 @@ export default class Properties extends Toggle {
   getCss(select) {
     if (!select) return;
     const features = select.getFeatures().getArray();
-    const item = [];
-    for (const f of features) {
-     console.log("download properties as json",f)
-    }
+    const geoJSON = new GeoJSON();
+    const jf = geoJSON.writeFeatures(features);
+    console.log(jf);
   }
   //this.wrapper select depended display
   wrapperSelect(select) {
