@@ -9,7 +9,29 @@
       "name": "VodoopskrbaPmo",
       "path": "vodovodOmis",
       "fileName": "pmo122018",
-      "type": "geojson"
+      "type": "geojson",
+      "schema": {
+        "geometry": "point",
+        "properties": [
+          {
+            "Name": "UTROSAK",
+            "Label": "Utrošak",
+            "Description": "Mjesečni utrošak vode m3",
+            "DataType": 8
+          }, {
+            "Name": "OPTIONALID",
+            "Label": "ID",
+            "Description": "Id",
+            "DataType": 8
+          },
+          {
+            "Name": "VRIJEME_OC",
+            "Label": "Datum očitanja",
+            "Description": "Datum očitanja",
+            "DataType": 3
+          }
+        ]
+      }
     },
     {
       "name": "VodoopskrbaVod",

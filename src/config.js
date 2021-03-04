@@ -175,7 +175,7 @@ export default class Config {
                     featureProjection: "EPSG:3765",
                   }).readFeatures(r);
                   source.addFeatures(features);
-                  source.getFeatures().map((x) => x.set("layer", layer));
+                  source.getFeatures().map((x) => x.set("layerName", layer.get('name')));
                 });
               });
             },

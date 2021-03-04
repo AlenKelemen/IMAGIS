@@ -10,70 +10,63 @@
   * dostup na osnovu privilegija korisnika
   * prava korištenja grupa podataka
   * centralni export podataka iz GIS-a
-* Pregledavanje i korištenje GIS-a (mainmenu:home)
+* Pregledavanje i korištenje GIS-a (header 1:IMAGIS)
   * [x] podloge uključuju SRPJ
-  * [x] legenda: prozirnost, izbor simbola, izbor podloga
-  * dodavanje slojeva iz drugih portala (upis linka)
-  * pozicioniranje na objekt i geokoding
-  * [ ] info: atributi, dužina, površina, visine, točke
-  * mjerenje udaljenosti i površine
-  * sql upit za selekciju
-  * [ ] selekcija sa točkom, linijom, poligonom i objektom na karti (u posebnom menu-u)
-  * statistika na odabrano
-  * pisanje i crtanje
-  * tisak u pdf
-  * export odabranog
-  * uzdužni profil odabranog voda
+  * [x] Legenda: prozirnost, izbor simbola, izbor podloga (taskpane section 1)
+  * [ ] Postavke: dodavanje slojeva iz drugih portala, uređenje sheme podataka (taskpane section 2)
+  * [ ] Pozicioniranje: pozicioniranje na objekt i geokoding (taskpane section 3)
+  * [x] Svojstva: atributi, dužina, površina, visine, točke, export odabranog (taskpane section 4)
+  * [ ] Mjerenje: udaljenosti i površine (taskpane section 5)
+  * [ ] Odabir: sql upit za selekciju i selekcija sa linijom, poligonom i poligionskim objektom na karti (taskpane section 6)
+  * [x] selekcija sa točkom i kvadratnim zahvatom na karti (toolbar 1)
+  * [ ] Statistika na odabranog (taskpane section 7)
+  * [ ] Crtanje i pisanje (taskpane section 8)
+  * [ ] Tisak u pdf (taskpane section 9)
+  * [ ] Uzdužni profil odabranog voda (taskpane section 10)
     * izbor mjerila
     * veza na odabrano
     * dužina. materijal, pad
     * eksport profila DXF
     * umetanje čvorova u profil
+
 * Pregledavanje i korištenje GIS-a - web (podskup predhodnog)
   * pozicioniranje po adresi i objektima
   * prilagođeni GUI
   * offline prikpljanje podataka
-* GIS vodoopskrbe (mainmenu: Sustav, login)
-  * Evidencija i ažuriranje podataka (mainmenu: Uredi, login)
-    * definirani standard ASCII/DXF
-    * visinski: niveleta, teren, dubine okna
-    * liste atributa se mogu mijenjati
-    * montažne sheme se mogu pridružiti
-    * kontrola topo i atributa
-    * provjera za EPANET
-    * automatski upis atributa i objekata za standardizirani ASCII/DXF
-  * Vođenje podataka o kvarovima (mainmenu: Kvarovi, login)
-    * vezano uz adresu (ako postoji adresni model)
-    * prijave putem weba (hiperlink)
-    * atributi: vidljivo obilježje, uzrok, lokacija, tip kvara
-    * povezano s radnim nalogom
-    * export u KANEW
-    * izvješća
-    * zatvaranje zasuna
-    * tijek popravka
-  * Povezivanje s NUS i mjernom opremom (mainmenu: Mjerenje, login)
-    * sučelje za dodavanje izmjerenog u GIS i položajno
-    * interpolacija vrijednosti koje fale
-    * pohrana mjerenja
-  * Nadzor gubitaka vode (mainmenu: Gubici, login)
-    * [ ] definiranje DMA
-    * [x] izračun ILI po IWA metodologiji za DMA i sustave za mjesec, kvartal i godinu
-    * tablični prikaz gubitaka
-    * pridruživanje mjerača i privremenih mjerača
-    * izračun gubitka vode pri akcidentu
-    * izračun ili upis min. noćnog protoka
-    * [x] graf mjerenja
-    * [ ] povezano s bazom očitanja vode, analiza prividnih gubitaka (krađe vode) po zoni/ mjesečno
-  * Povezivanje i eksport u EPANET
-* GIS odvodnje (mainmenu: Sustav, login)- separate page
-  * Evidencija i ažuriranje podataka (mainmenu: Uredi, login)
+
+* GIS vodoopskrbe (header 2: Vodoopskrba)
+    * [ ] Standard ASCII/DXF download standarda, visinski: niveleta, teren, dubine okna (taskpane section 1)
+    * [ ] Automatski upis atributa i objekata za standardizirani ASCII/DXF (taskpane section 2)
+    * [ ] Montažne sheme i dokumenti se mogu pregledati i pridružiti (taskpane section 3)
+    * [ ] Kontrola topo i atributa (taskpane section 4)
+    * [ ] EPANET provjera i export u EPANET (taskpane section 5)
+    * [ ] automatski upis atributa i objekata za standardizirani ASCII/DXF (taskpane section 6)Vođenje podataka o kvarovima (taskpane section 6-10)
+      * vezano uz adresu (ako postoji adresni model)
+      * prijave putem weba (hiperlink)
+      * atributi: vidljivo obilježje, uzrok, lokacija, tip kvara
+      * povezano s radnim nalogom
+      * export u KANEW
+      * izvješća
+      * zatvaranje zasuna
+      * tijek popravka
+    * [ ] NUS i mjerna oprema, povezivanje (upis mjerača u GIS i linka odnosno file-a iz loggera)(taskpane section 6)
+    * [ ] Mjerenja, prikaz i interpolacija vrijednosti koje fale (taskpane section 7)
+      * CRUD mjerenja u GIS db 
+  * Nadzor gubitaka vode (header 3: Gubici, login)
+    * [ ] DMA - definiranje i automatsko pridruživanje mjerača i privremenih mjerača u DMA (taskpane section 1)
+    * [x] ILI - izračun po IWA metodologiji, izračun pri akcidentu i na osnovu min nočnih protoka za DMA i sustav za mjesec, kvartal i godinu  (taskpane section 2)
+    * [ ] Gubici - tablični prikaz gubitaka  (taskpane section 3)
+    * [x] Grafikon mjerenja   (taskpane section 7)
+    * [ ] Prividni gubici, povezano s bazom očitanja vode, analiza prividnih gubitaka (krađe vode) po zoni/ mjesečno  (taskpane section 8)
+* GIS odvodnje (header 4: Sustav)
+  * Evidencija i ažuriranje podataka (taskpane section 1)
     * definirani standard ASCII/DXF
     * visinski: niveleta, teren, dubine okna
     * liste atributa se mogu mijenjati
     * montažne sheme se mogu pridružiti
     * kontrola topo i atributa
     * automatski upis atributa i objekata za standardizirani ASCII/DXF
-  * Vođenje podataka o kvarovima i problemima (mainmenu: Kvarovi, login)
+  * Vođenje podataka o kvarovima i problemima (taskpane section 2)
     * vezano uz adresu (ako postoji adresni model)
     * prijave putem weba (hiperlink)
     * atributi: vidljivo obilježje, uzrok, lokacija, tip kvara
@@ -82,7 +75,7 @@
     * izvješća
     * zatvaranje zasuna
     * tijek popravka
-  * Evidencija problema strukturalne stabilnosti sustava odvodnje (optička inspekcija) (mainmenu: CCTV, login)
+  * Evidencija problema strukturalne stabilnosti sustava odvodnje (optička inspekcija) (taskpane section 3)
     * plan inspekcije CCTV
     * izviješće
     * podaci direktno iz kamere
@@ -90,16 +83,16 @@
     * opis stanja cijevi je posebna linijska tema sa stacionažom početka i kraja
     * prikaz slika i videa kao atribut stanja cijevi
     * video povezan s pomicanjem točke u GIS-u
-  * Evidencija problema vodonepropusnosti
+  * Evidencija problema vodonepropusnosti (taskpane section 4)
     * plan ispitivanja vodonepropusnosti sa radnim nalozima
-  * Evidencija septičkih jama
+  * Evidencija septičkih jama (taskpane section 5)
   * vezano uz adresu (ako postoji adresni model)
 * Povezivanje s PIS
   * edit adresnog modela, preuzimanje službenog
   * status priključka (poljoprivredni, fontana)
   * standard tablica koje se prezimanju iz PIS za povezivanje s prostorom
-* Izdavanje suglasnosti (mainmenu: Suglasnosti, login)
+* Izdavanje suglasnosti (header 5: Suglasnosti, login)
   * izrada pdf suglasnosti sa kartom
   * pregled u GIS izdanih suglasnosti
-* Praćenje vozila (mainmenu: Vozila, login)
+* Praćenje vozila (header: Vozila, login)
   * potreban hiperlink na server proizvođaća uređaja

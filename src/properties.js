@@ -52,18 +52,21 @@ export default class Properties extends Toggle {
         this.select.on("select", onSelect);
       } else this.select.un("select", onSelect);
     });
-    this.image.addEventListener("click", (evt) => this.getCss(this.select));
+    this.image.addEventListener("click", (evt) => this.getJson(this.select));
     this.hideButton.addEventListener("click", (evt) => console.log("show geometry of selected"));
     this.defaultButton.addEventListener("click", (evt) => console.log("undo changes"));
     this.saveButton.addEventListener("click", (evt) => console.log("stage changes"));
   }
   // download properties as json
-  getCss(select) {
+  getJson(select) {
     if (!select) return;
     const features = select.getFeatures().getArray();
     const geoJSON = new GeoJSON();
     const jf = geoJSON.writeFeatures(features);
-    console.log(jf);
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jf);
+    const a = elt("a", { href: dataStr, download: "imagis.geojson" });
+    a.click();
+    a.remove();
   }
   //this.wrapper select depended display
   wrapperSelect(select) {
@@ -72,7 +75,7 @@ export default class Properties extends Toggle {
     this.wrapper.innerHTML = features.length === 0 ? '<div class="middle-center">Ništa nije odabrano</div>' : "";
     const item = [];
     for (const f of features) {
-      const l = f.get("layer");
+      const l = this.map.getLayers().getArray().find((x) => x.get("name") === f.get("layerName"));
       if (l) {
         if (item.find((x) => x.layer === l)) {
           item.find((x) => x.layer === l).features.push(f);

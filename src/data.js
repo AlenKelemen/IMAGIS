@@ -32,7 +32,7 @@ export default class Data extends Toggle {
       const select = evt.target;
       const features = select.getFeatures().getArray();
       const f = features[features.length - 1];
-      if (f && f.get("layer") === th) {
+      if (f && f.get("layerName") === 'th') {
         this.container.setVisible(true);
         const id = f.get("device_id");
         this.chart.options.title.text = f.get("device_name");
