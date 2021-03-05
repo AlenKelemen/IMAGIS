@@ -14,9 +14,9 @@ export default class Container extends Control {
     super({
       element: document.createElement(options.semantic || "div"),
     });
-    this.hiddenClass = options.hiddenClass || 'hidden';
+    this.hiddenClass = options.hiddenClass || "hidden";
     this.element.className = options.className || "container"; // className
-    this.setVisible((options.visible === undefined) ? true : options.visible);
+    this.setVisible(options.visible === undefined ? true : options.visible);
     this.set("name", options.name);
     this.controls_ = [];
   }
@@ -25,10 +25,11 @@ export default class Container extends Control {
     if (this.getVisible() == b) return;
     if (b) this.element.classList.remove(this.hiddenClass);
     else {
-      for(const c of this.getControls()){
-        c.setActive(false);
+      for (const c of this.getControls()) {
+        if (typeof c.setActive === "function") c.setActive(false);
       }
-      this.element.classList.add(this.hiddenClass);}
+      this.element.classList.add(this.hiddenClass);
+    }
     this.dispatchEvent({
       type: "change:visible",
       key: "visible",
