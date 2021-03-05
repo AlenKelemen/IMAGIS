@@ -1,4 +1,6 @@
 import Container from "./container";
+import Toggle from "./toggle";
+import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 
 export default class UX {
   constructor(options = {}) {
@@ -15,42 +17,68 @@ export default class UX {
     document.body.appendChild(this.target);
     this.map.setTarget(this.target);
     /**
+     * WRAPPER element
+     */
+    this.wrapper = new Container({
+      className: options.wrapperClass || "wrapper",
+    });
+    this.map.addControl(this.wrapper);
+
+    /**
+     * TASK element
+     */
+    this.task = new Container({
+      className: options.wrapperClass || "task",
+    });
+    this.map.addControl(this.task);
+
+    /** in WRAPPER */
+    /**
      * HEADER element
      */
     this.header = new Container({
-      semantic: "header",
-      className: options.headerClass || "map-header control",
+      className: options.headerClass || "header",
     });
-    this.map.addControl(this.header);
+    this.wrapper.addControl(this.header);
     /**
-     * ASIDE element 
+     * ASIDE element
      */
     this.aside = new Container({
-      semantic: "aside",
-      className: options.asideClass || "map-aside",
+      className: options.asideClass || "aside",
     });
-    this.map.addControl(this.aside);
+    this.wrapper.addControl(this.aside);
     /**
      * FOOTER element
      */
     this.footer = new Container({
-      semantic: "footer",
-      className: options.footerClass || "map-footer",
+      className: options.footerClass || "footer",
     });
-    this.map.addControl(this.footer);
-  }
-  
+    this.wrapper.addControl(this.footer);
 
+    /**
+     * in HEADER
+     */
+    this.imagis = new Toggle({
+      html: '<i class="far fa-home fa-fw"></i> Imagis',
+      className: "imagis",
+      tipLabel: "Tip...",
+      active: false,
+    });
+    this.header.addControl(this.imagis);
+    /**
+     * in ASIDE
+     */
+    this.toolbar = new Container({
+      className: "toolbar",
+    });
+    this.aside.addControl(this.toolbar);
+    /**
+     * in FOOTER
+     */
+
+    this.footer.addControl(new ScaleLine());
+  }
   getTarget() {
     return this.target;
-  }
-  getHeader() {
-    return this.header;
-  }
-  getAside() {
-    return this.aside;
-  }
-  getFooter() {
-    return this.footer;
   }
 }
