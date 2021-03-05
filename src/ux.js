@@ -5,80 +5,107 @@ import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 export default class UX {
   constructor(options = {}) {
     this.map = options.map;
-    if (!this.map) {
-      console.log("please set options.map");
-      return;
-    }
-    /**
-     * Map target element
-     */
-    this.target = document.createElement("main");
-    this.target.className = "map";
-    document.body.appendChild(this.target);
-    this.map.setTarget(this.target);
-    /**
-     * WRAPPER element
-     */
-    this.wrapper = new Container({
-      className: options.wrapperClass || "wrapper",
-    });
-    this.map.addControl(this.wrapper);
+    this.headerItems = [
+      {
+        name: "water",
+        label: "Voda",
+        tip: "tip",
+        icon: "fa-water",
+      },
+      {
+        name: "imagis",
+        label: "IMAGIS",
+        tip: "tip",
+        icon: "fa-home",
+        active: true,
+      },
+    ];
+    this.navbarItems = [
+      {
+        name: "imagis", //sidebar name
+        navbar: [
+          {
+            name: "legend",
+            label: "Legenda",
+            tip: "Legenda",
+            icon: "fa-layers",
+          },
+        ],
+      },
+      {
+        name: "water", //sidebar name
+        navbar: [
+          {
+            name: "legend",
+            label: "Legenda",
+            tip: "Legenda",
+            icon: "fa-layers",
+          },
+        ],
+      },
+    ];
 
-    /**
-     * TASK element
-     */
-    this.task = new Container({
-      className: options.wrapperClass || "task",
-    });
-    this.map.addControl(this.task);
-
-    /** in WRAPPER */
-    /**
-     * HEADER element
-     */
+    this.setSidebar();
     this.header = new Container({
-      className: options.headerClass || "header",
+      className: "w3-bar", //w3-small
     });
-    this.wrapper.addControl(this.header);
-    /**
-     * ASIDE element
-     */
-    this.aside = new Container({
-      className: options.asideClass || "aside",
-    });
-    this.wrapper.addControl(this.aside);
-    /**
-     * FOOTER element
-     */
-    this.footer = new Container({
-      className: options.footerClass || "footer",
-    });
-    this.wrapper.addControl(this.footer);
-
-    /**
-     * in HEADER
-     */
-    this.imagis = new Toggle({
-      html: '<i class="far fa-home fa-fw"></i> Imagis',
-      className: "imagis",
-      tipLabel: "Tip...",
-      active: false,
-    });
-    this.header.addControl(this.imagis);
-    /**
-     * in ASIDE
-     */
-    this.toolbar = new Container({
-      className: "toolbar",
-    });
-    this.aside.addControl(this.toolbar);
-    /**
-     * in FOOTER
-     */
-
-    this.footer.addControl(new ScaleLine());
+    this.map.addControl(this.header);
+    this.setHeader();
+    this.setNavbar();
   }
-  getTarget() {
-    return this.target;
+  setNavbar() {
+    //set sidebar's navbar items
+    for (const ni of this.navbarItems) {
+      const sidebar = map
+        .getControls()
+        .getArray()
+        .find((x) => x.get("name") === ni.name);
+        const navbar = new Container({
+          className: "w3-bar-block", //w3-small
+        });
+        sidebar.addControl(navbar);
+        const toggle = new Toggle({
+          html: `<i class="far ${ni.icon} fa-fw"></i><span class="w3-hide-small"> ${ni.label}</span>`,
+          className: "w3-bar-item w3-button w3-right w3-padding-small w3-hover-red",
+          tipLabel: ni.tip,
+          active: ni.active || false,
+          name: ni.name,
+        });
+        navbar.addControl(toggle);
+
+    }
+  }
+
+  setSidebar() {
+    for (const hi of this.headerItems) {
+      const sidebar = new Container({
+        className: "w3-sidebar",
+        name: hi.name,
+        hiddenClass: "w3-hide",
+      });
+      this.map.addControl(sidebar);
+    }
+  }
+  setHeader() {
+    for (const hi of this.headerItems) {
+      const toggle = new Toggle({
+        html: `<i class="far ${hi.icon} fa-fw"></i><span class="w3-hide-small"> ${hi.label}</span>`,
+        className: "w3-bar-item w3-button w3-right w3-padding-small w3-hover-red",
+        tipLabel: hi.tip,
+        active: hi.active || false,
+        name: hi.name,
+      });
+      this.header.addControl(toggle);
+      const sidebar = this.map
+        .getControls()
+        .getArray()
+        .find((x) => x.get("name") === hi.name);
+      if (hi.active === true) toggle.element.classList.add("w3-red");
+      else toggle.element.classList.remove("w3-red");
+      toggle.on("change:active", (evt) => {
+        sidebar.setVisible(evt.active);
+        toggle.element.classList.toggle("w3-red");
+      });
+    }
   }
 }

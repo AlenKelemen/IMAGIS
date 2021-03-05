@@ -1,5 +1,3 @@
-import { Icon, Fill, Stroke, Circle, Text, RegularShape, Style } from "ol/style";
-const images = require("../img/*.png");
 
 /**
  * <body>

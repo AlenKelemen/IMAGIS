@@ -15,4 +15,8 @@ export default class EPSG3765 extends Projection {
             extent: [208311.05, 4614890.75, 724721.78, 5159767.36]
         });
     }
+    getCenter(){
+        const e = this.getExtent();
+        return [(e[0]+e[2])/2, (e[1]+e[3])/2]
+    }
 }

@@ -29,6 +29,8 @@
         "proj4": "^2.6.2",
         "regenerator-runtime": "^0.13.7",
         "sortablejs": "^1.10.2",
-        "vanilla-picker": "^2.11.0"
+        "vanilla-picker": "^2.11.0",
+        "w3-css": "^4.1.0",
+        "w3css": "^2.7.0"
     }
 }
