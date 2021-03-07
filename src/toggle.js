@@ -29,7 +29,7 @@ export default class Toggle extends Control {
         evt.preventDefault();
         evt.stopPropagation();
         this.setActive(!this.getActive());
-        if (options.handleClick) options.handleClick.call(this, evt);
+        if (options.handleClick) options.handleClick.call(this, this.getActive());
       }
     };
     e.addEventListener("click", evtFunction);
