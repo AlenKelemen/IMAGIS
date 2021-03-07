@@ -22,10 +22,9 @@ export default class Container extends Control {
   }
   setVisible(b) {
     // set element visible
-    if (this.getVisible() == b) return;
     if (b) this.element.classList.remove(this.hiddenClass);
     else {
-      for (const c of this.getControls()) {
+      for (const c of this.getControls()||[]) {
         if (typeof c.setActive === "function") c.setActive(false);
       }
       this.element.classList.add(this.hiddenClass);

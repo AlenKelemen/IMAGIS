@@ -48,6 +48,7 @@ export default class UX {
       name: "legend",
       className: "w3-rest",
       hiddenClass: "w3-hide",
+      visible:false
     });
     legend.element.style.cssText = "width:300px;height:100%";
     this.imagis.addControl(legend);
