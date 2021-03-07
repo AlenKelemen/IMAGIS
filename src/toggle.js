@@ -17,6 +17,7 @@ export default class Toggle extends Control {
     super({
       element: e,
     });
+    this.activeClass = options.activeClass;
     if (options.className) e.className = options.className;
     e.innerHTML = options.html || "";
     if (options.tipLabel) e.title = options.tipLabel;
@@ -24,7 +25,7 @@ export default class Toggle extends Control {
     if (options.active === undefined) options.active = false;
     this.setActive(options.active);
     const evtFunction = (evt) => {
-      if (this.getParent()) this.getParent().deactivateControls(this); //see navbar.js for deactivateControls
+      if (this.getParent()) this.getParent().deactivateControls(this); //Deactivate all toggles in a container where is toggle
       if (evt && evt.preventDefault) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -47,8 +48,8 @@ export default class Toggle extends Control {
    */
   setActive(b, silent = false) {
     if (this.getActive() == b) return;
-    if (b) this.element.classList.add("active");
-    else this.element.classList.remove("active");
+    if (b) this.element.classList.add(this.activeClass);
+    else this.element.classList.remove(this.activeClass);
     if (!silent) {
       this.dispatchEvent({
         type: "change:active",
@@ -63,7 +64,7 @@ export default class Toggle extends Control {
    * @return {bool}.
    */
   getActive() {
-    return this.element.classList.contains("active");
+    return this.element.classList.contains(this.activeClass);
   }
   /**
    * Set control inner HTML.

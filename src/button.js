@@ -14,6 +14,7 @@ export default class Button extends Control {
         const e = document.createElement('button');
         super({ element: e });
         this.setDisabled(options.disabled);
+        this.set("name", options.name || "button");
         this.element.className = options.className;
         this.element.innerHTML = options.html || '';
         this.element.title = options.title || '';

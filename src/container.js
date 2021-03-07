@@ -77,7 +77,7 @@ export default class Container extends Control {
   deactivateControls(except) {
     for (const control of this.controls_) {
       if (control !== except) {
-        if (control.getActive()) control.setActive(false);
+        if (typeof control.setActive === "function" && control.getActive()) control.setActive(false);
       }
     }
   }
