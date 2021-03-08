@@ -36,6 +36,10 @@ export default class Container extends Control {
       visible: b,
     });
   }
+  
+  getHiddenClass(){
+    return this.hiddenClass;
+  }
   getVisible() {
     // get element visible
     return !this.element.classList.contains(this.hiddenClass);
@@ -74,6 +78,7 @@ export default class Container extends Control {
    * @param {_ol_control_} except a control to keep active, if except == undefined all controls are deactivated
    */
   deactivateControls(except) {
+    console.log(except)
     for (const control of this.controls_) {
       if (control !== except) {
         if (typeof control.setActive === "function" && control.getActive()) control.setActive(false);

@@ -11,6 +11,7 @@ import { Rotate, Zoom, ScaleLine, Control } from "ol/control";
 import { elt } from "./src/util";
 import epsg3765 from "./src/EPSG3765";
 import UX from "./src/ux";
+import Legend from "./src/legend";
 
 /**  ol/Map*/
 const htrs = new epsg3765();
@@ -34,3 +35,8 @@ window.map = new Map({
 map.ux = new UX({
   map: map,
 });
+map.ux.addImagis(
+  new Legend({
+    target: map.ux.getImagis(),
+  })
+);
