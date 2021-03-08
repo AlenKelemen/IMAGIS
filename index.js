@@ -17,6 +17,7 @@ import Data from "./src/data.js";
 import DMA from "./src/dma.js";
 import Theme from "./src/theme.js";
 import Properties from "./src/properties.js";
+import Search from "./src/search.js";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -102,6 +103,12 @@ map.properties = new Properties({
  readOnly:false
 })
 ux.aside.home.addControl(map.properties);
+
+ux.aside.home.addControl(
+  new Search({
+    target: ux.aside
+  })
+);
 
 ux.aside.home.addControl(
   new Project({
