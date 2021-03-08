@@ -45,11 +45,39 @@ export default class Search extends Toggle {
   }
   properties() {
     if (!this.layer.getSource().get("schema")) return;
+    const plist = elt("select", { className: "search properties" }, elt("option", { disabled: "true", selected: "true" }, "Odaberi svojstvo"));
+    this.main.appendChild(plist);
     const props = this.layer.getSource().get("schema").properties;
-    const plist = elt('select',{className:'search properties'},'Odaberi')
-    this.main.appendChild(plist)
-    for (prop of props) {
-        //plist.add(new Option(prop.label, prop.name));
+    for (const prop of props) {
+      plist.add(new Option(prop.Label, prop.Name));
     }
+    const res = elt("div", {});
+    this.main.appendChild(res);
+    const visible = this.layer.getVisible();
+    this.layer.setVisible(true); //to be loaded!!
+    const src = this.layer.getSource();
+    src.once("change", (evt) => {
+     
+      this.layer.setVisible(visible);
+      if (src.getState() === "ready") {
+        plist.addEventListener("change", (evt) => {
+          res.innerHTML = "";
+          const property = evt.target.value;
+          const result = [];
+          const m = new Map();
+          for (const item of src.getFeatures()) {
+            if (!m.has(item.get(property))) {
+              m.set(item.get(property), true);
+              result.push(item.get(property));
+            }
+          }
+          console.log(result);
+
+          for (const r of result) {
+            res.appendChild(elt("div", {}, r || ""));
+          }
+        });
+      }
+    });
   }
 }
