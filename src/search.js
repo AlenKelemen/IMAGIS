@@ -18,38 +18,43 @@ export default class Search extends Toggle {
     options.target.addControl(this.container);
     this.map = this.container.getMap();
     this.container.setVisible(this.active);
+    this.propertiesList = elt("select", { className: "search properties" }, elt("option", { selected: true, disabled: true }, "Odaberite svojstvo za pretragu"));
     this.header = elt("div", { className: "header right" });
     this.main = elt("main", { className: `main` }, this.header);
     this.container.element.appendChild(this.main);
-    this.on("change:active", (evt) => this.container.setVisible(evt.active));
-    this.map.getLayers().on("change:active", (evt) => {
-      this.setLayer(evt.target.get("active"));
+    this.on("change:active", (evt) => {
+      this.container.setVisible(evt.active);
+      if (evt.active) {
+        const activeLayer = this.map
+          .getLayers()
+          .getArray()
+          .find((x) => x.get("active") === true);
+
+          console.log(activeLayer.get('name'))
+        if (!activeLayer) {
+          this.header.className = "middle";
+          this.header.innerHTML = `Odaberite aktivni sloj u legendi`;
+        } else {
+          this.header.className = "header column";
+          this.header.innerHTML = `Pretraga sloja ${activeLayer.get("label") || activeLayer.get("name") || ""}`;
+          this.header.appendChild(this.propertiesList);
+          if (!activeLayer.getSource().get("schema")) {
+            console.log("no schema");
+            return;
+          }
+          const properties = activeLayer.getSource().get("schema").properties;
+          for (const p of properties) this.propertiesList.add(new Option(p.Label, p.Name));
+          this.propertiesList.addEventListener("change", (evt) => {
+            activeLayer.setVisible(true); //to be loaded!!
+            const src = activeLayer.getSource();
+            src.once("change", (evt) => {
+              if (src.getState() === "ready") {
+                console.log(src.getFeatures())
+              }
+            });
+          });
+        }
+      }
     });
-    this.setLayer(
-      this.map
-        .getLayers()
-        .getArray()
-        .find((x) => x.get("active") === true)
-    );
-  }
-  setLayer(layer) {
-    this.layer = layer;
-    if (!layer) {
-      this.header.className = "middle";
-      this.header.innerHTML = `Odaberite aktivni sloj u legendi`;
-    } else {
-      this.header.className = "header column";
-      this.header.innerHTML = `Pretraga sloja ${layer.get("label") || layer.get("name") || ""}`;
-      this.properties();
-    }
-  }
-  properties() {
-    if (!this.layer.getSource().get("schema")) return;
-    const props = this.layer.getSource().get("schema").properties;
-    const plist = elt('select',{className:'search properties'},'Odaberi')
-    this.main.appendChild(plist)
-    for (prop of props) {
-        //plist.add(new Option(prop.label, prop.name));
-    }
   }
 }

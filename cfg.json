@@ -18,7 +18,8 @@
             "Label": "Utrošak",
             "Description": "Mjesečni utrošak vode m3",
             "DataType": 8
-          }, {
+          },
+          {
             "Name": "OPTIONALID",
             "Label": "ID",
             "Description": "Id",
@@ -336,7 +337,20 @@
       "type": "geojson",
       "schema": {
         "geometry": "polygon",
-        "properties": [{ "Name": "NAS_MB" }, { "Label": "MB" }, { "Description": "Matični broj" }, { "DataType": 9 }, { "Name": "NAS_NAZIV" }, { "Label": "Naziv" }, { "Description": "Naziv" }, { "DataType": 9 }]
+        "properties": [
+          {
+            "Name": "NAS_MB",
+            "Label": "MB",
+            "Description": "Matični broj",
+            "DataType": 9
+          },
+          {
+            "Name": "NAS_NAZIV",
+            "Label": "Naziv",
+            "Description": "Naziv",
+            "DataType": 9
+          }
+        ]
       }
     },
     {
@@ -635,7 +649,7 @@
     {
       "source": "srpjNaselja",
       "name": "srpjNaselja",
-      "Label": "Granice naselja",
+      "label": "Granice naselja",
       "info": "",
       "visible": false,
       "opacity": 0.6,
