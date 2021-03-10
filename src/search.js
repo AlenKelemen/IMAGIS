@@ -18,96 +18,49 @@ export default class Search extends Toggle {
     options.target.addControl(this.container);
     this.map = this.container.getMap();
     this.container.setVisible(this.active);
-    this.propertiesList = elt("select", { className: "search properties" }, elt("option", { selected: true, disabled: true }, "Odaberite svojstvo za pretragu"));
-    this.header = elt("div", { className: "header right" });
-    this.main = elt("main", { className: `main` }, this.header);
+    this.main = elt("div", { className: `main` });
     this.container.element.appendChild(this.main);
+    this.activeLayer = this.map
+      .getLayers()
+      .getArray()
+      .find((x) => x.get("active") === true);
+    this.map.getLayers().on("change:active", (evt) => (this.activeLayer = evt.target.get("active")));
     this.on("change:active", (evt) => {
       this.container.setVisible(evt.active);
       if (evt.active) {
-        const activeLayer = this.map
-          .getLayers()
-          .getArray()
-          .find((x) => x.get("active") === true);
-
-          console.log(activeLayer.get('name'))
-        if (!activeLayer) {
-          this.header.className = "middle";
-          this.header.innerHTML = `Odaberite aktivni sloj u legendi`;
+        if (!this.activeLayer) {
+          this.main.innerHTML = '<span class="middle">Odaberite aktivni sloj u legendi</span>';
         } else {
-          this.header.className = "header column";
-          this.header.innerHTML = `Pretraga sloja ${activeLayer.get("label") || activeLayer.get("name") || ""}`;
-          this.header.appendChild(this.propertiesList);
-          if (!activeLayer.getSource().get("schema")) {
+          this.main.innerHTML = "";
+          const header = elt("div", { className: "header" }, `Pretraga sloja ${this.activeLayer.get("label") || this.activeLayer.get("name") || ""}`);
+          this.main.appendChild(header);
+          const distinct = elt("div", { className: "distinct" });
+          this.main.appendChild(distinct);
+          this.activeLayer.setVisible(true); //to be loaded!!
+          if (!this.activeLayer.getSource().get("schema")) {
             console.log("no schema");
             return;
           }
-          const properties = activeLayer.getSource().get("schema").properties;
-          for (const p of properties) this.propertiesList.add(new Option(p.Label, p.Name));
-          this.propertiesList.addEventListener("change", (evt) => {
-            activeLayer.setVisible(true); //to be loaded!!
-            const src = activeLayer.getSource();
-            src.once("change", (evt) => {
-              if (src.getState() === "ready") {
-                console.log(src.getFeatures())
+          const src = this.activeLayer.getSource();
+          const select = elt("select", { className: "search properties" }, elt("option", { selected: true, disabled: true }, "Odaberite svojstvo pretraživanja"));
+          header.appendChild(select);
+          const properties = this.activeLayer.getSource().get("schema").properties;
+          for (const p of properties) select.add(new Option(p.Label, p.Name));
+          select.addEventListener("change", (evt) => {
+            distinct.innerHTML = "";
+            const property = evt.target.value;
+            const result = [];
+            for (const f of src.getFeatures()) {
+              const s = result.find((x) => x.property === f.get(property));
+              if (!s) {
+                result.push({ property: f.get(property), features: [f] });
+              } else {
+                s.features.push(f);
               }
-            });
+            }
+            console.log(result);
           });
         }
-      }
-    });
-    this.setLayer(
-      this.map
-        .getLayers()
-        .getArray()
-        .find((x) => x.get("active") === true)
-    );
-  }
-  setLayer(layer) {
-    this.layer = layer;
-    if (!layer) {
-      this.header.className = "middle";
-      this.header.innerHTML = `Odaberite aktivni sloj u legendi`;
-    } else {
-      this.header.className = "header column";
-      this.header.innerHTML = `Pretraga sloja ${layer.get("label") || layer.get("name") || ""}`;
-      this.properties();
-    }
-  }
-  properties() {
-    if (!this.layer.getSource().get("schema")) return;
-    const plist = elt("select", { className: "search properties" }, elt("option", { disabled: "true", selected: "true" }, "Odaberi svojstvo"));
-    this.main.appendChild(plist);
-    const props = this.layer.getSource().get("schema").properties;
-    for (const prop of props) {
-      plist.add(new Option(prop.Label, prop.Name));
-    }
-    const res = elt("div", {});
-    this.main.appendChild(res);
-    const visible = this.layer.getVisible();
-    this.layer.setVisible(true); //to be loaded!!
-    const src = this.layer.getSource();
-    src.once("change", (evt) => {
-     
-      this.layer.setVisible(visible);
-      if (src.getState() === "ready") {
-        plist.addEventListener("change", (evt) => {
-          res.innerHTML = "";
-          const property = evt.target.value;
-          const result = [];
-          const m = new Map();
-          for (const item of src.getFeatures()) {
-            if (!m.has(item.get(property))) {
-              m.set(item.get(property), true);
-              result.push(item.get(property));
-            }
-          }
-          console.log(result);
-
-          for (const r of result) {
-            res.appendChild(elt("div", {}, r || ""));
-          }
-        });
       }
     });
   }
