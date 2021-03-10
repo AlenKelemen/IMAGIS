@@ -4,7 +4,7 @@ import Container from "./container";
 import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
-import { containsExtent } from "ol/extent";
+import {extend} from 'ol/extent';
 
 export default class Search extends Toggle {
   constructor(options = {}) {
@@ -53,15 +53,42 @@ export default class Search extends Toggle {
             for (const f of src.getFeatures()) {
               const s = result.find((x) => x.property === f.get(property));
               if (!s) {
-                result.push({ property: f.get(property), features: [f] });
+                result.push({ property: f.get(property), features: [f],extent:f.getGeometry().getExtent() });
               } else {
                 s.features.push(f);
+                s.extent = extend(s.extent, f.getGeometry().getExtent());
               }
             }
-            console.log(result);
+            let item;
+           
+            
+            const num = result
+              .filter((x) => typeof x.property === "number")
+              .sort((a, b) => {
+                return a.property - b.property;
+              });
+            for (const r of num) {
+              item = elt("div", { onclick: this.fit(r.extent) }, r.property.toString() + "  (" + r.features.length + ")");
+              distinct.appendChild(item);
+            }
+            const str = result
+              .filter((x) => typeof x.property !== "number")
+              .sort((a, b) => {
+                if (a.property) return a.property.localeCompare(b.property);
+              });
+            for (const r of str) {
+              item = elt("div", { onclick: this.fit(r.extent) }, (r.property || "~") + "  (" + r.features.length + ")");
+              distinct.appendChild(item);
+            }
           });
         }
       }
     });
   }
+  fit(extent){
+    this.map.getView().fit(extent, {
+      maxZoom: 14,
+      duration: 300
+  });
+}
 }
