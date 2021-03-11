@@ -14,7 +14,7 @@
   * [x] podloge uključuju SRPJ
   * [x] Legenda: prozirnost, izbor simbola, izbor podloga (taskpane section 1)
   * [ ] Postavke: dodavanje slojeva iz drugih portala, uređenje sheme podataka (taskpane section 2)
-  * [ ] Pozicioniranje: pozicioniranje na objekt i geokoding (taskpane section 3)
+  * [x] Pozicioniranje: pozicioniranje na objekt i geokoding (taskpane section 3)
   * [x] Svojstva: atributi, dužina, površina, visine, točke, export odabranog (taskpane section 4)
   * [ ] Mjerenje: udaljenosti i površine (taskpane section 5)
   * [ ] Odabir: sql upit za selekciju i selekcija sa linijom, poligonom i poligionskim objektom na karti (taskpane section 6)

@@ -14,7 +14,7 @@ body {
 }
 .right {
   margin-left: auto;
-  float:right;
+  float: right;
 }
 .columns {
   flex-direction: column;
@@ -67,7 +67,7 @@ input {
   align-self: center;
   margin: auto;
 }
-.center{
+.center {
   text-align: center;
 }
 
@@ -133,7 +133,7 @@ input {
   padding-bottom: 6px;
   z-index: 9999;
 }
-.flex-menu{
+.flex-menu {
   display: flex;
   justify-content: space-evenly;
 }
@@ -237,7 +237,7 @@ input {
   margin-right: 8px;
   padding: 2px;
   border: 0;
-  width: 95%
+  width: 95%;
 }
 
 .taskpane.theme .color {
@@ -262,45 +262,57 @@ input {
 .picker_wrapper {
   box-shadow: unset !important;
   width: 220px !important;
-  margin: 0 !important
+  margin: 0 !important;
 }
 /** properties */
-.taskpane.properties .main .footer{
-  display:flex;
+.taskpane.properties .main .footer {
+  display: flex;
   justify-content: space-evenly;
-  padding:0
+  padding: 0;
 }
-.taskpane.properties .main .footer i{
-  padding:6px
+.taskpane.properties .main .footer i {
+  padding: 6px;
 }
-.taskpane.properties .wrapper{
-  padding:2px
+.taskpane.properties .wrapper {
+  padding: 2px;
 }
-.taskpane.properties .layer-header{
+.taskpane.properties .layer-header {
   background-color: rgba(26, 26, 27, 0.226);
   padding-left: 4px;
 }
-.taskpane.properties .layer{
+.taskpane.properties .layer {
   padding: 4px;
-  margin-top:2px;
-  margin-bottom:2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
-.taskpane.properties .items{
-  margin:4px
+.taskpane.properties .items {
+  margin: 4px;
 }
-.taskpane.properties .item{
-  margin:4px
+.taskpane.properties .item {
+  margin: 4px;
 }
-.taskpane.properties .item label{
-  display:block
+.taskpane.properties .item label {
+  display: block;
 }
 .taskpane.properties .item input,
-.taskpane.properties .item select{
-  width:100%;
+.taskpane.properties .item select {
+  width: 100%;
   background-color: #e8e8e8;
-  padding:2px;
+  padding: 2px;
   outline: none;
 }
+.taskpane.search .header {
+  padding: 6px;
+}
+.taskpane.search .header select {
+  padding: 6px;
+  width: 100%;
+}
+.taskpane.search .footer{
+  padding: 6px;
+}
+
+
 /** */
 /** UX right side child of aside */
 .toolbar {
