@@ -54,6 +54,9 @@ input {
 .ol-control .toggle.active:hover {
   background-color: rgb(54 148 2 / 75%);
 }
+.ol-control .toggle.active:focus {
+  background-color: rgba(0, 136, 105, 0.6);
+}
 .ol-control button {
   outline: none;
   font-weight: normal;
@@ -101,7 +104,7 @@ input {
   border: solid;
   border-color: rgba(255, 255, 255, 0);
   border-radius: 4px;
-  background-color: #f8f9fa;
+  background-color: rgba(255, 255, 255, 0.4);
 }
 .taskpane.horizontal {
   height: 300px;
@@ -119,6 +122,7 @@ input {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  background-color: white;
 }
 
 .taskpane .footer,
@@ -128,9 +132,8 @@ input {
   right: 0;
   top: 0;
   color: white;
-  background-color: rgb(73 79 93);
-  padding-top: 6px;
-  padding-bottom: 6px;
+  background-color: rgb(115 148 177);
+  border-radius: 4px;
   z-index: 9999;
 }
 .flex-menu {
@@ -141,6 +144,13 @@ input {
 .taskpane .footer {
   bottom: 0;
   margin-top: auto;
+}
+.taskpane .footer i {
+  padding: 6px;
+}
+.taskpane .footer i:hover {
+  color: black;
+  background-color: white;
 }
 .taskpane .main input {
   width: 90%;
@@ -308,10 +318,20 @@ input {
   padding: 6px;
   width: 100%;
 }
-.taskpane.search .footer{
+.taskpane.search .footer {
   padding: 6px;
 }
-
+.taskpane.search .distinct {
+  padding: 6px;
+}
+.taskpane.search .distinct div{
+  padding:6px
+}
+.taskpane.search .distinct div:hover,
+.taskpane.search .distinct div:focus {
+  background-color: #7394b1;;
+  color: white;
+}
 
 /** */
 /** UX right side child of aside */
@@ -382,10 +402,10 @@ input {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: rgba(115, 148, 177, 0.6);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgb(115 148 177);
 }
