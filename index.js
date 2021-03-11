@@ -18,6 +18,7 @@ import DMA from "./src/dma.js";
 import Theme from "./src/theme.js";
 import Properties from "./src/properties.js";
 import Search from "./src/search.js";
+import SQL from "./src/sql.js";
 
 /**  ol/Map*/
 window.map = new Map({
@@ -106,6 +107,11 @@ ux.aside.home.addControl(map.properties);
 
 ux.aside.home.addControl(
   new Search({
+    target: ux.aside
+  })
+);
+ux.aside.home.addControl(
+  new SQL({
     target: ux.aside
   })
 );
