@@ -5,6 +5,7 @@ import Control from "ol/control/Control";
 import Toggle from "./toggle";
 import { elt } from "./util";
 import GeoJSON from "ol/format/GeoJSON";
+import winnow from "winnow";
 
 export default class SQL extends Toggle {
   constructor(options = {}) {
@@ -35,13 +36,17 @@ export default class SQL extends Toggle {
           this.header = elt("div", { className: "header" }, `SQL upit za odabir u sloju ${this.activeLayer.get("label") || this.activeLayer.get("name") || ""}`);
           this.main.appendChild(this.header);
           this.where = elt("input", { className: "where" });
-          this.where.value = 'Select * from ? where DN > 100';
+          this.where.value = "DN > 100";
           this.main.appendChild(this.where);
-          this.submit = elt("button", { className: "submit" },'OK');
+          this.submit = elt("button", { className: "submit" }, "OK");
           this.main.appendChild(this.submit);
-          this.submit.addEventListener('click',evt => console.log(this.where.value))
-
-          
+          this.activeSource = this.activeLayer.getSource();
+          console.log(this.activeSource.getState());
+          const features = this.activeSource.getFeatures();
+          console.log(features);
+          const f = new GeoJSON().writeFeaturesObject(features);
+          const result = winnow.query(f, { where: this.where.value });
+          console.log(this.map.select.olSelect.getFeatures(), result);
         }
       }
     });

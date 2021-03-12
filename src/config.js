@@ -176,6 +176,7 @@ export default class Config {
                   }).readFeatures(r);
                   source.addFeatures(features);
                   source.getFeatures().map((x) => x.set("layerName", layer.get('name')));
+                  source.getFeatures().map((x) => x.set("objectId", x.getId()));
                 });
               });
             },
@@ -222,6 +223,7 @@ export default class Config {
                   }).readFeatures(geojson);
                   source.addFeatures(features);
                   source.getFeatures().map((x) => x.set("layer", layer));
+                  source.getFeatures().map((x) => x.set("objectId", x.getId()));
                 });
             },
           });
