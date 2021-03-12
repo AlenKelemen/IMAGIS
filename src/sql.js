@@ -8,7 +8,7 @@ import GeoJSON from "ol/format/GeoJSON";
 
 export default class SQL extends Toggle {
   constructor(options = {}) {
-    if (!options.className) options.className = "sql";
+    if (!options.className) options.className = "toggle";
     if (!options.html) options.html = '<i class="far fa-filter fa-fw"></i>';
     super(options);
     this.container = new Container({
@@ -35,7 +35,11 @@ export default class SQL extends Toggle {
           this.header = elt("div", { className: "header" }, `SQL upit za odabir u sloju ${this.activeLayer.get("label") || this.activeLayer.get("name") || ""}`);
           this.main.appendChild(this.header);
           this.where = elt("input", { className: "where" });
+          this.where.value = 'Select * from ? where DN > 100';
           this.main.appendChild(this.where);
+          this.submit = elt("button", { className: "submit" },'OK');
+          this.main.appendChild(this.submit);
+          this.submit.addEventListener('click',evt => console.log(this.where.value))
 
           
         }

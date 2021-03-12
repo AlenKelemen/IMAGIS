@@ -246,11 +246,11 @@ input {
 .taskpane.theme .color {
   margin-right: 8px;
   padding: 2px;
-  border:solid;
-  border-width:1px;
-  border-color:gray;
+  border: solid;
+  border-width: 1px;
+  border-color: gray;
   width: 95%;
-  outline:none;
+  outline: none;
 }
 
 .taskpane.theme .color {
@@ -304,11 +304,10 @@ input {
 }
 .taskpane.properties .item {
   margin: 4px;
-  
 }
 .taskpane.properties .item label {
   display: block;
-  color:gray
+  color: gray;
 }
 .taskpane.properties .item input,
 .taskpane.properties .item select {
@@ -326,9 +325,9 @@ input {
 .taskpane.search .header select {
   padding: 6px;
   width: 100%;
-      border: none;
-    border-radius: 4px;
-    outline: none;
+  border: none;
+  border-radius: 4px;
+  outline: none;
 }
 .taskpane.search .footer {
   padding: 6px;
@@ -336,22 +335,30 @@ input {
 .taskpane.search .distinct {
   padding: 6px;
 }
-.taskpane.search .distinct div{
-  padding:6px
+.taskpane.search .distinct div {
+  padding: 6px;
 }
 .taskpane.search .distinct div:hover,
 .taskpane.search .distinct div:focus {
-  background-color: #7394b1;;
+  background-color: #7394b1;
   color: white;
 }
-.taskpane.sql{
-  margin-top:auto;
-  height:25%;
-  width:100%;
+.taskpane.sql {
+  margin-top: auto;
+  height: 25%;
+  width: 100%;
 }
-.taskpane.sql .header{
-  width:fit-content;
-  padding:0 6px 0 6px
+.taskpane.sql .main {
+  display: block;
+}
+.taskpane.sql .main button,
+.taskpane.sql .main input{
+  display: block;
+  padding:6px
+}
+.taskpane.sql .header {
+  width: fit-content;
+  padding: 0 6px 0 6px;
 }
 /** */
 /** UX right side child of aside */
