@@ -27,6 +27,7 @@ export default class SQL extends Toggle {
       .find((x) => x.get("active") === true);
     this.map.getLayers().on("change:active", (evt) => (this.activeLayer = evt.target.get("active")));
     this.on("change:active", (evt) => {
+      this.activeSource = this.activeLayer.getSource();
       this.container.setVisible(evt.active);
       if (evt.active) {
         if (!this.activeLayer) {
@@ -40,13 +41,19 @@ export default class SQL extends Toggle {
           this.main.appendChild(this.where);
           this.submit = elt("button", { className: "submit" }, "OK");
           this.main.appendChild(this.submit);
-          this.activeSource = this.activeLayer.getSource();
-          console.log(this.activeSource.getState());
           const features = this.activeSource.getFeatures();
-          console.log(features);
           const f = new GeoJSON().writeFeaturesObject(features);
-          const result = winnow.query(f, { where: this.where.value });
-          console.log(this.map.select.olSelect.getFeatures(), result);
+          this.submit.addEventListener("click", (evt) => {
+            this.select =this.map.select.olSelect;
+            this.select.getFeatures().clear();
+            const result = winnow.query(f, { where: this.where.value });
+           
+            
+            for(const f of result.features){
+              this.select.getFeatures().push(this.activeSource.getFeatureById(f.properties.objectId));
+            }
+          });
+
         }
       }
     });
