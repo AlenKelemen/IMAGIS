@@ -45,6 +45,9 @@ export default class SQL extends Toggle {
           this.submit = elt("button", { className: "submit" }, "OK");
           this.main.appendChild(this.submit);
 
+          
+          //this.rule();
+
           const features = this.activeSource.getFeatures();
           const f = new GeoJSON().writeFeaturesObject(features);
           this.submit.addEventListener("click", (evt) => {
@@ -67,25 +70,16 @@ export default class SQL extends Toggle {
       }
     });
   }
-  rule(source){
+  rule(source) {
+    const container = elt("div", { className: "rule" });
     const sp = elt("select", {}, elt("option", { disabled: true, selected: true }, "Odaberi svojstvo"));
+    const so = elt("select", {}, elt("option", { disabled: true, selected: true }, "Odaberi operator"));
     for (const p of source.get("schema").properties) s.add(new Option(p.Label, p.Name));
-    sp.addEventListener('change', evt =>{
-      
-    })
-
-    const e = elt("div", { className: "property-selector" }, sp);
-  }
-  operatorSelector(property) {
-    const s = elt("select", {}, elt("option", { disabled: true, selected: true }, "Odaberi operator"));
-    const e = elt("div", { className: "operator-selector" }, s);
-    for (const o of [
-      { Label: "jedanko", Name: "=" },
-      { Label: "različito", Name: "<>" },
-      { Label: "poput", Name: "LIKE" },
-    ])
-      s.add(new Option(o.Label, o.Name));
-    console.log(e);
-    return e;
+    sp.addEventListener("change", (evt) => {
+      if (evt.target.selectedIndex === 0) container.appendChild(so);
+      so.find("option").not(":first").remove();
+      const dt = source.get("schema").properties.find((x) => x.Name === evt.target.value).DataType;
+    });
+    return container;
   }
 }
