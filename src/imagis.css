@@ -343,13 +343,16 @@ input {
   background-color: #7394b1;
   color: white;
 }
-.taskpane.sql {
-  margin-top: auto;
-  height: 25%;
-  width: 100%;
-}
-.taskpane.sql .main {
-  display: block;
+.taskpane.sql input,
+.taskpane.sql select
+{
+  margin-right: 8px;
+  padding: 2px;
+  border: solid;
+  border-width: 1px;
+  border-color: gray;
+  width: 95%;
+  outline: none;
 }
 .taskpane.sql .main button,
 .taskpane.sql .main input{

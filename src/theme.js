@@ -344,7 +344,7 @@ export default class Theme extends Toggle {
     //fill .text .properties & .filter .properties
     if (!(this.layer || this.layer.getSource().get("schema"))) return; // if no schema should read props from features
     for (const e of itemElement.querySelectorAll(".properties")) {
-      e.length = 1; //first allways visible
+      e.length = 1; //first always visible
       for (const p of this.layer.getSource().get("schema").properties) e.add(new Option(p.Label, p.Name));
     }
   }
