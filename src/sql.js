@@ -45,8 +45,7 @@ export default class SQL extends Toggle {
           this.submit = elt("button", { className: "submit" }, "OK");
           this.main.appendChild(this.submit);
 
-          
-          //this.rule();
+          this.main.appendChild(this.rule(this.activeSource));
 
           const features = this.activeSource.getFeatures();
           const f = new GeoJSON().writeFeaturesObject(features);
@@ -71,14 +70,22 @@ export default class SQL extends Toggle {
     });
   }
   rule(source) {
-    const container = elt("div", { className: "rule" });
     const sp = elt("select", {}, elt("option", { disabled: true, selected: true }, "Odaberi svojstvo"));
-    const so = elt("select", {}, elt("option", { disabled: true, selected: true }, "Odaberi operator"));
-    for (const p of source.get("schema").properties) s.add(new Option(p.Label, p.Name));
+    for (const p of source.get("schema").properties) sp.add(new Option(p.Label, p.Name));
+    const so = elt("select", {});
+    const container = elt("div", { className: "rule" }, sp,so);
+    const options = [
+      { type: [1, 3, 4, 5, 6, 7, 8, 9], label: "jednako", operator: "=" },
+      { type: [1, 3, 4, 5, 6, 7, 8, 9], label: "različito", operator: "<>" },
+      { type: [4, 5, 6, 7, 8], label: "veće", operator: ">" },
+      { type: [4, 5, 6, 7, 8], label: "manje", operator: "<" },
+      { type: [9], label: "poput", operator: "LIKE" },
+    ];
     sp.addEventListener("change", (evt) => {
       if (evt.target.selectedIndex === 0) container.appendChild(so);
-      so.find("option").not(":first").remove();
+      so.length=0;
       const dt = source.get("schema").properties.find((x) => x.Name === evt.target.value).DataType;
+      options.filter((x) => x.type.includes(dt)).map((x) => so.add(new Option(x.label, x.operator)));
     });
     return container;
   }
