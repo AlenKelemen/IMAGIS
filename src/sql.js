@@ -27,66 +27,32 @@ export default class SQL extends Toggle {
       .find((x) => x.get("active") === true);
     this.map.getLayers().on("change:active", (evt) => (this.activeLayer = evt.target.get("active")));
     this.on("change:active", (evt) => {
-      this.activeSource = this.activeLayer.getSource();
       this.container.setVisible(evt.active);
       if (evt.active) {
         if (!this.activeLayer) {
           this.main.innerHTML = '<span class="middle">Odaberite aktivni sloj u legendi</span>';
         } else {
+          this.activeSource = this.activeLayer.getSource();
           this.main.innerHTML = "";
-          this.header = elt("div", { className: "header" }, `SQL upit za odabir u sloju ${this.activeLayer.get("label") || this.activeLayer.get("name") || ""}`);
-          this.main.appendChild(this.header);
-          /* const ps = this.propertySelector(this.activeSource);
-          ps.addEventListener("change", (evt) => this.operatorSelector(evt.target.value));
-          this.main.appendChild(ps); */
-          this.where = elt("input", { className: "where" });
-          this.where.value = "DN > 100";
-          this.main.appendChild(this.where);
-          this.submit = elt("button", { className: "submit" }, "OK");
-          this.main.appendChild(this.submit);
-
-          this.main.appendChild(this.rule(this.activeSource));
-
-          const features = this.activeSource.getFeatures();
-          const f = new GeoJSON().writeFeaturesObject(features);
-          this.submit.addEventListener("click", (evt) => {
-            this.select = this.map.select.olSelect;
-            this.select.getFeatures().clear();
-            this.select.dispatchEvent("select");
-            try {
-              const result = winnow.query(f, { where: this.where.value });
-              console.log(result);
-              for (const f of result.features) {
-                this.select.getFeatures().push(this.activeSource.getFeatureById(f.properties.objectId));
-                this.select.dispatchEvent("select");
-              }
-            } catch (e) {
-              console.log(e);
-              this.where.value = "";
-            }
-          });
+          const qb = this.queryBuilder();
+          this.main.appendChild(qb);
         }
       }
     });
   }
-  rule(source) {
-    const sp = elt("select", {}, elt("option", { disabled: true, selected: true }, "Odaberi svojstvo"));
-    for (const p of source.get("schema").properties) sp.add(new Option(p.Label, p.Name));
-    const so = elt("select", {});
-    const container = elt("div", { className: "rule" }, sp,so);
-    const options = [
-      { type: [1, 3, 4, 5, 6, 7, 8, 9], label: "jednako", operator: "=" },
-      { type: [1, 3, 4, 5, 6, 7, 8, 9], label: "različito", operator: "<>" },
-      { type: [4, 5, 6, 7, 8], label: "veće", operator: ">" },
-      { type: [4, 5, 6, 7, 8], label: "manje", operator: "<" },
-      { type: [9], label: "poput", operator: "LIKE" },
-    ];
-    sp.addEventListener("change", (evt) => {
-      if (evt.target.selectedIndex === 0) container.appendChild(so);
-      so.length=0;
-      const dt = source.get("schema").properties.find((x) => x.Name === evt.target.value).DataType;
-      options.filter((x) => x.type.includes(dt)).map((x) => so.add(new Option(x.label, x.operator)));
-    });
-    return container;
+  queryBuilder() {
+    const sql = "";
+    const btnOR = elt("button", { onclick: (evt) => btnAND.classList.toggle("active") },'OR');
+    const btnAND = elt("button", { className: "active", onclick: (evt) => btnOR.classList.toggle("active") },'AND');
+    const conditions = elt("span", { className: "conditions" }, btnAND, btnOR);
+    const addRule = elt("button", { className: "add-rule",onclick:(evt)=> {this.queryGroup()} },'+');
+    const rules =elt("span", { className: "rules" }, addRule);
+    const header = elt("div", { className: "header" }, conditions, rules);
+    const basic = elt("div", { className: "query-builder" }, header);
+    return basic;
+  }
+  queryGroup() {
+    const basicGroup = elt("div", { className: "rules-group-container" });
+    console.log('add query group')
   }
 }
