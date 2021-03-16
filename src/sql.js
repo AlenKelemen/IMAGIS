@@ -57,7 +57,6 @@ export default class SQL extends Toggle {
     const btnAND = elt(
       "button",
       {
-        className: "active",
         onclick: (evt) => {
           if (!evt.target.classList.contains("active")) {
             evt.target.classList.add("active");
