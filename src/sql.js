@@ -42,17 +42,68 @@ export default class SQL extends Toggle {
   }
   queryBuilder() {
     const sql = "";
-    const btnOR = elt("button", { onclick: (evt) => btnAND.classList.toggle("active") },'OR');
-    const btnAND = elt("button", { className: "active", onclick: (evt) => btnOR.classList.toggle("active") },'AND');
+    const btnOR = elt(
+      "button",
+      {
+        onclick: (evt) => {
+          if (!evt.target.classList.contains("active")) {
+            evt.target.classList.add("active");
+            btnAND.classList.remove("active");
+          }
+        },
+      },
+      "OR"
+    );
+    const btnAND = elt(
+      "button",
+      {
+        className: "active",
+        onclick: (evt) => {
+          if (!evt.target.classList.contains("active")) {
+            evt.target.classList.add("active");
+            btnOR.classList.remove("active");
+          }
+        },
+      },
+      "AND"
+    );
     const conditions = elt("span", { className: "conditions" }, btnAND, btnOR);
-    const addRule = elt("button", { className: "add-rule",onclick:(evt)=> {this.queryGroup()} },'+');
-    const rules =elt("span", { className: "rules" }, addRule);
+    const addRule = elt(
+      "button",
+      {
+        className: "add-rule",
+        onclick: (evt) => {
+          this.queryGroup();
+        },
+      },
+      "+ Dodaj pravilo"
+    );
+    const rules = elt("span", { className: "rules" }, addRule);
     const header = elt("div", { className: "header" }, conditions, rules);
     const basic = elt("div", { className: "query-builder" }, header);
     return basic;
   }
   queryGroup() {
-    const basicGroup = elt("div", { className: "rules-group-container" });
-    console.log('add query group')
+    const src = this.activeSource;
+    const options = [
+      { type: [1, 3, 4, 5, 6, 7, 8, 9], label: "jednako", operator: "=" },
+      { type: [1, 3, 4, 5, 6, 7, 8, 9], label: "različito", operator: "<>" },
+      { type: [4, 5, 6, 7, 8], label: "veće", operator: ">" },
+      { type: [4, 5, 6, 7, 8], label: "manje", operator: "<" },
+      { type: [9], label: "poput", operator: "LIKE" },
+    ];
+    const ruleProperties = elt("select", {});
+    for (const p of src.get("schema").properties) ruleProperties.add(new Option(p.Label, p.Name));
+    const ruleOperators = elt("select", {});
+    ruleProperties.addEventListener("change", (evt) => {
+      ruleOperators.length = 0;
+      const dt = src.get("schema").properties.find((x) => x.Name === ruleProperties.value).DataType;
+      options.filter((x) => x.type.includes(dt)).map((x) => ruleOperators.add(new Option(x.label, x.operator)));
+    });
+    ruleProperties.dispatchEvent(new Event("change"));
+    
+    const ruleDelete = elt("button", { className: "rule-delete" }, elt("i", { className: "far fa-trash-alt fa-fw" }));
+    const basicGroup = elt("div", { className: "rules-group-container" }, ruleProperties, ruleOperators, ruleDelete);
+    this.main.appendChild(basicGroup);
   }
 }

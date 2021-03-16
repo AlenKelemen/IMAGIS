@@ -77,7 +77,6 @@ export default class SQL extends Toggle {
       { type: [9], label: "poput", operator: "LIKE" },
     ];
     sp.addEventListener("change", (evt) => {
- 
       so.length=0;
       const dt = source.get("schema").properties.find((x) => x.Name === evt.target.value).DataType;
       options.filter((x) => x.type.includes(dt)).map((x) => so.add(new Option(x.label, x.operator)));

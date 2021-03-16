@@ -364,6 +364,11 @@ background-color: rgba(0, 136, 105, 0.6)
   width: 95%;
   outline: none;
 }
+.taskpane.sql .rule-delete{
+  color:red;
+  background-color: white;
+  float:right
+}
 
 /** */
 /** UX right side child of aside */
