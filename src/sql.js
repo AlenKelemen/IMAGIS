@@ -100,9 +100,12 @@ export default class SQL extends Toggle {
       options.filter((x) => x.type.includes(dt)).map((x) => ruleOperators.add(new Option(x.label, x.operator)));
     });
     ruleProperties.dispatchEvent(new Event("change"));
+    const ruleValue = elt("input", { type: "text" });
+    const ruleQuery = elt('span',{className:'rule-query'},ruleProperties, ruleOperators, ruleValue)
+
+    const ruleDelete = elt("button", { className: "rule-delete", onclick:evt => evt.currentTarget.parentElement.remove() }, elt("i", { className: "far fa-trash-alt fa-fw" }));
     
-    const ruleDelete = elt("button", { className: "rule-delete" }, elt("i", { className: "far fa-trash-alt fa-fw" }));
-    const basicGroup = elt("div", { className: "rules-group-container" }, ruleProperties, ruleOperators, ruleDelete);
+    const basicGroup = elt("div", { className: "rules-group-container" }, ruleQuery, ruleDelete);
     this.main.appendChild(basicGroup);
   }
 }
