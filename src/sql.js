@@ -34,14 +34,19 @@ export default class SQL extends Toggle {
         } else {
           this.activeSource = this.activeLayer.getSource();
           this.main.innerHTML = "";
-          const qb = this.queryBuilder();
-          this.main.appendChild(qb);
+          const header = elt('div',{className:'header'},this.queryBuilder());
+          this.main.appendChild(header);
+          this.wrapper = elt('div',{className:'wrapper'},)
+          this.main.appendChild(this.wrapper);
+          const accept = elt("button", { className: "accept" }, "OK");
+          const footer = elt("div", { className: "footer" }, accept);
+          this.main.appendChild(footer);
         }
       }
     });
   }
+
   queryBuilder() {
-    const sql = "";
     const btnOR = elt(
       "button",
       {
@@ -63,10 +68,11 @@ export default class SQL extends Toggle {
             btnOR.classList.remove("active");
           }
         },
+        className: "active",
       },
       "AND"
     );
-    const conditions = elt("span", { className: "conditions" }, btnAND, btnOR);
+    this.conditions = elt("span", { className: "conditions" }, btnAND, btnOR);
     const addRule = elt(
       "button",
       {
@@ -78,7 +84,7 @@ export default class SQL extends Toggle {
       "+ Dodaj pravilo"
     );
     const rules = elt("span", { className: "rules" }, addRule);
-    const header = elt("div", { className: "header" }, conditions, rules);
+    const header = elt("div", { className: "header" }, this.conditions, rules);
     const basic = elt("div", { className: "query-builder" }, header);
     return basic;
   }
@@ -101,11 +107,13 @@ export default class SQL extends Toggle {
     });
     ruleProperties.dispatchEvent(new Event("change"));
     const ruleValue = elt("input", { type: "text" });
-    const ruleQuery = elt('span',{className:'rule-query'},ruleProperties, ruleOperators, ruleValue)
+    const ruleQuery = elt("span", { className: "rule-query" }, elt("label", {}, "Svojstvo"), ruleProperties, elt("label", {}, "Operator"), ruleOperators, elt("label", {}, "Vrijednost"), ruleValue);
 
-    const ruleDelete = elt("button", { className: "rule-delete", onclick:evt => evt.currentTarget.parentElement.remove() }, elt("i", { className: "far fa-trash-alt fa-fw" }));
-    
+    const ruleDelete = elt("button", { className: "rule-delete", onclick: (evt) => evt.currentTarget.parentElement.remove() }, elt("i", { className: "far fa-trash-alt fa-fw" }));
     const basicGroup = elt("div", { className: "rules-group-container" }, ruleQuery, ruleDelete);
-    this.main.appendChild(basicGroup);
+    if (this.wrapper.children.length > 1) {
+      console.log(this.conditions.querySelector(".active"));
+    }
+    this.wrapper.appendChild(basicGroup);
   }
 }
