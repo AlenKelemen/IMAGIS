@@ -21,6 +21,7 @@ export default class SQL extends Toggle {
     this.container.setVisible(this.active);
     this.main = elt("div", { className: `main` });
     this.container.element.appendChild(this.main);
+    this.wrapper = elt('div',{className:'wrapper'},)
     this.activeLayer = this.map
       .getLayers()
       .getArray()
@@ -36,7 +37,6 @@ export default class SQL extends Toggle {
           this.main.innerHTML = "";
           const header = elt('div',{className:'header'},this.queryBuilder());
           this.main.appendChild(header);
-          this.wrapper = elt('div',{className:'wrapper'},)
           this.main.appendChild(this.wrapper);
           const accept = elt("button", { className: "accept" }, "OK");
           const footer = elt("div", { className: "footer" }, accept);
@@ -49,7 +49,7 @@ export default class SQL extends Toggle {
   queryBuilder() {
     const btnOR = elt(
       "button",
-      {
+      { disabled:true,
         onclick: (evt) => {
           if (!evt.target.classList.contains("active")) {
             evt.target.classList.add("active");
@@ -61,7 +61,7 @@ export default class SQL extends Toggle {
     );
     const btnAND = elt(
       "button",
-      {
+      {disabled:true,
         onclick: (evt) => {
           if (!evt.target.classList.contains("active")) {
             evt.target.classList.add("active");
@@ -78,6 +78,8 @@ export default class SQL extends Toggle {
       {
         className: "add-rule",
         onclick: (evt) => {
+          btnOR.disabled=false;
+          btnAND.disabled=false;
           this.queryGroup();
         },
       },
@@ -109,7 +111,8 @@ export default class SQL extends Toggle {
     const ruleValue = elt("input", { type: "text" });
     const ruleQuery = elt("span", { className: "rule-query" }, elt("label", {}, "Svojstvo"), ruleProperties, elt("label", {}, "Operator"), ruleOperators, elt("label", {}, "Vrijednost"), ruleValue);
 
-    const ruleDelete = elt("button", { className: "rule-delete", onclick: (evt) => evt.currentTarget.parentElement.remove() }, elt("i", { className: "far fa-trash-alt fa-fw" }));
+    const ruleDelete = elt("button", { className: "rule-delete", onclick:
+     (evt) => {evt.currentTarget.parentElement.remove();} }, elt("i", { className: "far fa-trash-alt fa-fw" }));
     const basicGroup = elt("div", { className: "rules-group-container" }, ruleQuery, ruleDelete);
     if (this.wrapper.children.length > 1) {
       console.log(this.conditions.querySelector(".active"));
