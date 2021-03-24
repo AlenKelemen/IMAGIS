@@ -21,7 +21,7 @@ export default class SQL extends Toggle {
     this.container.setVisible(this.active);
     this.main = elt("div", { className: `main` });
     this.container.element.appendChild(this.main);
-    this.wrapper = elt('div',{className:'wrapper'},)
+    this.wrapper = elt("div", { className: "wrapper" });
     this.activeLayer = this.map
       .getLayers()
       .getArray()
@@ -35,7 +35,7 @@ export default class SQL extends Toggle {
         } else {
           this.activeSource = this.activeLayer.getSource();
           this.main.innerHTML = "";
-          const header = elt('div',{className:'header'},this.queryBuilder());
+          const header = elt("div", { className: "header" }, this.queryBuilder());
           this.main.appendChild(header);
           this.main.appendChild(this.wrapper);
           const accept = elt("button", { className: "accept" }, "OK");
@@ -47,39 +47,43 @@ export default class SQL extends Toggle {
   }
 
   queryBuilder() {
-    const btnOR = elt(
+    this.btnOR = elt(
       "button",
-      { disabled:true,
+      {
+        disabled: true,
         onclick: (evt) => {
           if (!evt.target.classList.contains("active")) {
             evt.target.classList.add("active");
-            btnAND.classList.remove("active");
+            this.btnAND.classList.remove("active");
           }
         },
       },
       "OR"
     );
-    const btnAND = elt(
+    this.btnAND = elt(
       "button",
-      {disabled:true,
+      {
+        disabled: true,
         onclick: (evt) => {
           if (!evt.target.classList.contains("active")) {
             evt.target.classList.add("active");
-            btnOR.classList.remove("active");
+            this.btnOR.classList.remove("active");
           }
         },
-        className: "active",
       },
       "AND"
     );
-    this.conditions = elt("span", { className: "conditions" }, btnAND, btnOR);
+    this.conditions = elt("span", { className: "conditions" }, this.btnAND, this.btnOR);
     const addRule = elt(
       "button",
       {
         className: "add-rule",
         onclick: (evt) => {
-          btnOR.disabled=false;
-          btnAND.disabled=false;
+          this.btnOR.disabled = false;
+          this.btnAND.disabled = false;
+          
+          const rule = elt('p',{className:'rule'},header.querySelector('.active'))
+          if(this.wrapper.children.length > 0) this.wrapper.appendChild(rule)
           this.queryGroup();
         },
       },
@@ -111,12 +115,17 @@ export default class SQL extends Toggle {
     const ruleValue = elt("input", { type: "text" });
     const ruleQuery = elt("span", { className: "rule-query" }, elt("label", {}, "Svojstvo"), ruleProperties, elt("label", {}, "Operator"), ruleOperators, elt("label", {}, "Vrijednost"), ruleValue);
 
-    const ruleDelete = elt("button", { className: "rule-delete", onclick:
-     (evt) => {evt.currentTarget.parentElement.remove();} }, elt("i", { className: "far fa-trash-alt fa-fw" }));
+    const ruleDelete = elt(
+      "button",
+      {
+        className: "rule-delete",
+        onclick: (evt) => {
+          evt.currentTarget.parentElement.remove();
+        },
+      },
+      elt("i", { className: "far fa-trash-alt fa-fw" })
+    );
     const basicGroup = elt("div", { className: "rules-group-container" }, ruleQuery, ruleDelete);
-    if (this.wrapper.children.length > 1) {
-      console.log(this.conditions.querySelector(".active"));
-    }
     this.wrapper.appendChild(basicGroup);
   }
 }
